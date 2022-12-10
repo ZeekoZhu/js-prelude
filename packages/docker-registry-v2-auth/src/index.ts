@@ -1,1 +1,1 @@
-export * from './lib/docker-registry-v2-api';
+export * from './lib/get-auth-token';

@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "module": "ESNext",
     "target": "ES2019",
     "sourceMap": true,
+    "moduleResolution": "Node",
     "paths": {
       "docker-registry-v2-auth": [
         "packages/docker-registry-v2-auth/src/index.ts"

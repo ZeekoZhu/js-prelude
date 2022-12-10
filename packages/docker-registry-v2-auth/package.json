@@ -1,5 +1,8 @@
 {
-  "name": "docker-registry-v2-auth",
+  "name": "@zeeko/docker-registry-v2-auth",
   "version": "0.0.1",
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "node-fetch": "^3.3.0"
+  }
 }
