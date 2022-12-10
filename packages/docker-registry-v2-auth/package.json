@@ -1,5 +1,5 @@
 {
-  "name": "@zeeko/docker-registry-v2-api",
+  "name": "docker-registry-v2-auth",
   "version": "0.0.1",
   "type": "commonjs"
 }

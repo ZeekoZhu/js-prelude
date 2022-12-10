@@ -1,17 +1,17 @@
 {
-  "name": "docker-registry-v2-api",
+  "name": "docker-registry-v2-auth",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/docker-registry-v2-api/src",
+  "sourceRoot": "packages/docker-registry-v2-auth/src",
   "projectType": "library",
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/docker-registry-v2-api",
-        "main": "packages/docker-registry-v2-api/src/index.ts",
-        "tsConfig": "packages/docker-registry-v2-api/tsconfig.lib.json",
-        "assets": ["packages/docker-registry-v2-api/*.md"]
+        "outputPath": "dist/packages/docker-registry-v2-auth",
+        "main": "packages/docker-registry-v2-auth/src/index.ts",
+        "tsConfig": "packages/docker-registry-v2-auth/tsconfig.lib.json",
+        "assets": ["packages/docker-registry-v2-auth/*.md"]
       }
     },
     "publish": {
@@ -25,7 +25,7 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/docker-registry-v2-api/**/*.ts"]
+        "lintFilePatterns": ["packages/docker-registry-v2-auth/**/*.ts"]
       }
     },
     "test": {
