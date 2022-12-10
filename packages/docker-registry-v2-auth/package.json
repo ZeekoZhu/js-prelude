@@ -1,7 +1,17 @@
 {
   "name": "@zeeko/docker-registry-v2-auth",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZeekoZhu/js-prelude.git",
+    "directory": "packages/docker-registry-v2-auth"
+  },
+  "author": {
+    "name": "Zeeko Zhu",
+    "email": "vaezt@outlook.com"
+  },
+  "license": "MIT",
   "version": "0.0.1",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "node-fetch": "^3.3.0"
   }
