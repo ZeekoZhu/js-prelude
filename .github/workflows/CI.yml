@@ -14,7 +14,10 @@ jobs:
           fetch-depth: 0
       - uses: nrwl/nx-set-shas@v3
       - run: npm ci
-
+      - name: setup env
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - run: npx nx workspace-lint
       - run: npx nx format:check
       - run: npx nx affected --target=lint --parallel=3
