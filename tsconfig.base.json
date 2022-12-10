@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES2019",
+    "sourceMap": true,
+    "paths": {
+      "@zeeko/docker-registry-v2-api": [
+        "packages/docker-registry-v2-api/src/index.ts"
+      ]
+    }
+  },
+  "exclude": ["node_modules"]
+}
