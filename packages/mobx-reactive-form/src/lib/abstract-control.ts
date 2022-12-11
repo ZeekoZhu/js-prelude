@@ -19,8 +19,8 @@ export abstract class AbstractControl<
   TRawValue extends TValue = TValue,
 > {
   constructor(
-    public validators: ValidatorFn | ValidatorFn[],
-    public asyncValidators: AsyncValidatorFn | AsyncValidatorFn[],
+    validators: ValidatorFn | ValidatorFn[],
+    asyncValidators: AsyncValidatorFn | AsyncValidatorFn[],
   ) {}
 
   value!: TValue;

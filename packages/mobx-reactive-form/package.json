@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "type": "commonjs",
   "dependencies": {
+    "lodash-es": "^4.17.21",
     "mobx": "^6.7.0"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.6"
   }
 }

@@ -6,7 +6,8 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from './abstract-control';
-import { makeAutoObservable, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
+import { merge } from 'lodash-es';
 
 export interface FormControlState<T> {
   value: T;
@@ -24,7 +25,17 @@ function isFormControlState<TValue>(
   );
 }
 
+function composeValidators(validators: Iterable<ValidatorFn>) {
+  const validatorArray = Array.from(validators);
+  return (control: AbstractControl<any, any>) => {
+    const errors = validatorArray.map((validator) => validator(control));
+    return errors.length > 0 ? merge({}, ...errors) : null;
+  };
+}
+
 export class FormControl<TValue = any> extends AbstractControl<TValue> {
+  protected _validators = new Set<ValidatorFn>();
+
   constructor(
     value: TValue | FormControlState<TValue>,
     options?: { defaultValue: TValue | null },
@@ -34,6 +45,7 @@ export class FormControl<TValue = any> extends AbstractControl<TValue> {
       this,
       {
         value: observable.ref,
+        setValue: action.bound,
       },
       { autoBind: true, deep: false },
     );
@@ -54,11 +66,21 @@ export class FormControl<TValue = any> extends AbstractControl<TValue> {
 
   addAsyncValidators(validators: AsyncValidatorFn | AsyncValidatorFn[]): void {}
 
-  addValidators(validators: ValidatorFn | ValidatorFn[]): void {}
+  addValidators(validators: ValidatorFn | ValidatorFn[]): void {
+    if (Array.isArray(validators)) {
+      validators.forEach((validator) => this._validators.add(validator));
+    } else {
+      this._validators.add(validators);
+    }
+    this.validator = composeValidators(this._validators);
+  }
 
   clearAsyncValidators(): void {}
 
-  clearValidators(): void {}
+  clearValidators(): void {
+    this._validators.clear();
+    this.validator = null;
+  }
 
   disable(opts: ChangeEventOptions | undefined): void {}
 
@@ -83,7 +105,7 @@ export class FormControl<TValue = any> extends AbstractControl<TValue> {
   }
 
   hasValidator(validator: ValidatorFn): boolean {
-    return false;
+    return this._validators.has(validator);
   }
 
   markAllAsTouched(): void {}
@@ -104,7 +126,18 @@ export class FormControl<TValue = any> extends AbstractControl<TValue> {
     validators: AsyncValidatorFn | AsyncValidatorFn[],
   ): void {}
 
-  removeValidators(validators: ValidatorFn | ValidatorFn[]): void {}
+  removeValidators(validators: ValidatorFn | ValidatorFn[]): void {
+    if (Array.isArray(validators)) {
+      validators.forEach((validator) => this._validators.delete(validator));
+    } else {
+      this._validators.delete(validators);
+    }
+    if (this._validators.size > 0) {
+      this.validator = composeValidators(this._validators);
+    } else {
+      this.validator = null;
+    }
+  }
 
   reset(value: TValue | undefined, options?: ChangeEventOptions): void {}
 
@@ -115,7 +148,10 @@ export class FormControl<TValue = any> extends AbstractControl<TValue> {
     opts: Omit<ChangeEventOptions, 'onlySelf'> | undefined,
   ): void {}
 
-  setValidators(validators: ValidatorFn | ValidatorFn[]): void {}
+  setValidators(validators: ValidatorFn | ValidatorFn[]): void {
+    this.clearValidators();
+    this.addValidators(validators);
+  }
 
   setValue(value: TValue, options?: ChangeEventOptions): void {
     this.value = value;
