@@ -1,0 +1,40 @@
+{
+  "name": "mobx-reactive-form",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/mobx-reactive-form/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/mobx-reactive-form",
+        "main": "packages/mobx-reactive-form/src/index.ts",
+        "tsConfig": "packages/mobx-reactive-form/tsconfig.lib.json",
+        "assets": ["packages/mobx-reactive-form/*.md"]
+      }
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node tools/scripts/publish.mjs mobx-reactive-form {args.ver} {args.tag}"
+      },
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/mobx-reactive-form/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/vite:test",
+      "outputs": ["{projectRoot}/coverage"],
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
