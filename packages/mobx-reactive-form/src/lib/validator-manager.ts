@@ -48,7 +48,9 @@ export class SyncValidatorManager extends AbstractValidatorManager<ValidatorFn> 
 
     const validatorArray = Array.from(this._validators);
     return (control: AbstractControl<any, any>) => {
-      const errors = validatorArray.map((validator) => validator(control));
+      const errors = validatorArray
+        .map((validator) => validator(control))
+        .filter((error) => error != null);
       return errors.length > 0 ? merge({}, ...errors) : null;
     };
   }

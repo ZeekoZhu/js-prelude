@@ -46,7 +46,7 @@ describe('FormControl', () => {
       expect(onChange).toBeCalledWith(2);
     });
   });
-  describe('validation', () => {
+  describe('validators', () => {
     test('validator is null', () => {
       const ctrl = new FormControl(1);
       expect(ctrl.validator).toBeNull();
@@ -127,6 +127,8 @@ describe('FormControl', () => {
         expect(ctrl.hasValidator(v2)).toBe(true);
       });
       test('invoke validator', () => {
+        v1.mockClear();
+        v2.mockClear();
         ctrl.validator?.(ctrl);
         expect(v1).not.toBeCalled();
         expect(v2).toBeCalledWith(ctrl);
@@ -152,6 +154,9 @@ describe('FormControl', () => {
           expect(ctrl.hasValidator(v3)).toBe(true);
         });
         test('invoke validator', () => {
+          v1.mockClear();
+          v2.mockClear();
+          v3.mockClear();
           ctrl.removeValidators(v2);
           ctrl.validator?.(ctrl);
           expect(v1).toBeCalledWith(ctrl);
@@ -166,7 +171,43 @@ describe('FormControl', () => {
         });
       });
     });
-    test.todo('errors');
+  });
+  describe('errors', () => {
+    test('error is null', () => {
+      const ctrl = new FormControl(1);
+      expect(ctrl.errors).toBeNull();
+    });
+    describe('error is reactive', () => {
+      test('value change', () => {
+        const ctrl = new FormControl(1);
+        const errorObj = { lgt1: 'great than 1' };
+        ctrl.addValidators((c) => (c.value > 1 ? errorObj : null));
+        const onChange = vi.fn();
+        autorun(() => onChange(ctrl.errors));
+        ctrl.setValue(2);
+        expect(onChange).toBeCalledWith(errorObj);
+      });
+      test('validator change', () => {
+        const ctrl = new FormControl(1);
+        const errorObj = { lgt1: 'great than 1' };
+        const v1 = vi.fn((c) => (c.value > 1 ? errorObj : null));
+        ctrl.addValidators(v1);
+        const onChange = vi.fn();
+        autorun(() => onChange(ctrl.errors));
+        ctrl.removeValidators(v1);
+        expect(onChange).toBeCalledWith(null);
+      });
+    });
+  });
+  describe('disabled', () => {
+    test('turn off validation', () => {
+      const ctrl = new FormControl(1);
+      const errorObj = { lgt1: 'great than 1' };
+      ctrl.addValidators((c) => (c.value > 1 ? errorObj : null));
+      ctrl.disable({ emitEvent: false });
+      ctrl.setValue(2);
+      expect(ctrl.errors).toBeNull();
+    });
   });
   describe.todo('reset');
 });

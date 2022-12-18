@@ -6,7 +6,7 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from './abstract-control';
-import { action, makeObservable, observable } from 'mobx';
+import { action, autorun, makeObservable, observable, runInAction } from 'mobx';
 import {
   AsyncValidatorManager,
   SyncValidatorManager,
@@ -65,7 +65,14 @@ export class FormControl<TValue = any> extends AbstractControl<TValue> {
       this,
       {
         value: observable.ref,
+        errors: observable.ref,
+        validator: observable.ref,
+        disabled: observable.ref,
         setValue: action.bound,
+        setValidators: action.bound,
+        addValidators: action.bound,
+        removeValidators: action.bound,
+        clearValidators: action.bound,
       },
       { autoBind: true, deep: false },
     );
@@ -77,6 +84,17 @@ export class FormControl<TValue = any> extends AbstractControl<TValue> {
       this.disabled = false;
     }
     this.defaultValue = options?.defaultValue ?? this.value;
+    autorun(() => {
+      if (this.validator == null || this.disabled) {
+        return;
+      }
+      const errors = this.validator(this);
+      if (errors != null) {
+        runInAction(() => {
+          this.errors = errors;
+        });
+      }
+    });
   }
 
   /**
@@ -94,9 +112,13 @@ export class FormControl<TValue = any> extends AbstractControl<TValue> {
     this.asyncValidator = this.asyncValidatorManager.buildValidator();
   }
 
-  disable(opts: ChangeEventOptions | undefined): void {}
+  disable(opts: ChangeEventOptions | undefined): void {
+    this.disabled = true;
+  }
 
-  enable(opts: ChangeEventOptions | undefined): void {}
+  enable(opts: ChangeEventOptions | undefined): void {
+    this.disabled = false;
+  }
 
   getError(
     errorCode: string,
@@ -147,7 +169,9 @@ export class FormControl<TValue = any> extends AbstractControl<TValue> {
   setErrors(
     errors: ValidationErrors,
     opts: Omit<ChangeEventOptions, 'onlySelf'> | undefined,
-  ): void {}
+  ): void {
+    this.errors = errors;
+  }
 
   setValue(value: TValue, options?: ChangeEventOptions): void {
     this.value = value;
