@@ -9,7 +9,8 @@
       "@zeeko/docker-registry-v2-auth": [
         "packages/docker-registry-v2-auth/src/index.ts"
       ],
-      "@zeeko/mobx-reactive-form": ["packages/mobx-reactive-form/src/index.ts"]
+      "@zeeko/mobx-reactive-form": ["packages/mobx-reactive-form/src/index.ts"],
+      "@zeeko/power-accessor": ["packages/power-accessor/src/index.ts"]
     }
   },
   "exclude": ["node_modules"]
