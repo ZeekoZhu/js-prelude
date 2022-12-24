@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-interface IMatcher {
+export interface IMatcher {
   matches(obj: any): any[];
 
   setValue(obj: any, value: any): void;
@@ -43,7 +43,11 @@ class PredicateMatcher implements IMatcher {
         try {
           return this.predicate(key, val);
         } catch (e) {
-          throw new Error(`Error in predicate function called with key: ${key}, value: ${JSON.stringify(val)}: ${e}`);
+          throw new Error(
+            `Error in predicate function called with key: ${key}, value: ${JSON.stringify(
+              val,
+            )}: ${e}`,
+          );
         }
       })
       .map(([, value]) => value);
@@ -59,17 +63,28 @@ class PredicateMatcher implements IMatcher {
 }
 
 export class Matcher {
-  static all = new AllValuesMatcher();
+  /**
+   * Matches all values in an object
+   */
+  static all: IMatcher = new AllValuesMatcher();
 
   private constructor() {
     // ignore
   }
 
-  static key(key: KeyType) {
+  /**
+   * Matches a specific key in an object
+   * @param key
+   */
+  static key(key: KeyType): IMatcher {
     return new KeyMatcher(key);
   }
 
-  static when(predicate: (key: KeyType, value: any) => boolean) {
+  /**
+   * Matches a value in an object based on a predicate function
+   * @param predicate
+   */
+  static when(predicate: (key: KeyType, value: any) => boolean):IMatcher {
     return new PredicateMatcher(predicate);
   }
 }
@@ -81,13 +96,26 @@ function normalizeMatcher(value: IMatcher | KeyType) {
   return value;
 }
 
+/**
+ * Accessor class to get and set values in a complex object
+ */
 export class Accessor<TObj, TValue> {
   public matcherList: IMatcher[] = [];
 
+  /**
+   * Creates a new accessor that matches the given matchers.
+   * The matchers are applied in a 'path like' style.
+   * @param matcherList
+   */
   constructor(...matcherList: (IMatcher | KeyType)[]) {
     this.matcherList = matcherList.map(normalizeMatcher);
   }
 
+  /**
+   * Gets the value of the object
+   * @param object
+   * @returns it always returns an array, even if there is only one value
+   */
   get(object: TObj): TValue[] {
     const matchers = this.matcherList;
     return this.getValue({ obj: object, matchers: matchers });
@@ -119,6 +147,11 @@ export class Accessor<TObj, TValue> {
     return result;
   }
 
+  /**
+   * Sets the value of the object
+   * @param object
+   * @param value
+   */
   set(object: TObj, value: TValue): void {
     const parentObjects = this.getValue({
       obj: object,
