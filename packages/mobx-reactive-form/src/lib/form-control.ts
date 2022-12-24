@@ -73,6 +73,7 @@ export class FormControl<TValue = any> extends AbstractControl<TValue> {
         addValidators: action.bound,
         removeValidators: action.bound,
         clearValidators: action.bound,
+        disable: action.bound,
       },
       { autoBind: true, deep: false },
     );
