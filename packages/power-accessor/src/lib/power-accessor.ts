@@ -5,11 +5,16 @@ interface IMatcher {
   setValue(obj: any, value: any): void;
 }
 
+export type KeyType = string | number;
+
 class KeyMatcher implements IMatcher {
-  constructor(public key: string) {}
+  constructor(public key: KeyType) {}
 
   matches(obj: any) {
-    return [obj[this.key]];
+    if (Object.prototype.hasOwnProperty.call(obj, this.key)) {
+      return [obj[this.key]];
+    }
+    return [];
   }
 
   setValue(obj: any, value: any) {
@@ -29,6 +34,30 @@ class AllValuesMatcher implements IMatcher {
   }
 }
 
+class PredicateMatcher implements IMatcher {
+  constructor(public predicate: (key: KeyType, value: unknown) => boolean) {}
+
+  matches(obj: any) {
+    return Object.entries(obj)
+      .filter(([key, val]) => {
+        try {
+          return this.predicate(key, val);
+        } catch (e) {
+          throw new Error(`Error in predicate function called with key: ${key}, value: ${JSON.stringify(val)}: ${e}`);
+        }
+      })
+      .map(([, value]) => value);
+  }
+
+  setValue(obj: any, value: any) {
+    Object.keys(obj).forEach((key) => {
+      if (this.predicate(key, obj[key])) {
+        obj[key] = value;
+      }
+    });
+  }
+}
+
 export class Matcher {
   static all = new AllValuesMatcher();
 
@@ -36,13 +65,17 @@ export class Matcher {
     // ignore
   }
 
-  static key(key: string) {
+  static key(key: KeyType) {
     return new KeyMatcher(key);
+  }
+
+  static when(predicate: (key: KeyType, value: any) => boolean) {
+    return new PredicateMatcher(predicate);
   }
 }
 
-function normalizeMatcher(value: IMatcher | string) {
-  if (typeof value === 'string') {
+function normalizeMatcher(value: IMatcher | KeyType) {
+  if (typeof value === 'string' || typeof value === 'number') {
     return Matcher.key(value);
   }
   return value;
@@ -51,7 +84,7 @@ function normalizeMatcher(value: IMatcher | string) {
 export class Accessor<TObj, TValue> {
   public matcherList: IMatcher[] = [];
 
-  constructor(...matcherList: (IMatcher | string)[]) {
+  constructor(...matcherList: (IMatcher | KeyType)[]) {
     this.matcherList = matcherList.map(normalizeMatcher);
   }
 
@@ -74,7 +107,14 @@ export class Accessor<TObj, TValue> {
       ? matchers.length - 1
       : matchers.length;
     for (let i = 0; i < lastIndex; i++) {
-      result = result.flatMap((obj) => matchers[i].matches(obj));
+      try {
+        const matcher = matchers[i];
+        result = result.flatMap((obj) => matcher.matches(obj));
+      } catch (e) {
+        throw new Error(
+          `Failed to match object with matcher at index ${i}. ${e}`,
+        );
+      }
     }
     return result;
   }
