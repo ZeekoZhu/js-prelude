@@ -62,4 +62,11 @@ describe('FormField', () => {
     formField.setErrors(['error 1', 'error 2']);
     expect(formField.isValid).toBe(false);
   });
+
+  test('can clear errors', () => {
+    const formField = new FormField('initial value');
+    formField.setErrors(['error 1', 'error 2']);
+    formField.setErrors();
+    expect(formField.isValid).toBe(true);
+  });
 });

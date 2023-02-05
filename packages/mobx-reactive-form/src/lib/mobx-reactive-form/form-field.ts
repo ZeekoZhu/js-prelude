@@ -16,6 +16,15 @@ export class FormField implements FormFieldState {
   private _isTouched = false;
   private _isValid = true;
   private _errors: ReadonlyArray<string> = [];
+  private _isValidating = false;
+
+  get isValidating() {
+    return this._isValidating;
+  }
+
+  set isValidating(val: boolean) {
+    this._isValidating = val;
+  }
 
   get errors() {
     return this._errors;
@@ -62,8 +71,13 @@ export class FormField implements FormFieldState {
     this._isTouched = false;
   }
 
-  setErrors(errors: string[]) {
-    this._errors = errors;
-    this._isValid = errors.length === 0;
+  setErrors(errors?: string[]) {
+    if (errors == null || errors.length === 0) {
+      this._errors = [];
+      this._isValid = true;
+    } else {
+      this._errors = errors;
+      this._isValid = errors.length === 0;
+    }
   }
 }
