@@ -4,6 +4,11 @@ import { FieldGroup } from './field-group';
 import { FormField } from './form-field';
 import { FormValidator } from './form-validator';
 
+interface Person {
+  name: string;
+  age: number;
+}
+
 describe('FieldGroup', () => {
   test('can create instance', () => {
     const fieldGroup = new FieldGroup({
@@ -27,7 +32,7 @@ describe('FieldGroup', () => {
       name: new FormField('alice'),
       age: new FormField(99)
     });
-    const name = group.fields.get('name');
+    const name = group.field('name');
     name?.setValue('bob');
     expect(name?.isTouched).toBe(true);
     expect(group.isTouched).toBe(true);
@@ -38,14 +43,14 @@ describe('FieldGroup', () => {
       name: new FormField('alice'),
       age: new FormField(99)
     });
-    const name = group.fields.get('name');
+    const name = group.field('name');
     name?.setValue('bob');
     expect(name?.isDirty).toBe(true);
     expect(group.isDirty).toBe(true);
   });
 
   describe('setValue', () => {
-    let group: FieldGroup;
+    let group: FieldGroup<Person>;
     beforeEach(() => {
       group = new FieldGroup({
         name: new FormField('alice'),
@@ -62,7 +67,7 @@ describe('FieldGroup', () => {
   });
 
   describe('reset', () => {
-    let group: FieldGroup;
+    let group: FieldGroup<Person>;
     beforeEach(() => {
       group = new FieldGroup({
         name: new FormField('alice'),
@@ -79,7 +84,7 @@ describe('FieldGroup', () => {
   });
 
   describe('validation', () => {
-    let group: FieldGroup;
+    let group: FieldGroup<Person>;
     beforeEach(() => {
       group = new FieldGroup({
         name: new FormField('alice'),
@@ -91,7 +96,7 @@ describe('FieldGroup', () => {
     });
 
     test('should be invalid when has errors in fields', () => {
-      group.fields.get('age')?.setErrors(['too old']);
+      group.field('age').setErrors(['too old']);
       expect(group.isValid).toBe(false);
     });
 
@@ -110,7 +115,7 @@ describe('FieldGroup', () => {
   });
 
   describe('dynamic form', () => {
-    let group: FieldGroup;
+    let group: FieldGroup<Person>;
     beforeEach(() => {
       group = new FieldGroup({
         name: new FormField('alice'),

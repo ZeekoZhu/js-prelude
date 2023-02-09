@@ -1,12 +1,13 @@
 import { IValidatable } from './form-validator';
 
-export interface AbstractFormField extends IValidatable {
+export interface AbstractFormField<T> extends IValidatable {
   readonly isDirty: boolean;
   readonly isTouched: boolean;
   readonly errors: ReadonlyArray<string>;
 
-  setValue(val: unknown): void;
+  setValue(val: T): void;
 
-  reset(val: unknown): void;
+  reset(val?: T): void;
+  readonly value: T;
 
 }

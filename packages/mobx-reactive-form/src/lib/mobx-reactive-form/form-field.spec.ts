@@ -9,7 +9,7 @@ describe('FormField', () => {
     expect(formField.value).toBe('initial value');
   });
   describe('it should be observable', () => {
-    let formField: FormField;
+    let formField: FormField<string>;
     beforeEach(() => {
       formField = new FormField('initial value');
     });

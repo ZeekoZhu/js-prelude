@@ -3,7 +3,7 @@ import { FormField } from './form-field';
 import { IValidatable } from './form-validator';
 import { AbstractFormField } from './types';
 
-export class FieldGroup implements AbstractFormField, IValidatable {
+export class FieldGroup<T extends object> implements AbstractFormField<T>, IValidatable {
   private _isValid = true;
   private _errors: ReadonlyArray<string> = [];
   private _isValidating = false;
@@ -49,39 +49,45 @@ export class FieldGroup implements AbstractFormField, IValidatable {
     return result;
   }
 
-  private _fields = observable.map<string, FormField>({}, { deep: false });
+  private _fields = observable.map<string, FormField<unknown>>({}, { deep: false });
 
   get value() {
     const result: Record<string, unknown> = {};
     for (const [key, field] of this._fields) {
       result[key] = field.value;
     }
-    return result;
+    return result as T;
   }
 
-  get fields() {
+  get fields(): ReadonlyMap<string, FormField<unknown>> {
     return this._fields;
   }
 
-  constructor(fields: Record<string, FormField>) {
+  field<TK extends keyof T>(key: TK): FormField<T[TK]> {
+    return this._fields.get(key as string) as FormField<T[TK]>;
+  }
+
+  constructor(fields: { [key in keyof T]: FormField<T[key]> }) {
     this._fields.replace(fields);
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
   }
 
-  setValue(val: Record<string, any>): void {
+  setValue(val: T): void {
+    const value = val as Record<string, unknown>;
     for (const [key, field] of this._fields) {
-      if (key in val) {
-        field.setValue((val)[key]);
+      if (key in value) {
+        field.setValue((value)[key]);
       }
     }
   }
 
-  reset(val?: Record<string, any>): void {
+  reset(val?: Partial<T>): void {
+    const value = val as Record<string, unknown>;
     for (const [key, field] of this._fields) {
-      if (val == null) {
+      if (value == null) {
         field.reset();
-      } else if (key in val) {
-        field.reset((val)[key]);
+      } else if (key in value) {
+        field.reset((value)[key]);
       }
     }
   }
@@ -96,7 +102,7 @@ export class FieldGroup implements AbstractFormField, IValidatable {
     }
   }
 
-  addField(name: string, field: FormField) {
+  addField(name: string, field: FormField<unknown>) {
     this._fields.set(name, field);
   }
 }

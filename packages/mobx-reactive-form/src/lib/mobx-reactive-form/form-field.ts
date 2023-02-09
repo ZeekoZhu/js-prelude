@@ -1,7 +1,7 @@
 import { makeAutoObservable, observable } from 'mobx';
 import { AbstractFormField } from './types';
 
-export class FormField implements AbstractFormField {
+export class FormField<T> implements AbstractFormField<T> {
   initValue: unknown = undefined;
   private _value: unknown = undefined;
   private _isDirty = false;
@@ -36,10 +36,10 @@ export class FormField implements AbstractFormField {
 
 
   get value() {
-    return this._value;
+    return this._value as T;
   }
 
-  setValue(val: unknown) {
+  setValue(val: T) {
     // todo: allow customizing comparer
     if (val !== this.initValue) {
       this._isDirty = true;
@@ -48,15 +48,15 @@ export class FormField implements AbstractFormField {
     this._value = val;
   }
 
-  constructor(initValue: unknown) {
-    makeAutoObservable<FormField, '_errors'>(this, {
+  constructor(initValue: T) {
+    makeAutoObservable<FormField<T>, '_errors'>(this, {
       initValue: false,
       _errors: observable.shallow,
     }, { autoBind: true, deep: false });
     this.reset(initValue);
   }
 
-  reset(val?: unknown) {
+  reset(val?: T) {
     if (val !== undefined) {
       this.initValue = val;
     }
