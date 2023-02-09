@@ -1,5 +1,5 @@
 import { isObservableProp } from 'mobx';
-import { beforeEach, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test } from 'vitest';
 import { FieldGroup } from './field-group';
 import { FormField } from './form-field';
 import { FormValidator } from './form-validator';
@@ -60,6 +60,7 @@ describe('FieldGroup', () => {
     test('should call setValue of each field', () => {
       group.setValue({ name: 'bob', age: 100 });
       expect(group.value).toEqual({ name: 'bob', age: 100 });
+      expect(group.isDirty).toBe(true);
       for (const [, f] of group.fields) {
         expect(f.isTouched).toBe(true);
       }
@@ -122,13 +123,65 @@ describe('FieldGroup', () => {
         age: new FormField(99)
       });
     });
-    test('add field', () => {
-      group.addField('address', new FormField('beijing'));
-      expect(group.value).toEqual({
-        name: 'alice',
-        age: 99,
-        address: 'beijing'
+    describe('add field', () => {
+      test('should update value', () => {
+        group.addField('address', new FormField('beijing'));
+        expect(group.value).toEqual({
+          name: 'alice',
+          age: 99,
+          address: 'beijing'
+        });
       });
+
+      it('should not be dirty', () => {
+        group.addField('address', new FormField('beijing'));
+        expect(group.isDirty).toBe(false);
+      });
+      describe('then reset with initial fields', () => {
+        beforeEach(() => {
+          group.addField('address', new FormField('beijing'));
+          group.reset({ name: 'bob', age: 100 });
+        });
+        test('should remove new field', () => {
+          expect(group.value).toEqual({
+            name: 'bob',
+            age: 100,
+            address: 'beijing'
+          });
+        });
+        it('should not be dirty', () => {
+          expect(group.isDirty).toBe(false);
+        });
+      });
+      describe('then reset with undefined', () => {
+        beforeEach(() => {
+          group.addField('address', new FormField('beijing'));
+          group.field('name').setValue('bob');
+          group.reset();
+        });
+        test('should keep new field', () => {
+          expect(group.value).toEqual({
+            name: 'alice',
+            age: 99,
+            address: 'beijing'
+          });
+        });
+      });
+
+      describe('then reset with partial initial fields', () => {
+        beforeEach(() => {
+          group.addField('address', new FormField('beijing'));
+          group.reset({ name: 'bob' });
+        });
+        test('should remove fields not in value', () => {
+          expect(group.value).toEqual({
+            name: 'bob',
+            age: 99,
+            address: 'beijing'
+          });
+        });
+      });
+      it.todo('should be touched');
     });
   });
 });

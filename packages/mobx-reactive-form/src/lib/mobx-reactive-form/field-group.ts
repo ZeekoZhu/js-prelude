@@ -1,7 +1,6 @@
 import { makeAutoObservable, observable } from 'mobx';
 import { FormField } from './form-field';
-import { IValidatable } from './form-validator';
-import { AbstractFormField } from './types';
+import { AbstractFormField, IValidatable } from './types';
 
 export class FieldGroup<T extends object> implements AbstractFormField<T>, IValidatable {
   private _isValid = true;
@@ -21,53 +20,42 @@ export class FieldGroup<T extends object> implements AbstractFormField<T>, IVali
   }
 
   get isDirty() {
-    for (const field of this._fields.values()) {
-      if (field.isDirty) {
-        return true;
-      }
-    }
-    return false;
+    const dirtyField = this.findField(field => field.isDirty);
+    return !!dirtyField;
   }
 
   get isTouched() {
-    for (const field of this._fields.values()) {
-      if (field.isTouched) {
-        return true;
-      }
-    }
-    return false;
+    const touchedField = this.findField(field => field.isTouched);
+    return !!touchedField;
   }
 
   get isValid() {
-    let result = this._isValid;
-    if (!result) {
-      return result;
+    if (!this._isValid) {
+      return false;
     }
-    for (const field of this._fields.values()) {
-      result = result && field.isValid;
-    }
-    return result;
+    const invalidField = this.findField(field => !field.isValid);
+    return invalidField === undefined;
   }
 
-  private _fields = observable.map<string, FormField<unknown>>({}, { deep: false });
+  private _fields = observable.map<string, AbstractFormField<unknown>>({}, { deep: false });
 
   get value() {
     const result: Record<string, unknown> = {};
-    for (const [key, field] of this._fields) {
+    this.forEachField((field, key) => {
       result[key] = field.value;
-    }
+    });
     return result as T;
   }
 
-  get fields(): ReadonlyMap<string, FormField<unknown>> {
+  get fields(): ReadonlyMap<string, AbstractFormField<unknown>> {
     return this._fields;
   }
 
-  field<TK extends keyof T>(key: TK): FormField<T[TK]> {
-    return this._fields.get(key as string) as FormField<T[TK]>;
+  field<TK extends keyof T>(key: TK): AbstractFormField<T[TK]> {
+    return this._fields.get(key as string) as AbstractFormField<T[TK]>;
   }
 
-  constructor(fields: { [key in keyof T]: FormField<T[key]> }) {
+  constructor(fields: { [key in keyof T]: AbstractFormField<T[key]> }) {
     this._fields.replace(fields);
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
   }
@@ -83,13 +71,7 @@ export class FieldGroup<T extends object> implements AbstractFormField<T>, IVali
 
   reset(val?: Partial<T>): void {
     const value = val as Record<string, unknown>;
-    for (const [key, field] of this._fields) {
-      if (value == null) {
-        field.reset();
-      } else if (key in value) {
-        field.reset((value)[key]);
-      }
-    }
+    this.forEachField((field, key) => field.reset(value?.[key]));
   }
 
   setErrors(errors: string[] | undefined): void {
@@ -104,5 +86,20 @@ export class FieldGroup<T extends object> implements AbstractFormField<T>, IVali
 
   addField(name: string, field: FormField<unknown>) {
     this._fields.set(name, field);
+  }
+
+  private forEachField(fn: (field: AbstractFormField<unknown>, key: string) => void) {
+    for (const [k, f] of this._fields) {
+      fn(f, k);
+    }
+  }
+
+  private findField(fn: (field: AbstractFormField<unknown>, key: string) => boolean) {
+    for (const [k, f] of this._fields) {
+      if (fn(f, k)) {
+        return f;
+      }
+    }
+    return undefined;
   }
 }

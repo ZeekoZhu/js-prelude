@@ -1,3 +1,5 @@
+import { IValidatable } from './types';
+
 export type ValidatorFn<T> = (value: T) => string[] | undefined;
 
 export type ValidatorFnAsync<T> = (value: T) => Promise<string[] | undefined>;
@@ -5,16 +7,6 @@ export type ValidatorFnAsync<T> = (value: T) => Promise<string[] | undefined>;
 export interface FormValidatorOptions<T> {
   validator?: ValidatorFn<T>;
   asyncValidator?: ValidatorFnAsync<T>;
-}
-
-export interface IValidatable {
-  isValidating: boolean;
-
-  setErrors(errors: string[] | undefined): void;
-
-  get isValid(): boolean;
-
-  get value(): unknown;
 }
 
 export class FormValidator<T> {

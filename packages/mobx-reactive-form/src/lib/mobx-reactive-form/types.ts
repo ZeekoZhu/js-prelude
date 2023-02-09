@@ -1,4 +1,12 @@
-import { IValidatable } from './form-validator';
+export interface IValidatable {
+  isValidating: boolean;
+
+  setErrors(errors: string[] | undefined): void;
+
+  get isValid(): boolean;
+
+  get value(): unknown;
+}
 
 export interface AbstractFormField<T> extends IValidatable {
   readonly isDirty: boolean;
@@ -8,6 +16,7 @@ export interface AbstractFormField<T> extends IValidatable {
   setValue(val: T): void;
 
   reset(val?: T): void;
+
   readonly value: T;
 
 }
