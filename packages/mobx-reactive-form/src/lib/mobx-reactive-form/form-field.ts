@@ -7,6 +7,9 @@ export interface FormFieldState {
   readonly isDirty: boolean;
   readonly isTouched: boolean;
   readonly isValid: boolean;
+  readonly isValidating: boolean;
+  readonly errors: ReadonlyArray<string>;
+  readonly value: unknown;
 }
 
 export class FormField implements FormFieldState {

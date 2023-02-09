@@ -1,5 +1,3 @@
-import { FormField } from './form-field';
-
 export type ValidatorFn<T> = (value: T) => string[] | undefined;
 
 export type ValidatorFnAsync<T> = (value: T) => Promise<string[] | undefined>;
@@ -9,8 +7,18 @@ export interface FormValidatorOptions<T> {
   asyncValidator?: ValidatorFnAsync<T>;
 }
 
+export interface IValidatable {
+  isValidating: boolean;
+
+  setErrors(errors: string[] | undefined): void;
+
+  get isValid(): boolean;
+
+  get value(): unknown;
+}
+
 export class FormValidator<T> {
-  constructor(public field: FormField, public options: FormValidatorOptions<T>) {
+  constructor(public field: IValidatable, public options: FormValidatorOptions<T>) {
   }
 
   async validate(): Promise<void> {
