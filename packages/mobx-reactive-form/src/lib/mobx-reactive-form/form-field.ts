@@ -1,18 +1,7 @@
-import {
-  makeAutoObservable,
-  observable
-} from 'mobx';
+import { makeAutoObservable, observable } from 'mobx';
+import { AbstractFormField } from './types';
 
-export interface FormFieldState {
-  readonly isDirty: boolean;
-  readonly isTouched: boolean;
-  readonly isValid: boolean;
-  readonly isValidating: boolean;
-  readonly errors: ReadonlyArray<string>;
-  readonly value: unknown;
-}
-
-export class FormField implements FormFieldState {
+export class FormField implements AbstractFormField {
   initValue: unknown = undefined;
   private _value: unknown = undefined;
   private _isDirty = false;
@@ -67,9 +56,11 @@ export class FormField implements FormFieldState {
     this.reset(initValue);
   }
 
-  reset(val: unknown) {
-    this.initValue = val;
-    this._value = val;
+  reset(val?: unknown) {
+    if (val !== undefined) {
+      this.initValue = val;
+    }
+    this._value = this.initValue;
     this._isDirty = false;
     this._isTouched = false;
   }

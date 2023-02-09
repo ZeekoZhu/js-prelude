@@ -1,10 +1,9 @@
 import { makeAutoObservable, observable } from 'mobx';
-import { FormField, FormFieldState } from './form-field';
+import { FormField } from './form-field';
 import { IValidatable } from './form-validator';
+import { AbstractFormField } from './types';
 
-export class FieldGroup implements FormFieldState, IValidatable {
-  private _isDirty = false;
-  private _isTouched = false;
+export class FieldGroup implements AbstractFormField, IValidatable {
   private _isValid = true;
   private _errors: ReadonlyArray<string> = [];
   private _isValidating = false;
@@ -22,11 +21,21 @@ export class FieldGroup implements FormFieldState, IValidatable {
   }
 
   get isDirty() {
-    return this._isDirty;
+    for (const field of this._fields.values()) {
+      if (field.isDirty) {
+        return true;
+      }
+    }
+    return false;
   }
 
   get isTouched() {
-    return this._isTouched;
+    for (const field of this._fields.values()) {
+      if (field.isTouched) {
+        return true;
+      }
+    }
+    return false;
   }
 
   get isValid() {
@@ -59,6 +68,24 @@ export class FieldGroup implements FormFieldState, IValidatable {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
   }
 
+  setValue(val: Record<string, any>): void {
+    for (const [key, field] of this._fields) {
+      if (key in val) {
+        field.setValue((val)[key]);
+      }
+    }
+  }
+
+  reset(val?: Record<string, any>): void {
+    for (const [key, field] of this._fields) {
+      if (val == null) {
+        field.reset();
+      } else if (key in val) {
+        field.reset((val)[key]);
+      }
+    }
+  }
+
   setErrors(errors: string[] | undefined): void {
     if (errors == null || errors.length === 0) {
       this._errors = [];
@@ -67,5 +94,9 @@ export class FieldGroup implements FormFieldState, IValidatable {
       this._errors = errors;
       this._isValid = errors.length === 0;
     }
+  }
+
+  addField(name: string, field: FormField) {
+    this._fields.set(name, field);
   }
 }
