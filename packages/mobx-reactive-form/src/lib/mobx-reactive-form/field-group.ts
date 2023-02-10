@@ -6,7 +6,6 @@ export class FieldGroup<T extends object> implements AbstractFormField<T>, IVali
   private _isValid = true;
   private _errors: ReadonlyArray<string> = [];
   private _isValidating = false;
-
   get isValidating() {
     return this._isValidating;
   }
@@ -62,11 +61,7 @@ export class FieldGroup<T extends object> implements AbstractFormField<T>, IVali
 
   setValue(val: T): void {
     const value = val as Record<string, unknown>;
-    for (const [key, field] of this._fields) {
-      if (key in value) {
-        field.setValue((value)[key]);
-      }
-    }
+    this.forEachField((field, key) => field.setValue((value)[key]));
   }
 
   reset(val?: Partial<T>): void {
@@ -86,6 +81,22 @@ export class FieldGroup<T extends object> implements AbstractFormField<T>, IVali
 
   addField(name: string, field: FormField<unknown>) {
     this._fields.set(name, field);
+  }
+
+  removeField(name: string) {
+    this._fields.delete(name);
+  }
+
+  containsField(name: string) {
+    return this._fields.has(name);
+  }
+
+  setField(name: string, field: AbstractFormField<unknown>) {
+    this._fields.set(name, field);
+  }
+
+  setFields(fields: { [key in keyof T]: AbstractFormField<T[key]> }) {
+    this._fields.replace(fields);
   }
 
   private forEachField(fn: (field: AbstractFormField<unknown>, key: string) => void) {
