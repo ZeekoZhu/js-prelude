@@ -16,7 +16,7 @@ module.exports = {
     return mergeConfig(config, {
       plugins: [
         viteTsConfigPaths({
-          root: '../../../',
+          root: '../',
         }),
       ],
     });

@@ -6,6 +6,7 @@
     "sourceMap": true,
     "moduleResolution": "Node",
     "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "@zeeko/docker-registry-v2-auth": [
         "packages/docker-registry-v2-auth/src/index.ts"
