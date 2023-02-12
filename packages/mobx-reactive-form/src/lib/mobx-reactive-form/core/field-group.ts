@@ -67,9 +67,10 @@ export class FieldGroup<T extends object> implements AbstractFormField<T>, IVali
   reset(val?: Partial<T>): void {
     const value = val as Record<string, unknown>;
     this.forEachField((field, key) => field.reset(value?.[key]));
+    this.setErrors();
   }
 
-  setErrors(errors: string[] | undefined): void {
+  setErrors(errors?: string[]): void {
     if (errors == null || errors.length === 0) {
       this._errors = [];
       this._isValid = true;

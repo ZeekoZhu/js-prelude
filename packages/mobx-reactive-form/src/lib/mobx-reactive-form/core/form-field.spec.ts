@@ -1,5 +1,5 @@
 import { isObservableProp } from 'mobx';
-import { beforeEach, expect } from 'vitest';
+import { beforeEach, describe, expect } from 'vitest';
 import { FormField } from './form-field';
 
 describe('FormField', () => {
@@ -68,5 +68,14 @@ describe('FormField', () => {
     formField.setErrors(['error 1', 'error 2']);
     formField.setErrors();
     expect(formField.isValid).toBe(true);
+  });
+
+  describe('bugs', () => {
+    it('should clear errors after reset', () => {
+      const formField = new FormField('initial value');
+      formField.setErrors(['error 1', 'error 2']);
+      formField.reset();
+      expect(formField.isValid).toBe(true);
+    });
   });
 });

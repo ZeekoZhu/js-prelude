@@ -80,9 +80,10 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
         field.reset(val[index]);
       }
     });
+    this.setErrors();
   }
 
-  setErrors(errors: string[] | undefined): void {
+  setErrors(errors?: string[]): void {
     if (errors == null || errors.length === 0) {
       this._errors = [];
       this._isValid = true;

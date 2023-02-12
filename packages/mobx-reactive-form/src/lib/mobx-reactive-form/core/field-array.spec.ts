@@ -220,4 +220,12 @@ describe('FieldArray', () => {
       });
     });
   });
+  describe('bugs', () => {
+    it('should clear errors when reset', () => {
+      const field = new FieldArray([new FormField(1), new FormField(2), new FormField(3)]);
+      field.setErrors(['error']);
+      field.reset();
+      expect(field.errors).toEqual([]);
+    });
+  });
 });

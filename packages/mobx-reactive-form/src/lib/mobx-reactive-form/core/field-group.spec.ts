@@ -296,4 +296,16 @@ describe('FieldGroup', () => {
       });
     });
   });
+
+  describe('bugs', ()=>{
+    it('should clear errors when reset', ()=>{
+      const group = new FieldGroup({
+        name: new FormField('alice'),
+        age: new FormField(99)
+      });
+      group.setErrors(['error']);
+      group.reset();
+      expect(group.errors).toEqual([]);
+    });
+  })
 });

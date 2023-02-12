@@ -63,6 +63,7 @@ export class FormField<T> implements AbstractFormField<T> {
     this._value = this.initValue;
     this._isDirty = false;
     this._isTouched = false;
+    this.setErrors();
   }
 
   setErrors(errors?: string[]) {
