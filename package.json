@@ -2,13 +2,14 @@
   "name": "@zeeko/prelude",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
   "private": true,
+  "packageManager": "yarn@3.4.1",
   "devDependencies": {
-    "@babel/core": "7.12.13",
-    "@babel/preset-typescript": "7.12.13",
+    "@babel/core": "^7.20.12",
+    "@babel/preset-typescript": "^7.18.6",
     "@enio.ai/typedoc": "^1.0.2",
     "@nrwl/cypress": "15.6.3",
+    "@nrwl/devkit": "15.6.3",
     "@nrwl/eslint-plugin-nx": "15.6.3",
     "@nrwl/js": "15.6.3",
     "@nrwl/linter": "15.6.3",
@@ -39,6 +40,8 @@
     "jsdom": "~20.0.3",
     "nx": "15.6.3",
     "prettier": "^2.6.2",
+    "react": "17",
+    "react-dom": "17",
     "typedoc": "^0.23.20",
     "typedoc-plugin-rename-defaults": "^0.6.4",
     "typedoc-theme-hierarchy": "^3.0.0",
@@ -47,7 +50,8 @@
     "vite": "4.0.3",
     "vite-plugin-eslint": "1.8.1",
     "vite-tsconfig-paths": "4.0.3",
-    "vitest": "0.25.8"
+    "vitest": "0.25.8",
+    "webpack": "^5.75.0"
   },
   "workspaces": [
     "packages/*"
