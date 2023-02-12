@@ -7,6 +7,10 @@ import { FormValidator } from './form-validator';
 interface Person {
   name: string;
   age: number;
+  address?: {
+    address1: string;
+    address2: string;
+  };
 }
 
 describe('FieldGroup', () => {
@@ -261,6 +265,35 @@ describe('FieldGroup', () => {
       });
       expect(spy).toBeCalledTimes(1);
       dispose();
+    });
+  });
+
+  describe('complex nested', () => {
+    let group: FieldGroup<Record<string, Person>>;
+    beforeEach(() => {
+      group = new FieldGroup<Record<string, Person>>({
+        foo: new FieldGroup<Person>({
+          name: new FormField('alice'),
+          age: new FormField(99),
+          address: new FieldGroup({
+            address1: new FormField('beijing'),
+            address2: new FormField('chongqing')
+          })
+        }),
+      });
+    });
+
+    it('should produce correct value', () => {
+      expect(group.value).toEqual({
+        foo: {
+          name: 'alice',
+          age: 99,
+          address: {
+            address1: 'beijing',
+            address2: 'chongqing'
+          }
+        }
+      });
     });
   });
 });
