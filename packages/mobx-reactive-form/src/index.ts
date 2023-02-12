@@ -1,1 +1,1 @@
-export * from './lib/mobx-reactive-form';
+export * from './lib/mobx-reactive-form/core';
