@@ -1,1 +1,1 @@
-export * from './control-adaptor';
+export * from './use-control-props';

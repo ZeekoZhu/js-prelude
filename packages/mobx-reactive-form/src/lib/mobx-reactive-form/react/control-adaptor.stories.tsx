@@ -2,7 +2,8 @@ import { useCreation } from 'ahooks';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { FormField, FormValidator, FormValidatorOptions } from '../core';
+import { FormField } from '../core';
+import { useHtmlControlProps } from './use-control-props';
 
 const Demo = observer(() => {
   const field = useCreation(() => new FormField('hello world'), []);
@@ -14,7 +15,7 @@ const Demo = observer(() => {
       return ['Length must be between 5 and 10'];
     },
   };
-  const controlAdaptor = useControlAdaptor(field, {
+  const controlAdaptor = useHtmlControlProps(field, {
     rules,
     validateOnBlur: true,
     validateOnChange: false,
@@ -30,48 +31,17 @@ const Demo = observer(() => {
     <span className='text-sm text-red-500'>{field.errors.join(', ')}</span>
     </span>
     <span>You typed: {field.value} </span>
-    <button className={clsx(`rounded-full py-1 text-white`, field.isValid ? buttonNormal : buttonDisabled)}>Submit</button>
-    <button onClick={() => field.reset()} className={clsx('rounded-full py-1' +
-      ' text-blue-500' +
-      ' border border-blue-500')}>Reset
-    </button>
+    <div className='flex justify-between'>
+      <button onClick={() => field.reset()}
+              className={clsx('rounded-full py-1' +
+                ' text-blue-500 px-4' +
+                ' border border-blue-500')}>Reset
+      </button>
+      <button className={clsx(`rounded-full px-4 py-1 text-white`, field.isValid ? buttonNormal : buttonDisabled)}>Submit</button>
+    </div>
   </div>;
 });
 
-
-function useControlAdaptor<T>(field: FormField<T>, options: {
-  rules?: FormValidatorOptions<T>,
-  /**
-   * @default true
-   */
-  validateOnChange?: boolean,
-  /**
-   * @default false
-   */
-  validateOnBlur?: boolean,
-}) {
-  const validateOnChange = options.validateOnChange ?? true;
-  const maybeValidator = useCreation(() => {
-    if (!options.rules) {
-      return;
-    }
-    return new FormValidator(field, options.rules);
-  }, [options.rules, field]);
-  return {
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (validateOnChange) {
-        maybeValidator?.validate();
-      }
-      field.setValue(e.target.value as unknown as T);
-    },
-    onBlur: () => {
-      if (options.validateOnBlur) {
-        maybeValidator?.validate();
-      }
-    },
-    value: field.value,
-  };
-}
 
 export const Default = () => {
   return <Demo />;
