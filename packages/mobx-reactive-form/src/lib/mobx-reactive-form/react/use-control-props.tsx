@@ -1,4 +1,5 @@
 import { useCreation } from 'ahooks';
+import { runInAction } from 'mobx';
 import React, { useCallback } from 'react';
 import {
   AbstractFormField,
@@ -32,12 +33,14 @@ export function useControlProps<T, TControlValue>(field: AbstractFormField<T>, o
     return new FormValidator(field, options.rules);
   }, [options.rules, field]);
   const onChange = useCallback((value: TControlValue) => {
-    if (validateOnChange) {
-      maybeValidator?.validate();
-    }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    field.setValue((options.transformControlValue ?? identity)(value));
+    runInAction(() => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      field.setValue((options.transformControlValue ?? identity)(value));
+      if (validateOnChange) {
+        maybeValidator?.validate();
+      }
+    });
   }, [validateOnChange, maybeValidator, field]);
   const onBlur = useCallback(() => {
     if (options.validateOnBlur) {

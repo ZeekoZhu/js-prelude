@@ -17,8 +17,6 @@ const Demo = observer(() => {
   };
   const controlAdaptor = useHtmlControlProps(field, {
     rules,
-    validateOnBlur: true,
-    validateOnChange: false,
   });
   const validStyle = 'border-green-500 focus:outline-green-500';
   const invalidStyle = 'border-red-500 focus:outline-red-500';
