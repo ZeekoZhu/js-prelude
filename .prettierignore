@@ -3,3 +3,4 @@
 /dist
 /coverage
 .lib.swcrc
+.yarn/
