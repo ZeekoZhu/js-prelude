@@ -1,14 +1,14 @@
 {
   "name": "@zeeko/mobx-reactive-form",
-  "version": "0.0.1",
-  "type": "commonjs",
+  "version": "0.1.0",
+  "type": "module",
   "devDependencies": {
-    "mobx": "^6.7.0",
+    "mobx": "^6.4.0",
     "react": "^17.0.2"
   },
   "peerDependencies": {
-    "mobx": "^6.7.0",
-    "mobx-react-lite": "^3.4.0",
-    "react": "^17.0.2"
+    "mobx": "^6.4.0",
+    "mobx-react-lite": "^3.3.0",
+    "react": ">=16.0.0"
   }
 }

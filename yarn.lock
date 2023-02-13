@@ -4872,12 +4872,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@zeeko/mobx-reactive-form@workspace:packages/mobx-reactive-form"
   dependencies:
-    mobx: ^6.7.0
+    mobx: ^6.4.0
     react: ^17.0.2
   peerDependencies:
-    mobx: ^6.7.0
-    mobx-react-lite: ^3.4.0
-    react: ^17.0.2
+    mobx: ^6.4.0
+    mobx-react-lite: ^3.3.0
+    react: ">=16.0.0"
   languageName: unknown
   linkType: soft
 
@@ -4934,7 +4934,7 @@ __metadata:
     jsdom: ~20.0.3
     mobx-react-lite: ^3.4.0
     nx: 15.6.3
-    postcss: 8.4.19
+    postcss: ^8.4.21
     prettier: ^2.6.2
     react: 17
     react-dom: 17
@@ -12622,7 +12622,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx@npm:^6.7.0":
+"mobx@npm:^6.4.0":
   version: 6.8.0
   resolution: "mobx@npm:6.8.0"
   checksum: f09bb079292ea59023a7e35a9c73ed577e3de9a0175ec3d5a2adc8192e2e3a352b29ec0981ee06d1d63f701f81bb7fc6cc19fd9089edf84a754a8a75ef00ef7f
@@ -13956,17 +13956,6 @@ __metadata:
   version: 4.2.0
   resolution: "postcss-value-parser@npm:4.2.0"
   checksum: 819ffab0c9d51cf0acbabf8996dffbfafbafa57afc0e4c98db88b67f2094cb44488758f06e5da95d7036f19556a4a732525e84289a425f4f6fd8e412a9d7442f
-  languageName: node
-  linkType: hard
-
-"postcss@npm:8.4.19":
-  version: 8.4.19
-  resolution: "postcss@npm:8.4.19"
-  dependencies:
-    nanoid: ^3.3.4
-    picocolors: ^1.0.0
-    source-map-js: ^1.0.2
-  checksum: 62782723a385f92b7525f66d29614624de7c5643855423db3a5efd9287e677650300192749adddbbb6734cea9b1d5f5fd4f6ea00ca3f9a95dbbb88f835f5ca64
   languageName: node
   linkType: hard
 

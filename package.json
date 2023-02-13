@@ -47,7 +47,7 @@
     "jsdom": "~20.0.3",
     "mobx-react-lite": "^3.4.0",
     "nx": "15.6.3",
-    "postcss": "8.4.19",
+    "postcss": "^8.4.21",
     "prettier": "^2.6.2",
     "react": "17",
     "react-dom": "17",
