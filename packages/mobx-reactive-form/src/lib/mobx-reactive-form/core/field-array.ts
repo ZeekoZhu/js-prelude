@@ -6,16 +6,22 @@ interface FormFieldWithKey<T> extends FormField<T> {
   readonly key: string;
 }
 
-function makeFieldWithKey<T>(formField: FormField<T>, index: number): FormFieldWithKey<T> {
-  return Object.assign(formField, { key: index.toString() }) as FormFieldWithKey<T>;
+function makeFieldWithKey<T>(
+  formField: FormField<T>,
+  index: number,
+): FormFieldWithKey<T> {
+  return Object.assign(formField, {
+    key: index.toString(),
+  }) as FormFieldWithKey<T>;
 }
 
 export class FieldArray<T> implements AbstractFormField<T[]> {
   constructor(items: FormField<T>[]) {
-    this._value.replace(items.map((item) => makeFieldWithKey(item, this.nextKey())));
+    this._value.replace(
+      items.map((item) => makeFieldWithKey(item, this.nextKey())),
+    );
     makeAutoObservable(this, {}, { autoBind: true, deep: false });
   }
-
 
   private _fieldCounter = 0;
   private _value = observable.array<FormFieldWithKey<T>>([], { deep: false });
@@ -58,7 +64,7 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
   }
 
   get value(): T[] {
-    return this._value.map(field => field.value);
+    return this._value.map((field) => field.value);
   }
 
   get isValid(): boolean {
@@ -101,7 +107,9 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
     });
   }
 
-  private forEachField(callback: (field: FormFieldWithKey<T>, index: number) => void): void {
+  private forEachField(
+    callback: (field: FormFieldWithKey<T>, index: number) => void,
+  ): void {
     this._value.forEach(callback);
   }
 
@@ -150,7 +158,9 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
   }
 
   push(...fields: FormField<T>[]) {
-    this._value.push(...fields.map((field) => makeFieldWithKey(field, this.nextKey())));
+    this._value.push(
+      ...fields.map((field) => makeFieldWithKey(field, this.nextKey())),
+    );
   }
 
   private nextKey() {

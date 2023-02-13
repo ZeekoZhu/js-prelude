@@ -14,9 +14,12 @@ describe('FormField', () => {
       formField = new FormField('initial value');
     });
 
-    test.each([['value'], ['errors'], ['isDirty'], ['isTouched']])('%s should be observable', (prop) => {
-      expect(isObservableProp(formField, prop)).toBe(true);
-    });
+    test.each([['value'], ['errors'], ['isDirty'], ['isTouched']])(
+      '%s should be observable',
+      (prop) => {
+        expect(isObservableProp(formField, prop)).toBe(true);
+      },
+    );
 
     test('initValue should not be observable', () => {
       expect(isObservableProp(formField, 'initValue')).toBe(false);

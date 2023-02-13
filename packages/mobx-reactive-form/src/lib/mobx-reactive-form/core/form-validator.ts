@@ -10,8 +10,10 @@ export interface FormValidatorOptions<T> {
 }
 
 export class FormValidator<T> {
-  constructor(public field: IValidatable, public options: FormValidatorOptions<T>) {
-  }
+  constructor(
+    public field: IValidatable,
+    public options: FormValidatorOptions<T>,
+  ) {}
 
   async validate(): Promise<void> {
     try {

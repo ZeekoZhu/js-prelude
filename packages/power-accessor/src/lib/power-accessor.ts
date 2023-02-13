@@ -84,7 +84,7 @@ export class Matcher {
    * Matches a value in an object based on a predicate function
    * @param predicate
    */
-  static when(predicate: (key: KeyType, value: any) => boolean):IMatcher {
+  static when(predicate: (key: KeyType, value: any) => boolean): IMatcher {
     return new PredicateMatcher(predicate);
   }
 }

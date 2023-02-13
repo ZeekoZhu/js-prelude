@@ -17,24 +17,27 @@ describe('FieldGroup', () => {
   test('can create instance', () => {
     const fieldGroup = new FieldGroup({
       name: new FormField('alice'),
-      age: new FormField(99)
+      age: new FormField(99),
     });
     expect(fieldGroup.value).toEqual({ name: 'alice', age: 99 });
   });
   describe('should be observable', () => {
-    test.each([['value'], ['errors'], ['isDirty'], ['isTouched']])('%s should be observable', (prop) => {
-      const fieldGroup = new FieldGroup({
-        name: new FormField('alice'),
-        age: new FormField(99)
-      });
-      expect(isObservableProp(fieldGroup, prop)).toBe(true);
-    });
+    test.each([['value'], ['errors'], ['isDirty'], ['isTouched']])(
+      '%s should be observable',
+      (prop) => {
+        const fieldGroup = new FieldGroup({
+          name: new FormField('alice'),
+          age: new FormField(99),
+        });
+        expect(isObservableProp(fieldGroup, prop)).toBe(true);
+      },
+    );
   });
 
   it('should be touched when value is changed', () => {
     const group = new FieldGroup({
       name: new FormField('alice'),
-      age: new FormField(99)
+      age: new FormField(99),
     });
     const name = group.field('name');
     name?.setValue('bob');
@@ -45,7 +48,7 @@ describe('FieldGroup', () => {
   it('should be dirty when field is dirty', () => {
     const group = new FieldGroup({
       name: new FormField('alice'),
-      age: new FormField(99)
+      age: new FormField(99),
     });
     const name = group.field('name');
     name?.setValue('bob');
@@ -58,7 +61,7 @@ describe('FieldGroup', () => {
     beforeEach(() => {
       group = new FieldGroup({
         name: new FormField('alice'),
-        age: new FormField(99)
+        age: new FormField(99),
       });
     });
     test('should call setValue of each field', () => {
@@ -78,7 +81,7 @@ describe('FieldGroup', () => {
     beforeEach(() => {
       group = new FieldGroup({
         name: new FormField('alice'),
-        age: new FormField(99)
+        age: new FormField(99),
       });
     });
     test('should call reset of each field', () => {
@@ -95,7 +98,7 @@ describe('FieldGroup', () => {
     beforeEach(() => {
       group = new FieldGroup({
         name: new FormField('alice'),
-        age: new FormField(99)
+        age: new FormField(99),
       });
     });
     test('should be valid when no errors in fields', () => {
@@ -109,14 +112,17 @@ describe('FieldGroup', () => {
     });
 
     test('should support validator', async () => {
-      const validator = new FormValidator<{ name: string, age: number }>(group, {
-        validator: (value) => {
-          if (value.age > 50) {
-            return ['too old'];
-          }
-          return;
-        }
-      });
+      const validator = new FormValidator<{ name: string; age: number }>(
+        group,
+        {
+          validator: (value) => {
+            if (value.age > 50) {
+              return ['too old'];
+            }
+            return;
+          },
+        },
+      );
       await validator.validate();
       expect(group.isValid).toBe(false);
     });
@@ -127,7 +133,7 @@ describe('FieldGroup', () => {
     beforeEach(() => {
       group = new FieldGroup({
         name: new FormField('alice'),
-        age: new FormField(99)
+        age: new FormField(99),
       });
     });
     describe('add field', () => {
@@ -136,7 +142,7 @@ describe('FieldGroup', () => {
         expect(group.value).toEqual({
           name: 'alice',
           age: 99,
-          address: 'beijing'
+          address: 'beijing',
         });
       });
 
@@ -154,7 +160,7 @@ describe('FieldGroup', () => {
           expect(group.value).toEqual({
             name: 'bob',
             age: 100,
-            address: 'beijing'
+            address: 'beijing',
           });
         });
         it('should not be dirty', () => {
@@ -171,7 +177,7 @@ describe('FieldGroup', () => {
           expect(group.value).toEqual({
             name: 'alice',
             age: 99,
-            address: 'beijing'
+            address: 'beijing',
           });
         });
       });
@@ -185,7 +191,7 @@ describe('FieldGroup', () => {
           expect(group.value).toEqual({
             name: 'bob',
             age: 99,
-            address: 'beijing'
+            address: 'beijing',
           });
         });
       });
@@ -195,7 +201,7 @@ describe('FieldGroup', () => {
       beforeEach(() => {
         group = new FieldGroup({
           name: new FormField('alice'),
-          age: new FormField(99)
+          age: new FormField(99),
         });
         group.removeField('name');
       });
@@ -207,7 +213,7 @@ describe('FieldGroup', () => {
 
       it('should update value', () => {
         expect(group.value).toEqual({
-          age: 99
+          age: 99,
         });
       });
     });
@@ -218,7 +224,7 @@ describe('FieldGroup', () => {
     beforeEach(() => {
       group = new FieldGroup({
         name: new FormField('alice'),
-        age: new FormField(99)
+        age: new FormField(99),
       });
     });
     it('should return true when contains field', () => {
@@ -234,7 +240,7 @@ describe('FieldGroup', () => {
     beforeEach(() => {
       group = new FieldGroup({
         name: new FormField('alice'),
-        age: new FormField(99)
+        age: new FormField(99),
       });
       group.setField('name', new FormField('bob'));
     });
@@ -242,7 +248,7 @@ describe('FieldGroup', () => {
     it('should update value', () => {
       expect(group.value).toEqual({
         name: 'bob',
-        age: 99
+        age: 99,
       });
     });
 
@@ -255,13 +261,13 @@ describe('FieldGroup', () => {
     test('should run reaction only once', () => {
       const group = new FieldGroup({
         name: new FormField('alice'),
-        age: new FormField(99)
+        age: new FormField(99),
       });
       const spy = vi.fn();
       const dispose = reaction(() => group.value, spy);
       group.setFields({
         name: new FormField('bob'),
-        age: new FormField(100)
+        age: new FormField(100),
       });
       expect(spy).toBeCalledTimes(1);
       dispose();
@@ -277,8 +283,8 @@ describe('FieldGroup', () => {
           age: new FormField(99),
           address: new FieldGroup({
             address1: new FormField('beijing'),
-            address2: new FormField('chongqing')
-          })
+            address2: new FormField('chongqing'),
+          }),
         }),
       });
     });
@@ -290,22 +296,22 @@ describe('FieldGroup', () => {
           age: 99,
           address: {
             address1: 'beijing',
-            address2: 'chongqing'
-          }
-        }
+            address2: 'chongqing',
+          },
+        },
       });
     });
   });
 
-  describe('bugs', ()=>{
-    it('should clear errors when reset', ()=>{
+  describe('bugs', () => {
+    it('should clear errors when reset', () => {
       const group = new FieldGroup({
         name: new FormField('alice'),
-        age: new FormField(99)
+        age: new FormField(99),
       });
       group.setErrors(['error']);
       group.reset();
       expect(group.errors).toEqual([]);
     });
-  })
+  });
 });

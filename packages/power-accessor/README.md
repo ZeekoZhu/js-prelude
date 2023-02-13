@@ -20,7 +20,11 @@ const obj = {
   },
 };
 
-const accessor = new Accessor('a', Matcher.when(key => key.startsWith('b')), 'c');
+const accessor = new Accessor(
+  'a',
+  Matcher.when((key) => key.startsWith('b')),
+  'c',
+);
 const values = accessor.get(obj);
 console.log(values); // [1, 4]
 accessor.set(obj, 5);

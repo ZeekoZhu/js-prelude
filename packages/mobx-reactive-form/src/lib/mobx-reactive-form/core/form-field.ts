@@ -34,7 +34,6 @@ export class FormField<T> implements AbstractFormField<T> {
     return this._isValid;
   }
 
-
   get value() {
     return this._value as T;
   }
@@ -49,10 +48,14 @@ export class FormField<T> implements AbstractFormField<T> {
   }
 
   constructor(initValue: T) {
-    makeAutoObservable<FormField<T>, '_errors'>(this, {
-      initValue: false,
-      _errors: observable.shallow,
-    }, { autoBind: true, deep: false });
+    makeAutoObservable<FormField<T>, '_errors'>(
+      this,
+      {
+        initValue: false,
+        _errors: observable.shallow,
+      },
+      { autoBind: true, deep: false },
+    );
     this.reset(initValue);
   }
 

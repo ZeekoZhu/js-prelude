@@ -18,5 +18,4 @@ export interface AbstractFormField<T> extends IValidatable {
   reset(val?: T): void;
 
   readonly value: T;
-
 }

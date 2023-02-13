@@ -4,39 +4,56 @@ import { FieldArray } from './field-array';
 import { FormField } from './form-field';
 import { FormValidator } from './form-validator';
 
-
 describe('FieldArray', () => {
   test('can create instance', () => {
-    const fieldArray = new FieldArray([new FormField(1), new FormField(2), new FormField(3)]);
+    const fieldArray = new FieldArray([
+      new FormField(1),
+      new FormField(2),
+      new FormField(3),
+    ]);
     expect(fieldArray.value).toEqual([1, 2, 3]);
   });
 
   describe('field key', () => {
     let array: FieldArray<number>;
     beforeEach(() => {
-      array = new FieldArray([new FormField(1), new FormField(2), new FormField(3)]);
+      array = new FieldArray([
+        new FormField(1),
+        new FormField(2),
+        new FormField(3),
+      ]);
     });
     it('should be unique', () => {
-      const keys = array.fields.map(f => f.key);
+      const keys = array.fields.map((f) => f.key);
       expect(keys.length).toBe(new Set(keys).size);
     });
     it('should set key to field', () => {
-      for (const key of array.fields.map(f => f.key)) {
+      for (const key of array.fields.map((f) => f.key)) {
         expect(key).toBeTruthy();
       }
     });
   });
 
-
   describe('should be observable', () => {
-    test.each([['value'], ['errors'], ['isDirty'], ['isTouched']])('%s should be observable', (prop) => {
-      const fieldArray = new FieldArray([new FormField(1), new FormField(2), new FormField(3)]);
-      expect(isObservableProp(fieldArray, prop)).toBe(true);
-    });
+    test.each([['value'], ['errors'], ['isDirty'], ['isTouched']])(
+      '%s should be observable',
+      (prop) => {
+        const fieldArray = new FieldArray([
+          new FormField(1),
+          new FormField(2),
+          new FormField(3),
+        ]);
+        expect(isObservableProp(fieldArray, prop)).toBe(true);
+      },
+    );
   });
 
   it('should be touched when value is changed', () => {
-    const array = new FieldArray([new FormField(1), new FormField(2), new FormField(3)]);
+    const array = new FieldArray([
+      new FormField(1),
+      new FormField(2),
+      new FormField(3),
+    ]);
     const first = array.field(0);
     first?.setValue(4);
     expect(first?.isTouched).toBe(true);
@@ -44,7 +61,11 @@ describe('FieldArray', () => {
   });
 
   it('should be dirty when field is dirty', () => {
-    const array = new FieldArray([new FormField(1), new FormField(2), new FormField(3)]);
+    const array = new FieldArray([
+      new FormField(1),
+      new FormField(2),
+      new FormField(3),
+    ]);
     const first = array.field(0);
     first?.setValue(4);
     expect(first?.isDirty).toBe(true);
@@ -54,7 +75,11 @@ describe('FieldArray', () => {
   describe('setValue', () => {
     let array: FieldArray<number>;
     beforeEach(() => {
-      array = new FieldArray([new FormField(1), new FormField(2), new FormField(3)]);
+      array = new FieldArray([
+        new FormField(1),
+        new FormField(2),
+        new FormField(3),
+      ]);
       array.setValue([4, 5, 6]);
     });
     it('should update value', () => {
@@ -69,7 +94,11 @@ describe('FieldArray', () => {
   describe('reset', () => {
     let array: FieldArray<number>;
     beforeEach(() => {
-      array = new FieldArray([new FormField(1), new FormField(2), new FormField(3)]);
+      array = new FieldArray([
+        new FormField(1),
+        new FormField(2),
+        new FormField(3),
+      ]);
       array.setValue([4, 5, 6]);
     });
     it('should reset value', () => {
@@ -86,7 +115,11 @@ describe('FieldArray', () => {
   describe('validation', () => {
     let array: FieldArray<number>;
     beforeEach(() => {
-      array = new FieldArray([new FormField(1), new FormField(2), new FormField(3)]);
+      array = new FieldArray([
+        new FormField(1),
+        new FormField(2),
+        new FormField(3),
+      ]);
     });
 
     it('should be valid when all fields are valid', () => {
@@ -106,7 +139,7 @@ describe('FieldArray', () => {
             return ['error'];
           }
           return;
-        }
+        },
       });
       await validator.validate();
       expect(array.isValid).toBe(false);
@@ -116,7 +149,11 @@ describe('FieldArray', () => {
   describe('dynamic form', () => {
     let array: FieldArray<number>;
     beforeEach(() => {
-      array = new FieldArray([new FormField(1), new FormField(2), new FormField(3)]);
+      array = new FieldArray([
+        new FormField(1),
+        new FormField(2),
+        new FormField(3),
+      ]);
     });
 
     describe('insert', () => {
@@ -126,8 +163,8 @@ describe('FieldArray', () => {
       it('should add unique key to field', () => {
         const field = array.field(3);
         expect(field?.key).toBeTruthy();
-        const keys = array.fields.map(f => f.key);
-        expect(keys.length).toBe(new Set(array.fields.map(f => f.key)).size);
+        const keys = array.fields.map((f) => f.key);
+        expect(keys.length).toBe(new Set(array.fields.map((f) => f.key)).size);
       });
       it('should update value', () => {
         expect(array.value).toEqual([1, 4, 2, 3]);
@@ -222,7 +259,11 @@ describe('FieldArray', () => {
   });
   describe('bugs', () => {
     it('should clear errors when reset', () => {
-      const field = new FieldArray([new FormField(1), new FormField(2), new FormField(3)]);
+      const field = new FieldArray([
+        new FormField(1),
+        new FormField(2),
+        new FormField(3),
+      ]);
       field.setErrors(['error']);
       field.reset();
       expect(field.errors).toEqual([]);

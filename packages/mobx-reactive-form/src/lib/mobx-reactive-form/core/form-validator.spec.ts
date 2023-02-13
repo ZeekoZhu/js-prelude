@@ -11,7 +11,7 @@ describe('FormValidator', () => {
           return ['value should be greater than 10'];
         }
         return;
-      }
+      },
     });
     await validator.validate();
     expect(field.errors).toMatchInlineSnapshot(`
@@ -19,7 +19,6 @@ describe('FormValidator', () => {
         "value should be greater than 10",
       ]
     `);
-
   });
 
   describe('async validator', () => {
@@ -31,7 +30,7 @@ describe('FormValidator', () => {
           return new Promise((r) => {
             resolve = r;
           });
-        }
+        },
       });
       const validation = validator.validate();
       expect(field.isValidating).toBe(true);
@@ -52,9 +51,11 @@ describe('FormValidator', () => {
       const validator = new FormValidator<number>(field, {
         validator() {
           throw new Error('error');
-        }
+        },
       });
-      await expect(() => validator.validate()).rejects.toMatchInlineSnapshot('[Error: error]');
+      await expect(() => validator.validate()).rejects.toMatchInlineSnapshot(
+        '[Error: error]',
+      );
       expect(field.isValid).toBeTruthy();
     });
   });
