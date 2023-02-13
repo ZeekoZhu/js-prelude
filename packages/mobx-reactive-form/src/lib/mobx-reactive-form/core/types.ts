@@ -3,9 +3,9 @@ export interface IValidatable {
 
   setErrors(errors: string[] | undefined): void;
 
-  get isValid(): boolean;
+  readonly isValid: boolean;
 
-  get value(): unknown;
+  readonly value: unknown;
 }
 
 export interface AbstractFormField<T> extends IValidatable {
