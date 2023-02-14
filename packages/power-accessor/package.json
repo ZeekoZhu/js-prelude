@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "devDependencies": {
-    "@nrwl/eslint-plugin-nx": "15.6.3"
+    "@nrwl/eslint-plugin-nx": "15.6.3",
+    "@typescript-eslint/eslint-plugin": "5.51.0"
   }
 }
