@@ -4864,6 +4864,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@zeeko/docker-registry-v2-auth@workspace:packages/docker-registry-v2-auth"
   dependencies:
+    "@nrwl/eslint-plugin-nx": 15.6.3
     node-fetch: ^3.3.0
   languageName: unknown
   linkType: soft
@@ -4872,6 +4873,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@zeeko/mobx-reactive-form@workspace:packages/mobx-reactive-form"
   dependencies:
+    "@nrwl/eslint-plugin-nx": 15.6.3
     mobx: ^6.4.0
     react: ^17.0.2
   peerDependencies:
@@ -4884,6 +4886,8 @@ __metadata:
 "@zeeko/power-accessor@workspace:packages/power-accessor":
   version: 0.0.0-use.local
   resolution: "@zeeko/power-accessor@workspace:packages/power-accessor"
+  dependencies:
+    "@nrwl/eslint-plugin-nx": 15.6.3
   languageName: unknown
   linkType: soft
 

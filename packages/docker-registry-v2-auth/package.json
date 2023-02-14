@@ -14,5 +14,8 @@
   "type": "module",
   "dependencies": {
     "node-fetch": "^3.3.0"
+  },
+  "devDependencies": {
+    "@nrwl/eslint-plugin-nx": "15.6.3"
   }
 }

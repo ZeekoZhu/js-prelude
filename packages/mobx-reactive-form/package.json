@@ -4,6 +4,7 @@
   "type": "commonjs",
   "module": "src/index.js",
   "devDependencies": {
+    "@nrwl/eslint-plugin-nx": "15.6.3",
     "mobx": "^6.4.0",
     "react": "^17.0.2"
   },

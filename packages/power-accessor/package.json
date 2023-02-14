@@ -1,5 +1,8 @@
 {
   "name": "@zeeko/power-accessor",
   "version": "0.0.1",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@nrwl/eslint-plugin-nx": "15.6.3"
+  }
 }
