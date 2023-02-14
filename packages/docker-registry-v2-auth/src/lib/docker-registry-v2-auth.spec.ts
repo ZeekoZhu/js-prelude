@@ -1,7 +1,7 @@
-import { getAuthToken } from './get-auth-token';
 import { expect } from 'vitest';
+import { getAuthToken } from './get-auth-token';
 
-describe('docker-registry-v2-auth', () => {
+describe.skipIf(process.env['CI'])('docker-registry-v2-auth', () => {
   test('should work', async () => {
     const token = await getAuthToken({
       registry: 'https://registry-1.docker.io',
