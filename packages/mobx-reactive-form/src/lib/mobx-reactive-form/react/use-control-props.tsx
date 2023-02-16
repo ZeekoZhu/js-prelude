@@ -1,13 +1,35 @@
-import { useCreation } from 'ahooks';
-import { runInAction } from 'mobx';
-import React, { useCallback } from 'react';
+import { useCreation } from "ahooks";
+import { runInAction } from "mobx";
+import React, { useCallback } from "react";
 import {
   AbstractFormField,
   FormValidator,
-  FormValidatorOptions,
-} from '../core';
+  FormValidatorOptions
+} from "../core";
 
-export interface UseControlProps<T, TControlValue = T> {
+export interface IValidationTrigger {
+  validate(): Promise<void>;
+
+  addValidator(validator: FormValidator<unknown>): void;
+}
+
+export class ValidationTrigger implements IValidationTrigger {
+  private validators: FormValidator<unknown>[] = [];
+
+  validate = async (): Promise<void> => {
+    await Promise.allSettled(this.validators.map((validator) => validator.validate()));
+  };
+
+  addValidator = (validator: FormValidator<unknown>): void => {
+    this.validators.push(validator);
+  };
+}
+
+export function useValidationTrigger(): IValidationTrigger {
+  return useCreation(() => new ValidationTrigger(), []);
+}
+
+export interface UseControlPropsOptions<T, TControlValue = T> {
   rules?: FormValidatorOptions<T>;
   /**
    * @default true
@@ -18,6 +40,7 @@ export interface UseControlProps<T, TControlValue = T> {
    */
   validateOnBlur?: boolean;
   transformControlValue?: (value: TControlValue) => T;
+  validateTrigger?: IValidationTrigger;
 }
 
 function identity<T>(value: T): T {
@@ -26,15 +49,17 @@ function identity<T>(value: T): T {
 
 export function useControlProps<T, TControlValue>(
   field: AbstractFormField<T>,
-  options: UseControlProps<T, TControlValue>,
+  options: UseControlPropsOptions<T, TControlValue>
 ) {
   const validateOnChange = options.validateOnChange ?? true;
   const maybeValidator = useCreation(() => {
     if (!options.rules) {
       return;
     }
-    return new FormValidator(field, options.rules);
-  }, [options.rules, field]);
+    const validator = new FormValidator(field, options.rules);
+    options.validateTrigger?.addValidator(validator as FormValidator<unknown>);
+    return validator;
+  }, [options.rules, options.validateTrigger, field]);
   const onChange = useCallback(
     (value: TControlValue) => {
       runInAction(() => {
@@ -62,7 +87,7 @@ export function useControlProps<T, TControlValue>(
 
 export function useHtmlControlProps<T extends string>(
   field: AbstractFormField<T>,
-  options: UseControlProps<T, React.ChangeEvent<{ value: T }>>,
+  options: UseControlPropsOptions<T, React.ChangeEvent<{ value: T }>>
 ) {
   return useControlProps(field, {
     ...options,
