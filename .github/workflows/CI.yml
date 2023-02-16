@@ -22,7 +22,9 @@ jobs:
       - run: yarn exec nx affected --target=lint --parallel=3
         name: Lint
       - name: Run tests
-        run: yarn exec nx affected --target=test --parallel=3 --ci --coverage --watch=false --verbose --no-cloud
+        run:
+          - yarn exec nx affected --target=test --parallel=3 --ci --coverage
+          - yarn exec nx affected --target=e2e --parallel=3 --ci
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
