@@ -12,36 +12,36 @@ function submitBtn() {
   return cy.get('button[aria-label="submit"]').as('submitBtn');
 }
 
-describe('form-field validate on submit', ()=> {
-  beforeEach(()=>{
+describe('form-field validate on submit', () => {
+  beforeEach(() => {
     cy.visit(
-      "http://localhost:4400/iframe.html?args=initValue:0&id=controladaptor--default&viewMode=story"
+      'http://localhost:4400/iframe.html?args=initValue:0&id=controladaptor--default&viewMode=story',
     );
-  })
-  describe("click submit", () => {
+  });
+  describe('click submit', () => {
     beforeEach(() => {
       submitBtn().click();
     });
-    it("should be invalid", () => {
-      input().should("have.class", INVALID_INPUT);
+    it('should be invalid', () => {
+      input().should('have.class', INVALID_INPUT);
     });
   });
 });
 describe('form-field validate on change', () => {
   beforeEach(() => {
     cy.visit(
-      "http://localhost:4400/iframe.html?args=&id=controladaptor--default&viewMode=story"
+      'http://localhost:4400/iframe.html?args=&id=controladaptor--default&viewMode=story',
     );
   });
-  it("should render initial value", () => {
-    input().should("have.value", "hello world");
-    inputResult().should("contain.text", "hello world");
+  it('should render initial value', () => {
+    input().should('have.value', 'hello world');
+    inputResult().should('contain.text', 'hello world');
   });
-  it("should disable reset button", () => {
-    resetBtn().should("be.disabled");
+  it('should disable reset button', () => {
+    resetBtn().should('be.disabled');
   });
 
-  describe("change input to long text", () => {
+  describe('change input to long text', () => {
     beforeEach(() => {
       input().clear().type('hello world hello world hello world');
     });

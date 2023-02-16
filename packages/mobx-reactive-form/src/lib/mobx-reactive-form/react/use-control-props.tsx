@@ -1,11 +1,11 @@
-import { useCreation } from "ahooks";
-import { runInAction } from "mobx";
-import React, { useCallback } from "react";
+import { useCreation } from 'ahooks';
+import { runInAction } from 'mobx';
+import React, { useCallback } from 'react';
 import {
   AbstractFormField,
   FormValidator,
-  FormValidatorOptions
-} from "../core";
+  FormValidatorOptions,
+} from '../core';
 
 export interface IValidationTrigger {
   validate(): Promise<void>;
@@ -17,7 +17,9 @@ export class ValidationTrigger implements IValidationTrigger {
   private validators: FormValidator<unknown>[] = [];
 
   validate = async (): Promise<void> => {
-    await Promise.allSettled(this.validators.map((validator) => validator.validate()));
+    await Promise.allSettled(
+      this.validators.map((validator) => validator.validate()),
+    );
   };
 
   addValidator = (validator: FormValidator<unknown>): void => {
@@ -49,7 +51,7 @@ function identity<T>(value: T): T {
 
 export function useControlProps<T, TControlValue>(
   field: AbstractFormField<T>,
-  options: UseControlPropsOptions<T, TControlValue>
+  options: UseControlPropsOptions<T, TControlValue>,
 ) {
   const validateOnChange = options.validateOnChange ?? true;
   const maybeValidator = useCreation(() => {
@@ -81,7 +83,7 @@ export function useControlProps<T, TControlValue>(
   return {
     onChange: onChange,
     onBlur: onBlur,
-    value: field.value
+    value: field.value,
   };
 }
 
@@ -93,11 +95,11 @@ export interface UseHtmlControlReturn<T> {
 
 export function useHtmlControlProps<T extends string>(
   field: AbstractFormField<T>,
-  options: UseControlPropsOptions<T, React.ChangeEvent<{ value: T }>>
+  options: UseControlPropsOptions<T, React.ChangeEvent<{ value: T }>>,
 ): UseHtmlControlReturn<T> {
   return useControlProps(field, {
     ...options,
     transformControlValue: (value: React.ChangeEvent<{ value: T }>) =>
-      value.currentTarget.value
+      value.currentTarget.value,
   });
 }
