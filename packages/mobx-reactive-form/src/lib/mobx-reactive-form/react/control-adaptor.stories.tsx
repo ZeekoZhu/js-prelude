@@ -30,7 +30,7 @@ const Demo = observer((props: StoryParams) => {
   const controlAdaptor = useHtmlControlProps(field, {
     rules,
     ...props,
-    validateTrigger,
+    validationTrigger: validateTrigger,
   });
   const validStyle = 'border-green-500 focus:outline-green-500';
   const invalidStyle = 'border-red-500 focus:outline-red-500';
@@ -50,7 +50,9 @@ const Demo = observer((props: StoryParams) => {
             'border px-2 py-1 outline-none' + ' rounded',
             field.isValid ? validStyle : invalidStyle,
           )}
-          {...controlAdaptor}
+          value={controlAdaptor.value}
+          onChange={controlAdaptor.onChange}
+          onBlur={controlAdaptor.onBlur}
         />
         <span className="text-sm text-red-500">{field.errors.join(', ')}</span>
       </span>

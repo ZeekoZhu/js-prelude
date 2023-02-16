@@ -1,30 +1,34 @@
 import { useCreation } from 'ahooks';
-import { runInAction } from 'mobx';
-import React, { useCallback } from 'react';
+import { useLocalObservable } from 'mobx-react-lite';
+import React, { useEffect } from 'react';
 import {
   AbstractFormField,
   FormValidator,
   FormValidatorOptions,
 } from '../core';
+import { useObservableRef } from './use-observable-ref';
 
 export interface IValidationTrigger {
   validate(): Promise<void>;
 
-  addValidator(validator: FormValidator<unknown>): void;
+  subscribe(onValidate: () => void): () => void;
 }
 
 export class ValidationTrigger implements IValidationTrigger {
-  private validators: FormValidator<unknown>[] = [];
+  private validators: Set<() => void> = new Set<() => void>();
 
   validate = async (): Promise<void> => {
     await Promise.allSettled(
-      this.validators.map((validator) => validator.validate()),
+      Array.from(this.validators).map((validator) => validator()),
     );
   };
 
-  addValidator = (validator: FormValidator<unknown>): void => {
-    this.validators.push(validator);
-  };
+  subscribe(onValidate: () => void): () => void {
+    this.validators.add(onValidate);
+    return () => {
+      this.validators.delete(onValidate);
+    };
+  }
 }
 
 export function useValidationTrigger(): IValidationTrigger {
@@ -42,7 +46,7 @@ export interface UseControlPropsOptions<T, TControlValue = T> {
    */
   validateOnBlur?: boolean;
   transformControlValue?: (value: TControlValue) => T;
-  validateTrigger?: IValidationTrigger;
+  validationTrigger?: IValidationTrigger;
 }
 
 function identity<T>(value: T): T {
@@ -51,46 +55,67 @@ function identity<T>(value: T): T {
 
 export function useControlProps<T, TControlValue>(
   field: AbstractFormField<T>,
-  options: UseControlPropsOptions<T, TControlValue>,
-) {
-  const validateOnChange = options.validateOnChange ?? true;
-  const maybeValidator = useCreation(() => {
-    if (!options.rules) {
-      return;
-    }
-    const validator = new FormValidator(field, options.rules);
-    options.validateTrigger?.addValidator(validator as FormValidator<unknown>);
-    return validator;
-  }, [options.rules, options.validateTrigger, field]);
-  const onChange = useCallback(
-    (value: TControlValue) => {
-      runInAction(() => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        field.setValue((options.transformControlValue ?? identity)(value));
-        if (validateOnChange) {
-          maybeValidator?.validate();
-        }
-      });
-    },
-    [validateOnChange, maybeValidator, field],
+  options?: UseControlPropsOptions<T, TControlValue>,
+): UseControlReturn<T, TControlValue> {
+  const validateOnChange = useObservableRef(options?.validateOnChange ?? true);
+  const validateOnBlur = useObservableRef(options?.validateOnBlur ?? false);
+  const transformControlValue = useObservableRef(
+    options?.transformControlValue ?? identity,
   );
-  const onBlur = useCallback(() => {
-    if (options.validateOnBlur) {
-      maybeValidator?.validate();
+  const rules = useObservableRef(options?.rules);
+  const fieldRef = useObservableRef(field);
+  const result = useLocalObservable(() => ({
+    get validator() {
+      const rulesVal = rules.get();
+      if (!rulesVal) {
+        return;
+      }
+      return new FormValidator(fieldRef.get(), rulesVal);
+    },
+    onChange(value: TControlValue) {
+      fieldRef
+        .get()
+        .setValue(
+          transformControlValue.get()(value as unknown as TControlValue & T),
+        );
+      if (validateOnChange.get()) {
+        this.validator?.validate();
+      }
+    },
+    onBlur() {
+      if (validateOnBlur.get()) {
+        this.validator?.validate();
+      }
+    },
+    get value() {
+      return fieldRef.get().value;
+    },
+  }));
+  useEffect(() => {
+    if (options?.validationTrigger && result.validator) {
+      return options.validationTrigger.subscribe(() =>
+        result.validator?.validate?.(),
+      );
     }
-  }, [maybeValidator, options.validateOnBlur]);
-  return {
-    onChange: onChange,
-    onBlur: onBlur,
-    value: field.value,
-  };
+    return;
+  }, [options?.validationTrigger, result]);
+
+  return result;
+}
+
+export interface UseControlReturn<T, TControlValue = T> {
+  readonly validator?: FormValidator<T>;
+  onBlur: () => void;
+  readonly value: T;
+
+  onChange(value: TControlValue): void;
 }
 
 export interface UseHtmlControlReturn<T> {
+  readonly validator?: FormValidator<T>;
   onChange: (value: React.ChangeEvent<{ value: T }>) => void;
   onBlur: () => void;
-  value: T;
+  readonly value: T;
 }
 
 export function useHtmlControlProps<T extends string>(
