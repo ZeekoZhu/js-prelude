@@ -81,17 +81,23 @@ export function useControlProps<T, TControlValue>(
   return {
     onChange: onChange,
     onBlur: onBlur,
-    value: field.value,
+    value: field.value
   };
+}
+
+export interface UseHtmlControlReturn<T> {
+  onChange: (value: React.ChangeEvent<{ value: T }>) => void;
+  onBlur: () => void;
+  value: T;
 }
 
 export function useHtmlControlProps<T extends string>(
   field: AbstractFormField<T>,
   options: UseControlPropsOptions<T, React.ChangeEvent<{ value: T }>>
-) {
+): UseHtmlControlReturn<T> {
   return useControlProps(field, {
     ...options,
     transformControlValue: (value: React.ChangeEvent<{ value: T }>) =>
-      value.currentTarget.value,
+      value.currentTarget.value
   });
 }
