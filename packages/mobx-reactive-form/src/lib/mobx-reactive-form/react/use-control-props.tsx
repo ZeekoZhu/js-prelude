@@ -1,6 +1,6 @@
 import { useCreation } from 'ahooks';
 import { useLocalObservable } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import {
   AbstractFormField,
   FormValidator,
@@ -72,7 +72,7 @@ export function useControlProps<T, TControlValue>(
       }
       return new FormValidator(fieldRef.get(), rulesVal);
     },
-    onChange(value: TControlValue) {
+    onChange(value: TControlValue | ChangeEvent) {
       fieldRef
         .get()
         .setValue(

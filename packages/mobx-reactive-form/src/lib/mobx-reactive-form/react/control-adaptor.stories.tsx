@@ -94,6 +94,6 @@ Default.args = {
 };
 
 export default {
-  title: 'ControlAdaptor',
+  title: 'api/hooks/ControlAdaptor',
   component: Demo,
 };

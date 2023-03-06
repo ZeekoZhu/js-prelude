@@ -1,0 +1,66 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Docs/Get Started" />
+
+# mobx-reactive-form
+
+## Introduction
+
+mobx-reactive-form is a library for creating form state in React using MobX.
+It is inspired by [@angular/forms](https://angular.io/guide/reactive-forms).
+
+Why mobx-reactive-form?
+
+- Powered by MobX, easy to use and understand
+- All the state management features you need when building forms
+- Initial values
+- Form states: `dirty`, `touched`, `valid`, `errors`
+- Form actions: `reset`, `setValue`
+- Validation / Async validation
+- Dynamic form fields
+
+## Installation
+
+```bash
+npm install @zeeko/mobx-reactive-form
+# or yarn
+yarn add @zeeko/mobx-reactive-form
+```
+
+## Usage
+
+### Create a field group
+
+```ts
+import { FieldGroup, FormField } from '@zeeko/mobx-reactive-form/src';
+import { useCreation } from 'ahooks';
+
+// in your component
+const formGroup = useCreation(
+  () =>
+    new FieldGroup({
+      name: new FormField(''),
+      email: new FormField(''),
+      password: new FormField(''),
+    }),
+  [],
+);
+```
+
+### Create form fields
+
+Remember to use `Observer` from `mobx-react-lite` to make sure the component is re-rendered when the form state changes.
+
+```tsx
+// in your component
+<Observer>
+  {() => (
+    <label>
+      <Controller
+        field={formGroup.field('name')}
+        render={(f) => <input {...As.input(f)} />}
+      />
+    </label>
+  )}
+</Observer>
+```
