@@ -1,11 +1,23 @@
 import { useCreation } from 'ahooks';
+import { clsx } from 'clsx';
+
 import { Observer } from 'mobx-react-lite';
-import { FieldGroup, FormField } from '../lib/mobx-reactive-form/core';
+import {
+  AbstractFormField,
+  FieldGroup,
+  FormField,
+} from '../lib/mobx-reactive-form/core';
 import { As, Controller } from '../lib/mobx-reactive-form/react/controller';
 
 export default {
   title: 'Docs/Examples',
 };
+
+function inputClass(field: AbstractFormField<unknown>) {
+  return {
+    'input-error': !field.isValid,
+  };
+}
 
 export const FormGroup = () => {
   const formGroup = useCreation(
@@ -38,14 +50,29 @@ export const FormGroup = () => {
             </label>
             <Controller
               field={formGroup.field('name')}
+              options={{
+                rules: {
+                  validator: (val) => (val.length > 5 ? ['too long'] : []),
+                },
+              }}
               render={(f) => (
-                <input
-                  className="input input-bordered input-sm"
-                  name="name"
-                  {...As.input(f)}
-                />
+                <>
+                  <input
+                    className={clsx(
+                      'input input-bordered input-sm',
+                      inputClass(formGroup.field('name')),
+                    )}
+                    name="name"
+                    {...As.input(f)}
+                  />
+                </>
               )}
             />
+            <label className="label">
+              <span className="label-text-alt">
+                {formGroup.field('name').errors?.[0]}
+              </span>
+            </label>
           </div>
         )}
       </Observer>
@@ -161,6 +188,7 @@ export const FormGroup = () => {
                 <label className="label">
                   <span className="label-text">apple</span>
                   <input
+                    aria-label="apple"
                     className="radio radio-sm"
                     name="radio-group"
                     type="radio"
@@ -171,6 +199,7 @@ export const FormGroup = () => {
                   <span className="label-text">banana</span>
                   <input
                     className="radio radio-sm"
+                    aria-label="banana"
                     name="radio-group"
                     type="radio"
                     {...As.radio(f, 'banana')}
@@ -180,6 +209,7 @@ export const FormGroup = () => {
                 <label className="label">
                   <span className="label-text">orange</span>
                   <input
+                    aria-label="orange"
                     className="radio radio-sm"
                     name="radio-group"
                     type="radio"

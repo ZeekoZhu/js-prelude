@@ -1,17 +1,22 @@
 import { observer } from 'mobx-react-lite';
-import { useControlProps, UseControlReturn } from './use-control-props';
-import { AbstractFormField } from '../core';
 
 import { ChangeEvent } from 'react';
+import { AbstractFormField } from '../core';
+import {
+  useControlProps,
+  UseControlPropsOptions,
+  UseControlReturn,
+} from './use-control-props';
 
 export interface ControllerProps<T, TValue> {
   field: AbstractFormField<T>;
   render: (props: UseControlReturn<T, TValue>) => JSX.Element;
+  options?: UseControlPropsOptions<T, TValue>;
 }
 
 export const Controller = observer(
   <T, TValue = T>(props: ControllerProps<T, TValue>) => {
-    const controlProps = useControlProps<T, TValue>(props.field, {});
+    const controlProps = useControlProps<T, TValue>(props.field, props.options);
     return props.render(controlProps);
   },
 );

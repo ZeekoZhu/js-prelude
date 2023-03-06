@@ -15,7 +15,7 @@ function submitBtn() {
 describe('form-field validate on submit', () => {
   beforeEach(() => {
     cy.visit(
-      'http://localhost:4400/iframe.html?args=initValue:0&id=controladaptor--default&viewMode=story',
+      'http://localhost:4400/iframe.html?args=initValue:0&id=api-hooks-controladaptor--default&viewMode=story',
     );
   });
   describe('click submit', () => {
@@ -30,7 +30,7 @@ describe('form-field validate on submit', () => {
 describe('form-field validate on change', () => {
   beforeEach(() => {
     cy.visit(
-      'http://localhost:4400/iframe.html?args=&id=controladaptor--default&viewMode=story',
+      'http://localhost:4400/iframe.html?args=&id=api-hooks-controladaptor--default&viewMode=story',
     );
   });
   it('should render initial value', () => {
@@ -92,7 +92,7 @@ describe('form-field validate on change', () => {
 describe('form-field validate on blur', () => {
   beforeEach(() => {
     cy.visit(
-      'http://localhost:4400/iframe.html?args=validateOnBlur:true;validateOnChange:false&id=controladaptor--default',
+      'http://localhost:4400/iframe.html?args=validateOnBlur:true;validateOnChange:false&id=api-hooks-controladaptor--default',
     );
     input().clear().type('hello world hello world hello world');
   });
