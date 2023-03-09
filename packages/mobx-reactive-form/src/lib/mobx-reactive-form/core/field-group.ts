@@ -9,7 +9,11 @@ export class FieldGroup<T extends object>
   private _errors: ReadonlyArray<string> = [];
   private _isValidating = false;
   get isValidating() {
-    return this._isValidating;
+    if (this._isValidating) {
+      return true;
+    }
+    const validatingField = this.findField((field) => field.isValidating);
+    return !!validatingField;
   }
 
   set isValidating(val: boolean) {

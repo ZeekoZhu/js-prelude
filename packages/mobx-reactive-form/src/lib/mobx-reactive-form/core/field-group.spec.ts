@@ -313,5 +313,15 @@ describe('FieldGroup', () => {
       group.reset();
       expect(group.errors).toEqual([]);
     });
+
+    it('should be validating when sub field is validating', async () => {
+      const group = new FieldGroup({
+        name: new FormField('alice'),
+        age: new FormField(99),
+      });
+      const nameField = group.field('name');
+      nameField.isValidating = true;
+      expect(group.isValidating).toBe(true);
+    });
   });
 });
