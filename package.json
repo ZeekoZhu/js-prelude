@@ -23,6 +23,7 @@
     "@storybook/builder-vite": "^0.3",
     "@storybook/core-common": "^6.5.15",
     "@storybook/core-server": "^6.5.15",
+    "@storybook/manager-webpack5": "^6.5.16",
     "@storybook/react": "^6.5.15",
     "@svgr/webpack": "^5.4.0",
     "@swc/cli": "~0.1.55",
@@ -75,5 +76,8 @@
     "commitizen": {
       "path": "node_modules/cz-git"
     }
+  },
+  "volta": {
+    "node": "18.15.0"
   }
 }
