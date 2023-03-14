@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IMatcher {
-  matches(obj: any): any[];
+  matches(obj: any): [key: KeyType, value: any][];
 
   setValue(obj: any, value: any): void;
 }
@@ -10,9 +10,10 @@ export type KeyType = string | number;
 class KeyMatcher implements IMatcher {
   constructor(public key: KeyType) {}
 
-  matches(obj: any) {
+  matches(obj: any): [key: KeyType, value: any][] {
+    const key = this.key;
     if (Object.prototype.hasOwnProperty.call(obj, this.key)) {
-      return [obj[this.key]];
+      return [[key, obj[key]]];
     }
     return [];
   }
@@ -24,7 +25,7 @@ class KeyMatcher implements IMatcher {
 
 class AllValuesMatcher implements IMatcher {
   matches(obj: any) {
-    return Object.values(obj);
+    return Object.entries(obj);
   }
 
   setValue(obj: any, value: any) {
@@ -38,19 +39,17 @@ class PredicateMatcher implements IMatcher {
   constructor(public predicate: (key: KeyType, value: unknown) => boolean) {}
 
   matches(obj: any) {
-    return Object.entries(obj)
-      .filter(([key, val]) => {
-        try {
-          return this.predicate(key, val);
-        } catch (e) {
-          throw new Error(
-            `Error in predicate function called with key: ${key}, value: ${JSON.stringify(
-              val,
-            )}: ${e}`,
-          );
-        }
-      })
-      .map(([, value]) => value);
+    return Object.entries(obj).filter(([key, val]) => {
+      try {
+        return this.predicate(key, val);
+      } catch (e) {
+        throw new Error(
+          `Error in predicate function called with key: ${key}, value: ${JSON.stringify(
+            val,
+          )}: ${e}`,
+        );
+      }
+    });
   }
 
   setValue(obj: any, value: any) {
@@ -137,7 +136,7 @@ export class Accessor<TObj, TValue> {
     for (let i = 0; i < lastIndex; i++) {
       try {
         const matcher = matchers[i];
-        result = result.flatMap((obj) => matcher.matches(obj));
+        result = result.flatMap((obj) => matcher.matches(obj).map((x) => x[1]));
       } catch (e) {
         throw new Error(
           `Failed to match object with matcher at index ${i}. ${e}`,
