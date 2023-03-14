@@ -13,6 +13,10 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
+      - uses: actions/cache@v3.3.1
+        with:
+          path: '.yarn/cache'
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
       - uses: 'volta-cli/action@v4'
       - uses: nrwl/nx-set-shas@v3
       - run: yarn install --immutable
