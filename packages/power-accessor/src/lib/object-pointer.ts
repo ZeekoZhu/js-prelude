@@ -10,7 +10,9 @@ export interface IObjectPointer<TObj extends object, T> {
   getReferenceHolder<TR>(root: TObj): TR;
 }
 
-export class ObjectPointer<TObj extends object, T> implements IObjectPointer<TObj, T> {
+export class ObjectPointer<TObj extends object, T>
+  implements IObjectPointer<TObj, T>
+{
   constructor(
     protected objectGetter: (root: TObj) => object,
     protected key: KeyType,
@@ -77,5 +79,5 @@ export function toPointers<TObj extends object, T>(
       });
     });
   }
-  return paths.map(it => pathToPointer(it[0])) as IObjectPointer<TObj, T>[];
+  return paths.map((it) => pathToPointer(it[0])) as IObjectPointer<TObj, T>[];
 }
