@@ -143,4 +143,17 @@ describe('ObjectPointer', () => {
       });
     });
   });
+
+  describe('bugs', () => {
+    test('pointer creates sparse array when last matcher is Matcher.all', () => {
+      const obj = { a: [{ b: 1 }, { b: 2 }, { b: 3 }] };
+      const accessor = new Accessor<{ a: { b: number }[] }, number>(
+        'a',
+        Matcher.all,
+      );
+      const pointers = toPointers(accessor, obj);
+      pointers[0].remove(obj);
+      expect(obj.a.length).toBe(2);
+    });
+  });
 });

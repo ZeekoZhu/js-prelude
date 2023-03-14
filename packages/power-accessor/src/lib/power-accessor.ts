@@ -25,6 +25,9 @@ class KeyMatcher implements IMatcher {
 
 class AllValuesMatcher implements IMatcher {
   matches(obj: any) {
+    if (Array.isArray(obj)) {
+      return obj.map((val, index) => [index, val] as [KeyType, any]);
+    }
     return Object.entries(obj);
   }
 
@@ -39,7 +42,7 @@ class PredicateMatcher implements IMatcher {
   constructor(public predicate: (key: KeyType, value: unknown) => boolean) {}
 
   matches(obj: any) {
-    return Object.entries(obj).filter(([key, val]) => {
+    const filterEntries = ([key, val]: [KeyType, any]) => {
       try {
         return this.predicate(key, val);
       } catch (e) {
@@ -49,7 +52,13 @@ class PredicateMatcher implements IMatcher {
           )}: ${e}`,
         );
       }
-    });
+    };
+    if (Array.isArray(obj)) {
+      return obj
+        .map((val, index) => [index, val] as [KeyType, any])
+        .filter(filterEntries);
+    }
+    return Object.entries(obj).filter(filterEntries);
   }
 
   setValue(obj: any, value: any) {
