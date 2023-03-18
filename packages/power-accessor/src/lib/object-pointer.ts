@@ -1,4 +1,4 @@
-import { Accessor, KeyType } from './power-accessor';
+import { Accessor, KeyType } from './power-accessor.js';
 
 export interface IObjectPointer<TObj extends object, T> {
   get(root: TObj): T;
