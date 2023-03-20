@@ -15,13 +15,30 @@ function makeFieldWithKey<T>(
   }) as FormFieldWithKey<T>;
 }
 
+function isArrayEqual(a: string[], b: string[]) {
+  if (a.length !== b.length) {
+    return false;
+  }
+  for (let i = 0; i < a.length; i++) {
+    const aItem = a[i];
+    const bItem = b[i];
+    if (aItem !== bItem) {
+      return false;
+    }
+  }
+  return true;
+}
+
 export class FieldArray<T> implements AbstractFormField<T[]> {
   constructor(items: FormField<T>[]) {
     this._value.replace(
       items.map((item) => makeFieldWithKey(item, this.nextKey())),
     );
+    this.fieldKeys.replace(this.fields.map((it) => it.key));
     makeAutoObservable(this, {}, { autoBind: true, deep: false });
   }
+
+  private fieldKeys = observable.array<string>([], { deep: false });
 
   private _fieldCounter = 0;
   private _value = observable.array<FormFieldWithKey<T>>([], { deep: false });
@@ -51,7 +68,10 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
         return true;
       }
     }
-    return false;
+    return !isArrayEqual(
+      this.fieldKeys,
+      this.fields.map((it) => it.key),
+    );
   }
 
   get isTouched() {
@@ -60,7 +80,10 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
         return true;
       }
     }
-    return false;
+    return !isArrayEqual(
+      this.fieldKeys,
+      this.fields.map((it) => it.key),
+    );
   }
 
   get value(): T[] {
@@ -86,6 +109,8 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
         field.reset(val[index]);
       }
     });
+    const keys = this.fields.map((it) => it.key);
+    this.fieldKeys.replace(keys);
     this.setErrors();
   }
 

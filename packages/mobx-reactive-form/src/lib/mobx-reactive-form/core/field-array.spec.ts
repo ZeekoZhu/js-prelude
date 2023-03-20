@@ -173,6 +173,23 @@ describe('FieldArray', () => {
       it('should throw error when index is out of range', () => {
         expect(() => array.insert(10, new FormField(4))).toThrowError();
       });
+      it('should be dirty', () => {
+        expect(array.isDirty).toBe(true);
+      });
+      it('should be touched', () => {
+        expect(array.isTouched).toBe(true);
+      });
+      describe('then reset()', () => {
+        beforeEach(() => {
+          array.reset();
+        });
+        it('should not be dirty', () => {
+          expect(array.isDirty).toBe(false);
+        });
+        it('should not be touched', () => {
+          expect(array.isTouched).toBe(false);
+        });
+      });
     });
     describe('remove', () => {
       beforeEach(() => {
@@ -186,6 +203,12 @@ describe('FieldArray', () => {
       });
       it('should throw error when index is out of range', () => {
         expect(() => array.remove(10)).toThrowError();
+      });
+      it('should be dirty', () => {
+        expect(array.isDirty).toBe(true);
+      });
+      it('should be touched', () => {
+        expect(array.isTouched).toBe(true);
       });
     });
     describe('move', () => {
@@ -201,6 +224,12 @@ describe('FieldArray', () => {
       it('should throw error when index is out of range', () => {
         expect(() => array.move(10, 0)).toThrowError();
       });
+      it('should be dirty', () => {
+        expect(array.isDirty).toBe(true);
+      });
+      it('should be touched', () => {
+        expect(array.isTouched).toBe(true);
+      });
     });
     describe('swap', () => {
       beforeEach(() => {
@@ -214,6 +243,12 @@ describe('FieldArray', () => {
       });
       it('should throw error when index is out of range', () => {
         expect(() => array.swap(10, 0)).toThrowError();
+      });
+      it('should be dirty', () => {
+        expect(array.isDirty).toBe(true);
+      });
+      it('should be touched', () => {
+        expect(array.isTouched).toBe(true);
       });
     });
     describe('setField', () => {
@@ -229,6 +264,12 @@ describe('FieldArray', () => {
       it('should throw error when index is out of range', () => {
         expect(() => array.setField(10, new FormField(4))).toThrowError();
       });
+      it('should be dirty', () => {
+        expect(array.isDirty).toBe(true);
+      });
+      it('should be touched', () => {
+        expect(array.isTouched).toBe(true);
+      });
     });
     describe('clear', () => {
       beforeEach(() => {
@@ -239,6 +280,12 @@ describe('FieldArray', () => {
       });
       it('should update value', () => {
         expect(array.value).toEqual([]);
+      });
+      it('should be dirty', () => {
+        expect(array.isDirty).toBe(true);
+      });
+      it('should be touched', () => {
+        expect(array.isTouched).toBe(true);
       });
     });
     describe('push', () => {
@@ -254,6 +301,12 @@ describe('FieldArray', () => {
       it('can push multiple fields', () => {
         array.push(new FormField(5), new FormField(6));
         expect(array.value).toEqual([1, 2, 3, 4, 5, 6]);
+      });
+      it('should be dirty', () => {
+        expect(array.isDirty).toBe(true);
+      });
+      it('should be touched', () => {
+        expect(array.isTouched).toBe(true);
       });
     });
   });
