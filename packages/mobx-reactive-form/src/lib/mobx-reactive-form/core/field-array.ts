@@ -1,13 +1,12 @@
 import { makeAutoObservable, observable } from 'mobx';
-import { FormField } from './form-field';
 import { AbstractFormField } from './types';
 
-interface FormFieldWithKey<T> extends FormField<T> {
+interface FormFieldWithKey<T> extends AbstractFormField<T> {
   readonly key: string;
 }
 
 function makeFieldWithKey<T>(
-  formField: FormField<T>,
+  formField: AbstractFormField<T>,
   index: number,
 ): FormFieldWithKey<T> {
   return Object.assign(formField, {
@@ -30,7 +29,7 @@ function isArrayEqual(a: string[], b: string[]) {
 }
 
 export class FieldArray<T> implements AbstractFormField<T[]> {
-  constructor(items: FormField<T>[]) {
+  constructor(items: AbstractFormField<T>[]) {
     this._value.replace(
       items.map((item) => makeFieldWithKey(item, this.nextKey())),
     );
@@ -143,7 +142,7 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
     return this._value[index];
   }
 
-  insert(number: number, formField: FormField<T>) {
+  insert(number: number, formField: AbstractFormField<T>) {
     this.ensureInRange(number);
     this._value.splice(number, 0, makeFieldWithKey(formField, this.nextKey()));
   }
@@ -173,7 +172,7 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
     }
   }
 
-  setField(index: number, formField: FormField<T>) {
+  setField(index: number, formField: AbstractFormField<T>) {
     this.ensureInRange(index);
     this._value[index] = makeFieldWithKey(formField, this.nextKey());
   }
@@ -182,7 +181,7 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
     this._value.clear();
   }
 
-  push(...fields: FormField<T>[]) {
+  push(...fields: AbstractFormField<T>[]) {
     this._value.push(
       ...fields.map((field) => makeFieldWithKey(field, this.nextKey())),
     );
