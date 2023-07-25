@@ -8,7 +8,12 @@ import { join } from 'path';
 export default {
   plugins: {
     tailwindcss: {
-      config: join(process.cwd(), 'packages', 'mobx-reactive-form', 'tailwind.config.js'),
+      config: join(
+        process.cwd(),
+        'packages',
+        'mobx-reactive-form',
+        'tailwind.config.js',
+      ),
     },
     autoprefixer: {},
   },

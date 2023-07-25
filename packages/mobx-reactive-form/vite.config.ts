@@ -1,6 +1,9 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
+import _tsconfigPaths from 'vite-tsconfig-paths';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+const tsconfigPaths: typeof _tsconfigPaths = _tsconfigPaths.default;
 
 export default defineConfig({
   server: {

@@ -16,7 +16,7 @@
     "node-fetch": "^3.3.0"
   },
   "devDependencies": {
-    "@nrwl/eslint-plugin-nx": "15.7.0",
+    "@nx/eslint-plugin": "^16.5.5",
     "@typescript-eslint/eslint-plugin": "5.51.0"
   }
 }
