@@ -1,16 +1,46 @@
+#!/usr/bin/env node
 import * as process from 'process';
-import { echo, argv, path, fs } from 'zx';
+import { chalk, argv, echo, fs, path } from 'zx';
 
 import { findProjects } from './lib/find-projects.js';
-import { tryFormatTsconfig } from './lib/try-format-tsconfig.js';
 import { getAllImportRegex } from './lib/get-all-import-regex.js';
+import { tryFormatTsconfig } from './lib/try-format-tsconfig.js';
 import { updateTsconfigReferences } from './lib/update-tsconfig-references.js';
+import { convertToAbsolutePath } from './lib/path-utils.js';
 
-const tsconfigPath = argv['project'] || argv['p'] || 'tsconfig.json';
-const sourceFileGlobPattern = argv['files'] || argv['f'] || 'src/**/*.ts';
-const monorepoDir = argv['monorepo'] || argv['m'] || './';
+const tsconfigPath = convertToAbsolutePath(
+  argv['project'] || argv['p'] || './tsconfig.json',
+);
+const sourceFileGlobPattern = convertToAbsolutePath(
+  argv['files'] || argv['f'] || 'src/**/*.ts',
+);
+const monorepoDir = convertToAbsolutePath(
+  argv['monorepo'] || argv['m'] || './',
+);
 const dryRun = argv['dry-run'] || false;
 const verbose = argv['verbose'] || false;
+
+const help = argv['help'] || argv['h'] || false;
+
+if (help) {
+  const helpText = `
+Usage: ts-sync-ref [options]
+
+Options:
+  -p, --project <path>      Path to ${chalk.bold`project's`} tsconfig.json
+                            default = './tsconfig.json'
+  -f, --files <glob>        Glob pattern for source ${chalk.bold`files`},
+                            relative to containing dir of 'project'
+                            default = 'src/**/*.ts'
+  -m, --monorepo <path>     Path to ${chalk.bold`monorepo`} root
+                            default = './'
+  --dry-run                 Do not write to tsconfig.json
+  --verbose                 Print verbose logs
+  -h, --help                Display this message
+`;
+  echo(helpText);
+  process.exit(0);
+}
 
 if (verbose) {
   process.env['VERBOSE'] = 'true';

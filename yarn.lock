@@ -5822,7 +5822,7 @@ __metadata:
   peerDependencies:
     prettier: "> 3 || > 2"
   bin:
-    ts-sync-ref: dist/bin.js
+    ts-sync-ref: src/bin.js
   languageName: unknown
   linkType: soft
 
