@@ -1,0 +1,21 @@
+{
+  "name": "@zeeko/ts-sync-ref",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": "src/bin.js",
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@swc/helpers": "~0.5.0",
+    "lodash-es": "^4.17.21",
+    "zx": "^7.2.3"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4"
+  },
+  "peerDependencies": {
+    "prettier": "> 3 || > 2"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "name": "ts-sync-ref",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/ts-sync-ref/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "main": "packages/ts-sync-ref/src/bin.ts",
+        "tsConfig": "packages/ts-sync-ref/tsconfig.lib.json",
+        "outputPath": "dist/packages/ts-sync-ref"
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs ts-sync-ref {args.ver} {args.tag}",
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": [
+        "coverage/packages/ts-sync-ref"
+      ],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/packages/ts-sync-ref"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "packages/ts-sync-ref/**/*.ts"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
