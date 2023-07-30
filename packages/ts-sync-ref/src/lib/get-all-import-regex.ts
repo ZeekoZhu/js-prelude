@@ -1,6 +1,7 @@
 import { uniq } from 'lodash-es';
 import { globby, path, fs } from 'zx';
-import { ModuleId } from './get-all-imports';
+
+import { ModuleId } from './types';
 
 export async function getAllImportRegex(
   tsconfigPath: string,
@@ -19,7 +20,7 @@ export async function getAllImportRegex(
   );
 }
 
-function getImportModuleIdInFile(code: string): ModuleId[] {
+export function getImportModuleIdInFile(code: string): ModuleId[] {
   /**
    * import { foo } from 'bar';
    * import foo from '~/bar';
@@ -42,7 +43,7 @@ function getImportModuleIdInFile(code: string): ModuleId[] {
   /**
    * import 'foo';
    */
-  const sideEffectImport = /^import\s+['"](.+?)['"]/g;
+  const sideEffectImport = /import\s+['"](.+?)['"]/g;
   const matches3 = [...code.matchAll(sideEffectImport)];
   moduleIdList.push(...matches3.map((m) => m[1]));
   return moduleIdList;

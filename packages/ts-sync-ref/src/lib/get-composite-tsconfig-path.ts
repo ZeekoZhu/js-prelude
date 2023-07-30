@@ -1,5 +1,5 @@
 import { get } from 'lodash-es';
-import * as $ from 'zx';
+import { fs, path, globby } from 'zx';
 
 async function readCompositeTsconfigPathFromConfig(
   packageJson: string,
@@ -7,8 +7,8 @@ async function readCompositeTsconfigPathFromConfig(
 ): Promise<string | undefined> {
   const compositeConfig = get(packageJson, 'ts-auto-ref');
   if (!compositeConfig) return undefined;
-  const compositeTsconfigPath = $.path.join(projectRoot, compositeConfig);
-  if (!(await $.fs.exists(compositeTsconfigPath))) {
+  const compositeTsconfigPath = path.join(projectRoot, compositeConfig);
+  if (!(await fs.exists(compositeTsconfigPath))) {
     return undefined;
   }
   return compositeConfig;
@@ -17,12 +17,12 @@ async function readCompositeTsconfigPathFromConfig(
 const compositeRegex = /"composite"\s*:\s*true/;
 
 function isCompositeTsconfig(tsconfigPath: string) {
-  const tsconfig = $.fs.readFileSync(tsconfigPath, 'utf-8');
+  const tsconfig = fs.readFileSync(tsconfigPath, 'utf-8');
   return compositeRegex.test(tsconfig);
 }
 
 async function getTsconfigFile(projectRoot: string): Promise<string> {
-  const tsconfigFiles = await $.globby(['tsconfig.json', 'tsconfig.*.json'], {
+  const tsconfigFiles = await globby(['tsconfig.json', 'tsconfig.*.json'], {
     cwd: projectRoot,
     gitignore: true,
     absolute: true,
@@ -33,7 +33,7 @@ async function getTsconfigFile(projectRoot: string): Promise<string> {
       `Cannot find tsconfig.*.json with 'composite: true' in ${projectRoot}`,
     );
   }
-  return $.path.basename(compositeConfig);
+  return path.basename(compositeConfig);
 }
 
 export async function getCompositeTsconfigPath(
