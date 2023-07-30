@@ -30,7 +30,7 @@ Options:
   -p, --project <path>      Path to ${chalk.bold`project's`} tsconfig.json
                             default = './tsconfig.json'
   -f, --files <glob>        Glob pattern for source ${chalk.bold`files`},
-                            relative to containing dir of 'project'
+                            relative to current working directory
                             default = 'src/**/*.ts'
   -m, --monorepo <path>     Path to ${chalk.bold`monorepo`} root
                             default = './'

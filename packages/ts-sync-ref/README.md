@@ -28,7 +28,7 @@ Options:
   -p, --project <path>      Path to project's tsconfig.json
                             default = './tsconfig.json'
   -f, --files <glob>        Glob pattern for source files,
-                            relative to containing dir of 'project'
+                            relative to current working directory
                             default = 'src/**/*.ts'
   -m, --monorepo <path>     Path to monorepo root
                             default = './'
