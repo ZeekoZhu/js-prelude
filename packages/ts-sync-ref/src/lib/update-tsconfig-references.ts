@@ -3,7 +3,10 @@
  * @param tsconfigFile content of tsconfig.json
  * @param paths references to update
  */
-export function updateTsconfigReferences(tsconfigFile: string, paths: string[]) {
+export function updateTsconfigReferences(
+  tsconfigFile: string,
+  paths: string[],
+) {
   if (containsReferences(tsconfigFile)) {
     return updateExistingReferences(tsconfigFile, paths);
   } else {

@@ -2,7 +2,7 @@
 {
   "title": "vitest",
   "model": {
-  "modelName": "gpt-4"
+    "modelName": "gpt-4"
   }
 }
 ```
