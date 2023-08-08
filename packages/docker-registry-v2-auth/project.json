@@ -11,7 +11,8 @@
         "outputPath": "dist/packages/docker-registry-v2-auth",
         "main": "packages/docker-registry-v2-auth/src/index.ts",
         "tsConfig": "packages/docker-registry-v2-auth/tsconfig.lib.json",
-        "assets": ["packages/docker-registry-v2-auth/*.md"]
+        "assets": ["packages/docker-registry-v2-auth/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "publish": {

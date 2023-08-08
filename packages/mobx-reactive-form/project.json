@@ -11,7 +11,8 @@
         "outputPath": "dist/packages/mobx-reactive-form",
         "main": "packages/mobx-reactive-form/src/index.ts",
         "tsConfig": "packages/mobx-reactive-form/tsconfig.lib.json",
-        "assets": ["packages/mobx-reactive-form/*.md"]
+        "assets": ["packages/mobx-reactive-form/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "publish": {
