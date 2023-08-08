@@ -6,16 +6,12 @@
   "targets": {
     "build": {
       "executor": "@nx/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/power-accessor",
         "main": "packages/power-accessor/src/index.ts",
         "tsConfig": "packages/power-accessor/tsconfig.lib.json",
-        "assets": [
-          "packages/power-accessor/*.md"
-        ],
+        "assets": ["packages/power-accessor/*.md"],
         "updateBuildableProjectDepsInPackageJson": true
       }
     },
@@ -24,35 +20,25 @@
       "options": {
         "command": "node tools/scripts/publish.mjs power-accessor {args.ver} {args.tag}"
       },
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     },
     "lint": {
       "executor": "@nx/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/power-accessor/**/*.ts"
-        ]
+        "lintFilePatterns": ["packages/power-accessor/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/vite:test",
-      "outputs": [
-        "{projectRoot}/coverage"
-      ],
+      "outputs": ["{projectRoot}/coverage"],
       "options": {
         "passWithNoTests": true
       }
     },
     "typedoc": {
       "executor": "nx:run-commands",
-      "outputs": [
-        "{workspaceRoot}/docs/packages/power-accessor"
-      ],
+      "outputs": ["{workspaceRoot}/docs/packages/power-accessor"],
       "options": {
         "cwd": "packages/power-accessor",
         "command": "typedoc --options ./typedoc.json"
