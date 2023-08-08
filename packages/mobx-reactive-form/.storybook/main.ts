@@ -1,5 +1,9 @@
 import { dirname, join } from 'path';
-const { mergeConfig } = require('vite');
+import { mergeConfig } from 'vite';
+import viteTsconfig from 'vite-tsconfig-paths';
+
+const tsconfigPaths = viteTsconfig;
+
 module.exports = {
   stories: [
     '../src/docs/**/*.stories.mdx',
@@ -13,15 +17,16 @@ module.exports = {
     getAbsolutePath('@storybook/addon-mdx-gfm'),
   ],
   async viteFinal(config, { configType }) {
-    return mergeConfig(config, {});
+    return mergeConfig(config, {
+      plugins: [
+        tsconfigPaths({
+          root: './',
+        }),
+        ]
+    });
   },
   framework: {
     name: getAbsolutePath('@storybook/react-vite'),
-    options: {
-      builder: {
-        viteConfigPath: 'packages/mobx-reactive-form/vite.config.ts',
-      },
-    },
   },
   docs: {
     autodocs: true,
