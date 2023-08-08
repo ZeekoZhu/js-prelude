@@ -22,7 +22,7 @@ module.exports = {
         tsconfigPaths({
           root: './',
         }),
-        ]
+      ],
     });
   },
   framework: {
