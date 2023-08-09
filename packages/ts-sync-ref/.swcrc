@@ -20,5 +20,11 @@
     "noInterop": false
   },
   "sourceMaps": true,
-  "exclude": ["vite.config.ts", ".*\\.spec.tsx?$", ".*\\.test.tsx?$", ".*.js$"]
+  "exclude": [
+    "vite.config.ts",
+    ".*\\.spec.tsx?$",
+    ".*\\.test.tsx?$",
+    ".*.js$",
+    "node_modules"
+  ]
 }
