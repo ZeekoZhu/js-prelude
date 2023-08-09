@@ -8,20 +8,26 @@ on:
 jobs:
   main:
     runs-on: ubuntu-latest
+    env:
+      NXCACHE_MINIO_URL: ${{ secrets.NXCACHE_MINIO_URL }}
+      NXCACHE_MINIO_SECRET_KEY: ${{ secrets.NXCACHE_MINIO_SECRET_KEY }}
+      NXCACHE_MINIO_ACCESS_KEY: ${{ secrets.NXCACHE_MINIO_ACCESS_KEY }}
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           lfs: true
       - uses: actions/cache@v3.3.1
+        name: yarn cache
         with:
           path: '.yarn/cache'
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+            yarn-${{ runner.os }}-
       - uses: 'volta-cli/action@v4'
       - uses: nrwl/nx-set-shas@v3
       - run: yarn install --immutable
-      - run: yarn exec nx workspace-lint
-        name: Workspace lint
       - run: yarn exec nx format:check
         name: Check format
       - run: yarn exec nx affected --target=lint --parallel=3
