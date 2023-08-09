@@ -13,7 +13,7 @@
       },
       "configurations": {
         "ci": {
-          "devServerTarget": "mobx-reactive-form:storybook:ci"
+          "devServerTarget": "mobx-reactive-form:serve-static"
         }
       }
     },

@@ -60,6 +60,14 @@
           "quiet": true
         }
       }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "mobx-reactive-form:build-storybook",
+        "port": 4400,
+        "staticFilePath": "dist/storybook/mobx-reactive-form"
+      }
     }
   },
   "tags": []
