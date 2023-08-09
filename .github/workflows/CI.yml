@@ -21,8 +21,8 @@ jobs:
         name: yarn cache
         with:
           path: |
-            '.yarn/cache'
-            '.yarn/install-state.gz'
+            .yarn/cache
+            .yarn/install-state.gz
           key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             yarn-${{ runner.os }}-
