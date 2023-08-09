@@ -1,8 +1,10 @@
 {
   "tasksRunnerOptions": {
     "default": {
-      "runner": "nx/tasks-runners/default",
+      "runner": "nx-remotecache-minio",
       "options": {
+        "bucket": "js-prelude-build",
+        "region": "auto",
         "cacheableOperations": [
           "build",
           "lint",
