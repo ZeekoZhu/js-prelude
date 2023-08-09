@@ -18,18 +18,16 @@ jobs:
           fetch-depth: 0
           lfs: true
       - uses: actions/cache@v3.3.1
+        name: yarn cache
         with:
           path: '.yarn/cache'
           key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
             yarn-${{ runner.os }}-
-
       - uses: 'volta-cli/action@v4'
       - uses: nrwl/nx-set-shas@v3
       - run: yarn install --immutable
-      - run: yarn exec nx workspace-lint
-        name: Workspace lint
       - run: yarn exec nx format:check
         name: Check format
       - run: yarn exec nx affected --target=lint --parallel=3
