@@ -10,7 +10,8 @@
       "options": {
         "main": "packages/ts-sync-ref/src/bin.ts",
         "tsConfig": "packages/ts-sync-ref/tsconfig.lib.json",
-        "outputPath": "dist/packages/ts-sync-ref"
+        "outputPath": "dist/packages/ts-sync-ref",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "publish": {
@@ -19,7 +20,7 @@
     },
     "test": {
       "executor": "@nx/vite:test",
-      "outputs": ["coverage/packages/ts-sync-ref"],
+      "outputs": ["{workspaceRoot}/coverage/packages/ts-sync-ref"],
       "options": {
         "passWithNoTests": true,
         "reportsDirectory": "../../coverage/packages/ts-sync-ref"

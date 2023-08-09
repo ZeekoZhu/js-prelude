@@ -48,7 +48,7 @@ export class ObjectPointer<TObj extends object, T>
   }
 }
 
-type PathType = KeyType[];
+export type PathType = KeyType[];
 
 export function pathToPointer(path: PathType) {
   if (path.length < 1) {

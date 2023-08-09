@@ -1,6 +1,6 @@
 {
   "entryPointStrategy": "expand",
-  "entryPoints": ["./src"],
+  "entryPoints": ["./src/index.ts"],
   "tsconfig": "tsconfig.lib.json",
   "compilerOptions": {},
   "exclude": [

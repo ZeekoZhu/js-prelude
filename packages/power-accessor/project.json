@@ -11,7 +11,8 @@
         "outputPath": "dist/packages/power-accessor",
         "main": "packages/power-accessor/src/index.ts",
         "tsConfig": "packages/power-accessor/tsconfig.lib.json",
-        "assets": ["packages/power-accessor/*.md"]
+        "assets": ["packages/power-accessor/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "publish": {
@@ -36,10 +37,11 @@
       }
     },
     "typedoc": {
-      "executor": "@enio.ai/typedoc:typedoc",
-      "outputs": ["docs/packages/power-accessor"],
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/docs/packages/power-accessor"],
       "options": {
-        "options": "typedoc.json"
+        "cwd": "packages/power-accessor",
+        "command": "typedoc --options ./typedoc.json"
       },
       "configurations": {}
     }
