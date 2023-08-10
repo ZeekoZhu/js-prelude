@@ -1,0 +1,41 @@
+{
+  "name": "nx-debug-hasher-runner",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/nx-debug-hasher-runner/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/nx-debug-hasher-runner",
+        "main": "packages/nx-debug-hasher-runner/src/index.ts",
+        "tsConfig": "packages/nx-debug-hasher-runner/tsconfig.lib.json",
+        "assets": ["packages/nx-debug-hasher-runner/*.md"]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs nx-debug-hasher-runner {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/nx-debug-hasher-runner/**/*.ts",
+          "packages/nx-debug-hasher-runner/package.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["coverage/packages/nx-debug-hasher-runner"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/packages/nx-debug-hasher-runner"
+      }
+    }
+  },
+  "tags": []
+}
