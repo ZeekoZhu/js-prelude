@@ -6829,14 +6829,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@zeeko/nx-debug-hasher-runner@npm:alpha":
-  version: 0.0.2
-  resolution: "@zeeko/nx-debug-hasher-runner@npm:0.0.2"
+"@zeeko/nx-debug-hasher-runner@npm:latest":
+  version: 0.0.7
+  resolution: "@zeeko/nx-debug-hasher-runner@npm:0.0.7"
   dependencies:
     "@swc/helpers": ~0.5.0
   peerDependencies:
     nx: ^16
-  checksum: fbfd671c7b057a341fe2fd1a84f8ea58f81d92d03c0a76dcf4585751fafff3ca255176880b2d10788d4cb76508a9a34fa6fc45228bcf00a8c30c05661c8ef6f5
+  checksum: d1bcfec96c274d15b997c2e804986457051ddc4c729599faa4e346b3252db1d24cd6301f23d161ff22a6424076860bad7959f5646ec99a5e052bbd9867a911f5
   languageName: node
   linkType: hard
 
@@ -6897,7 +6897,7 @@ __metadata:
     "@vitejs/plugin-react": 4.0.3
     "@vitest/coverage-c8": ~0.32.0
     "@vitest/ui": ~0.32.0
-    "@zeeko/nx-debug-hasher-runner": alpha
+    "@zeeko/nx-debug-hasher-runner": latest
     ahooks: ^3.7.4
     autoprefixer: 10.4.13
     babel-loader: 8.1.0

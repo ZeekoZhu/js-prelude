@@ -38,7 +38,7 @@
     "@vitejs/plugin-react": "4.0.3",
     "@vitest/coverage-c8": "~0.32.0",
     "@vitest/ui": "~0.32.0",
-    "@zeeko/nx-debug-hasher-runner": "alpha",
+    "@zeeko/nx-debug-hasher-runner": "latest",
     "ahooks": "^3.7.4",
     "autoprefixer": "10.4.13",
     "babel-loader": "8.1.0",
