@@ -9,7 +9,7 @@ export interface DebugRunnerOptions {
   debugOptions?: {
     runner?: string;
     enable?: boolean;
-    debugInputFiles?: boolean;
+    debugInputPattern?: boolean;
   };
 }
 
@@ -34,15 +34,18 @@ function logTaskDebugInfo(
       const selfInputFileSetPatterns = inputs.selfInputs
         .filter((it) => 'fileset' in it)
         .map((it) => (it as { fileset: string }).fileset);
+      // when daemon is disabled
       // the projectFileMap should have been built by now
       const { projectFileMap } = getProjectFileMap();
-      const selfInputFiles = filterUsingGlobPatterns(
-        p.data.root,
-        projectFileMap[projectName] ?? [],
-        selfInputFileSetPatterns,
-      );
-      console.log(`DEBUG TASK: ${task.id} selfInputFiles`);
-      console.log(JSON.stringify(selfInputFiles, null, 2));
+      for (const selfInputFileSetPattern of selfInputFileSetPatterns) {
+        const selfInputFiles = filterUsingGlobPatterns(
+          p.data.root,
+          projectFileMap[projectName] ?? [],
+          [selfInputFileSetPattern],
+        );
+        console.log(`DEBUG TASK: ${task.id} input ${selfInputFileSetPattern}`);
+        console.log(JSON.stringify(selfInputFiles, null, 2));
+      }
     }
   }
 }
@@ -80,7 +83,7 @@ export const debugRunner: TasksRunner<DebugRunnerOptions> = async (
   );
   const awaitedRunnerResult = await runnerResult;
   if (enableDebug) {
-    logTaskDebugInfo(tasks, context, options?.debugOptions?.debugInputFiles);
+    logTaskDebugInfo(tasks, context, options?.debugOptions?.debugInputPattern);
   }
   return awaitedRunnerResult;
 };

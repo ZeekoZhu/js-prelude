@@ -18,7 +18,7 @@ This is a custom Nx runner that can be used to debug the hashers used by Nx.
         debugOptions: {
           runner: 'your-custom-runner',
           enable: false,
-          debugFileset: true,
+          debugInputPattern: true,
         },
         // all other options are passed to the actual runner (see debugOptions.runner)
         cacheableOperations: ['build'],
@@ -36,11 +36,11 @@ NX_DAEMON=false NX_DEBUG_HASHER_RUNNER=true nx build my-project
 
 ### debugOptions
 
-| Option name  | ENV variable           | Description                                           | Default                             |
-| ------------ | ---------------------- | ----------------------------------------------------- | ----------------------------------- |
-| runner       | -                      | The runner to use for running tasks.                  | Optional, `nx/tasks-runner/default` |
-| enable       | NX_DEBUG_HASHER_RUNNER | Set to `true` to enable the debug runner.             | Optional, `false`                   |
-| debugFileset | -                      | Set to `true` to debug the input fileset of the task. | Optional, `false`                   |
+| Option name       | ENV variable           | Description                                                    | Default                             |
+| ----------------- | ---------------------- | -------------------------------------------------------------- | ----------------------------------- |
+| runner            | -                      | The runner to use for running tasks.                           | Optional, `nx/tasks-runner/default` |
+| enable            | NX_DEBUG_HASHER_RUNNER | Set to `true` to enable the debug runner.                      | Optional, `false`                   |
+| debugInputPattern | -                      | Set to `true` to debug the input fileset patterns of the task. | Optional, `false`                   |
 
 ## Building
 
