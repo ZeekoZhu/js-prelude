@@ -9,7 +9,7 @@ export interface DebugRunnerOptions {
   debugOptions?: {
     runner?: string;
     enable?: boolean;
-    debugFileset?: boolean;
+    debugInputFiles?: boolean;
   };
 }
 
@@ -24,7 +24,7 @@ function logTaskDebugInfo(
     if (debugFileset && context) {
       if (context.daemon?.enabled()) {
         console.log(
-          `DEBUG TASK: unable to debug fileset when using daemon, please rerun the task with 'NX_DAEMON=false'`,
+          `DEBUG TASK: unable to debug input files when using daemon, please rerun the task with 'NX_DAEMON=false'`,
         );
         continue;
       }
@@ -80,7 +80,7 @@ export const debugRunner: TasksRunner<DebugRunnerOptions> = async (
   );
   const awaitedRunnerResult = await runnerResult;
   if (enableDebug) {
-    logTaskDebugInfo(tasks, context, options?.debugOptions?.debugFileset);
+    logTaskDebugInfo(tasks, context, options?.debugOptions?.debugInputFiles);
   }
   return awaitedRunnerResult;
 };
