@@ -1,6 +1,11 @@
 {
   "name": "@zeeko/nx-debug-hasher-runner",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZeekoZhu/js-prelude",
+    "directory": "packages/nx-debug-hasher-runner"
+  },
   "dependencies": {
     "@swc/helpers": "~0.5.0"
   },
