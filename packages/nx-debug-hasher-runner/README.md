@@ -17,7 +17,7 @@ This is a custom Nx runner that can be used to debug the hashers used by Nx.
         // see the following table for the available options
         debugOptions: {
           runner: 'your-custom-runner',
-          enable: false,
+          enable: true,
           debugInputPattern: true,
         },
         // all other options are passed to the actual runner (see debugOptions.runner)
@@ -31,7 +31,7 @@ This is a custom Nx runner that can be used to debug the hashers used by Nx.
 2. Run your tasks with `NX_DAEMON=false`
 
 ```shell
-NX_DAEMON=false NX_DEBUG_HASHER_RUNNER=true nx build my-project
+NX_DAEMON=false nx build my-project
 ```
 
 3. Now you will see the debug output from the runner, for example:
@@ -74,11 +74,12 @@ DEBUG TASK: nx-debug-hasher-runner:build input {projectRoot}/**/*
 
 ### debugOptions
 
-| Option name       | ENV variable           | Description                                                    | Default                             |
-| ----------------- | ---------------------- | -------------------------------------------------------------- | ----------------------------------- |
-| runner            | -                      | The runner to use for running tasks.                           | Optional, `nx/tasks-runner/default` |
-| enable            | NX_DEBUG_HASHER_RUNNER | Set to `true` to enable the debug runner.                      | Optional, `false`                   |
-| debugInputPattern | -                      | Set to `true` to debug the input fileset patterns of the task. | Optional, `false`                   |
+| Option name       | ENV variable                       | Description                                                                 | Default                             |
+| ----------------- | ---------------------------------- | --------------------------------------------------------------------------- | ----------------------------------- |
+| runner            | -                                  | The runner to use for running tasks.                                        | Optional, `nx/tasks-runner/default` |
+| enable            | NX_DEBUG_HASHER_RUNNER             | Set to `true` to enable the debug runner.                                   | Optional, `false`                   |
+| debugInputPattern | -                                  | Set to `true` to debug the input fileset patterns of the task.              | Optional, `false`                   |
+| outputFile        | NX_DEBUG_HASHER_RUNNER_OUTPUT_FILE | The file to write the debug output to, set a path to disable console output | Optional, `undefined`               |
 
 ## Building
 
