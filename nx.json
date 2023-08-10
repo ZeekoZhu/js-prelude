@@ -1,8 +1,12 @@
 {
   "tasksRunnerOptions": {
     "default": {
-      "runner": "nx-remotecache-minio",
+      "runner": "@zeeko/nx-debug-hasher-runner",
       "options": {
+        "debugOptions": {
+          "runner": "nx-remotecache-minio",
+          "enable": false
+        },
         "bucket": "js-prelude-build",
         "region": "auto",
         "cacheableOperations": [
