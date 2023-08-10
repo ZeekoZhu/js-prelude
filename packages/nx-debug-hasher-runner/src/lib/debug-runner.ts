@@ -1,17 +1,11 @@
 import type { Task } from 'nx/src/config/task-graph';
-import {
-  TaskHasher,
-  getInputs,
-  filterUsingGlobPatterns,
-} from 'nx/src/hasher/task-hasher';
+import { getInputs, filterUsingGlobPatterns } from 'nx/src/hasher/task-hasher';
 import { getProjectFileMap } from 'nx/src/project-graph/build-project-graph';
 import type { TasksRunner, TaskStatus } from 'nx/src/tasks-runner/tasks-runner';
 
 type TaskRunnerContext = Exclude<Parameters<TasksRunner>[2], undefined>;
 
 export interface DebugRunnerOptions {
-  // todo: support custom runner
-  // runnerImpl: string;
   debugOptions?: {
     runner?: string;
     enable?: boolean;
