@@ -1,6 +1,5 @@
-import { Task } from 'nx/src/config/task-graph';
-import defaultTasksRunner from 'nx/src/tasks-runner/default-tasks-runner';
-import { TasksRunner, TaskStatus } from 'nx/src/tasks-runner/tasks-runner';
+import type { Task } from 'nx/src/config/task-graph';
+import type { TasksRunner, TaskStatus } from 'nx/src/tasks-runner/tasks-runner';
 
 export interface DebugRunnerOptions {
   // todo: support custom runner
@@ -14,7 +13,7 @@ export interface DebugRunnerOptions {
 function logTaskDebugInfo(tasks: Task[]) {
   for (const task of tasks) {
     console.log(`DEBUG TASK: ${task.id}`);
-    console.log(JSON.stringify(task.hashDetails, null, 2));
+    console.log(JSON.stringify(task, null, 2));
   }
 }
 
