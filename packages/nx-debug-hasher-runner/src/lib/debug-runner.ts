@@ -37,15 +37,15 @@ function logTaskDebugInfo(
       // when daemon is disabled
       // the projectFileMap should have been built by now
       const { projectFileMap } = getProjectFileMap();
-      for (const selfInputFileSetPattern of selfInputFileSetPatterns) {
-        const selfInputFiles = filterUsingGlobPatterns(
-          p.data.root,
-          projectFileMap[projectName] ?? [],
-          [selfInputFileSetPattern],
-        );
-        console.log(`DEBUG TASK: ${task.id} input ${selfInputFileSetPattern}`);
-        console.log(JSON.stringify(selfInputFiles, null, 2));
-      }
+      const selfInputFiles = filterUsingGlobPatterns(
+        p.data.root,
+        projectFileMap[projectName] ?? [],
+        selfInputFileSetPatterns,
+      );
+      console.log(
+        `DEBUG TASK: ${task.id} input\n${selfInputFileSetPatterns.join('\n')}`,
+      );
+      console.log(JSON.stringify(selfInputFiles, null, 2));
     }
   }
 }
