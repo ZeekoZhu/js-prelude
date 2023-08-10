@@ -1,19 +1,55 @@
 import type { Task } from 'nx/src/config/task-graph';
+import {
+  TaskHasher,
+  getInputs,
+  filterUsingGlobPatterns,
+} from 'nx/src/hasher/task-hasher';
+import { getProjectFileMap } from 'nx/src/project-graph/build-project-graph';
 import type { TasksRunner, TaskStatus } from 'nx/src/tasks-runner/tasks-runner';
+
+type TaskRunnerContext = Exclude<Parameters<TasksRunner>[2], undefined>;
 
 export interface DebugRunnerOptions {
   // todo: support custom runner
   // runnerImpl: string;
-  debugOptions: {
-    runner: string;
-    enable: boolean;
+  debugOptions?: {
+    runner?: string;
+    enable?: boolean;
+    debugFileset?: boolean;
   };
 }
 
-function logTaskDebugInfo(tasks: Task[]) {
+function logTaskDebugInfo(
+  tasks: Task[],
+  context?: TaskRunnerContext,
+  debugFileset = false,
+) {
   for (const task of tasks) {
     console.log(`DEBUG TASK: ${task.id}`);
     console.log(JSON.stringify(task, null, 2));
+    if (debugFileset && context) {
+      if (context.daemon?.enabled()) {
+        console.log(
+          `DEBUG TASK: unable to debug fileset when using daemon, please rerun the task with 'NX_DAEMON=false'`,
+        );
+        continue;
+      }
+      const inputs = getInputs(task, context.projectGraph, context.nxJson);
+      const projectName = task.target.project;
+      const p = context.projectGraph.nodes[projectName];
+      const selfInputFileSetPatterns = inputs.selfInputs
+        .filter((it) => 'fileset' in it)
+        .map((it) => (it as { fileset: string }).fileset);
+      // the projectFileMap should have been built by now
+      const { projectFileMap } = getProjectFileMap();
+      const selfInputFiles = filterUsingGlobPatterns(
+        p.data.root,
+        projectFileMap[projectName] ?? [],
+        selfInputFileSetPatterns,
+      );
+      console.log(`DEBUG TASK: ${task.id} selfInputFiles`);
+      console.log(JSON.stringify(selfInputFiles, null, 2));
+    }
   }
 }
 
@@ -50,7 +86,7 @@ export const debugRunner: TasksRunner<DebugRunnerOptions> = async (
   );
   const awaitedRunnerResult = await runnerResult;
   if (enableDebug) {
-    logTaskDebugInfo(tasks);
+    logTaskDebugInfo(tasks, context, options?.debugOptions?.debugFileset);
   }
   return awaitedRunnerResult;
 };

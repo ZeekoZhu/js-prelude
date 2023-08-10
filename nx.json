@@ -5,7 +5,8 @@
       "options": {
         "debugOptions": {
           "runner": "nx-remotecache-minio",
-          "enable": false
+          "enable": false,
+          "debugFileset": true
         },
         "bucket": "js-prelude-build",
         "region": "auto",
