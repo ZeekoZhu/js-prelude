@@ -1,5 +1,10 @@
 {
   "name": "@zeeko/fun-ioc",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZeekoZhu/js-prelude.git",
+    "directory": "packages/fun-ioc"
+  },
   "version": "0.0.1",
   "dependencies": {
     "@swc/helpers": "~0.5.0"
