@@ -6814,6 +6814,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@zeeko/fun-ioc@workspace:packages/fun-ioc":
+  version: 0.0.0-use.local
+  resolution: "@zeeko/fun-ioc@workspace:packages/fun-ioc"
+  dependencies:
+    "@swc/helpers": ~0.5.0
+  languageName: unknown
+  linkType: soft
+
 "@zeeko/mobx-reactive-form@workspace:packages/mobx-reactive-form":
   version: 0.0.0-use.local
   resolution: "@zeeko/mobx-reactive-form@workspace:packages/mobx-reactive-form"

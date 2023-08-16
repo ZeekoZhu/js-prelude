@@ -15,17 +15,16 @@
     "loose": true
   },
   "module": {
-    "type": "commonjs",
-    "strict": true,
-    "noInterop": true
+    "type": "es6",
+    "strict": false,
+    "noInterop": false
   },
   "sourceMaps": true,
   "exclude": [
-    "jest.config.ts",
+    "vite.config.ts",
     ".*\\.spec.tsx?$",
     ".*\\.test.tsx?$",
-    "./src/jest-setup.ts$",
-    "./**/jest-setup.ts$",
-    ".*.js$"
+    ".*.js$",
+    "node_modules"
   ]
 }
