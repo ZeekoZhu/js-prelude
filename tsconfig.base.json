@@ -12,6 +12,7 @@
       "@zeeko/docker-registry-v2-auth": [
         "packages/docker-registry-v2-auth/src/index.ts"
       ],
+      "@zeeko/fun-ioc": ["packages/fun-ioc/src/index.ts"],
       "@zeeko/mobx-reactive-form": ["packages/mobx-reactive-form/src/index.ts"],
       "@zeeko/nx-debug-hasher-runner": [
         "packages/nx-debug-hasher-runner/src/index.ts"

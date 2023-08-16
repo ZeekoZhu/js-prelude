@@ -30,7 +30,7 @@
     },
     "test": {
       "executor": "@nx/vite:test",
-      "outputs": ["coverage/packages/nx-debug-hasher-runner"],
+      "outputs": ["{workspaceRoot}/coverage/packages/nx-debug-hasher-runner"],
       "options": {
         "passWithNoTests": true,
         "reportsDirectory": "../../coverage/packages/nx-debug-hasher-runner"
