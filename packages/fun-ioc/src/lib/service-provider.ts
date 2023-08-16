@@ -1,10 +1,23 @@
-import { IServiceCollection, IServiceProvider, IServiceToken } from './types';
+import { createServiceToken } from './create-service-token';
+import {
+  FactoryDescriptor,
+  provideValue,
+  ValueDescriptor,
+} from './descriptors';
+import { providerToken } from './service-collection';
+import {
+  Func,
+  IServiceCollection,
+  IServiceProvider,
+  IServiceToken,
+} from './types';
 
 export class ServiceProvider implements IServiceProvider {
-  private serviceCollection: IServiceCollection;
+  protected serviceCollection: IServiceCollection;
 
   constructor(serviceCollection: IServiceCollection) {
     this.serviceCollection = serviceCollection;
+    this.serviceCollection.replace(new ValueDescriptor(providerToken.id, this));
   }
 
   protected objectPool: Record<string, unknown> = {};
@@ -25,4 +38,22 @@ export class ServiceProvider implements IServiceProvider {
     this.objectPool[token.id] = created;
     return created;
   }
+
+  extends(config: Func<IServiceCollection, IServiceCollection>): this {
+    return new ServiceProvider(config(this.serviceCollection)) as this;
+  }
+}
+
+export function provideFrom<TTokens extends readonly IServiceToken<unknown>[]>(
+  sp: IServiceProvider,
+  tokens: TTokens,
+) {
+  return <TC extends IServiceCollection>(collection: TC) => {
+    tokens.forEach((token) => {
+      collection.add(
+        new FactoryDescriptor(token.id, [], () => sp.getService(token)),
+      );
+    });
+    return collection;
+  };
 }

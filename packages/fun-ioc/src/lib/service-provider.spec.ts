@@ -1,13 +1,21 @@
-import { vi } from 'vitest';
+import { expect, vi } from 'vitest';
 import { createServiceToken } from './create-service-token';
 import {
   defineServiceFactory,
   provideFactory,
   provideValue,
 } from './descriptors';
-import { ServiceCollection } from './service-collection';
+import { providerToken, ServiceCollection } from './service-collection';
+import { provideFrom } from './service-provider';
 
+const fooToken = createServiceToken<{ a: number }>('foo');
+const barToken = createServiceToken<{ b: number }>('bar');
 describe('ServiceProvider', () => {
+  it('should return it self with providerToken', () => {
+    const sp = new ServiceCollection().buildServiceProvider();
+    expect(sp.getService(providerToken)).toBe(sp);
+  });
+
   it('should return the same instance for the same token', () => {
     const services = new ServiceCollection();
     services.pipe(
@@ -22,13 +30,15 @@ describe('ServiceProvider', () => {
   it('should invoke factory with dependencies', () => {
     const services = new ServiceCollection();
     const token1 = createServiceToken<{ a: number }>('foo');
-    const token2 = createServiceToken<{ b: number }>('bar');
     const barFactory = defineServiceFactory([token1], (foo) => ({ b: foo.a }));
 
     const sp = services
-      .pipe(provideValue(token1, { a: 1 }), provideFactory(token2, barFactory))
+      .pipe(
+        provideValue(token1, { a: 1 }),
+        provideFactory(barToken, barFactory),
+      )
       .buildServiceProvider();
-    const instance = sp.getService(token2);
+    const instance = sp.getService(barToken);
     expect(instance).toEqual({ b: 1 });
   });
 
@@ -40,16 +50,68 @@ describe('ServiceProvider', () => {
   // it should only invoke factory once
   it('should only invoke factory once', () => {
     const services = new ServiceCollection();
-    const token1 = createServiceToken<{ a: number }>('foo');
     const factoryMock = vi.fn();
     factoryMock.mockReturnValue({ a: 1 });
     const fooFactory = defineServiceFactory([], factoryMock);
     const sp = services
-      .pipe(provideFactory(token1, fooFactory))
+      .pipe(provideFactory(fooToken, fooFactory))
       .buildServiceProvider();
-    expect(sp.getService(token1)).toEqual({ a: 1 });
-    expect(sp.getService(token1)).toEqual({ a: 1 });
-    expect(sp.getService(token1)).toEqual({ a: 1 });
+    expect(sp.getService(fooToken)).toEqual({ a: 1 });
+    expect(sp.getService(fooToken)).toEqual({ a: 1 });
+    expect(sp.getService(fooToken)).toEqual({ a: 1 });
     expect(factoryMock).toHaveBeenCalledTimes(1);
+  });
+
+  describe('extends', () => {
+    // it should get service from parent
+    it('can get service from parent', () => {
+      const parent = new ServiceCollection()
+        .pipe(provideValue(fooToken, { a: 1 }))
+        .buildServiceProvider();
+      const child = parent.extends((services) =>
+        services.pipe(provideValue(barToken, { b: 2 })),
+      );
+      expect(child.getService(fooToken)).toEqual({ a: 1 });
+      expect(child.getService(barToken)).toEqual({ b: 2 });
+    });
+
+    // it can provide deps later
+    it('can provide deps later', () => {
+      const fooFactory = defineServiceFactory([barToken], (bar) => ({
+        a: bar.b + 10,
+      }));
+      const parent = new ServiceCollection()
+        .pipe(provideFactory(fooToken, fooFactory))
+        .buildServiceProvider();
+
+      const child = parent.extends((services) =>
+        services.pipe(provideValue(barToken, { b: 2 })),
+      );
+
+      expect(child.getService(fooToken)).toEqual({ a: 12 });
+    });
+
+    // child provider should return it self for provider token
+    test('child provider should return it self for provider token', () => {
+      const parent = new ServiceCollection().buildServiceProvider();
+      const child = parent.extends((services) => services);
+      expect(child.getService(providerToken)).toBe(child);
+      expect(child.getService(providerToken)).not.toBe(parent);
+    });
+  });
+
+  describe('provideFrom', () => {
+    it('should provide services from another provider', () => {
+      const sp1 = new ServiceCollection()
+        .pipe(provideValue(fooToken, { a: 1 }))
+        .buildServiceProvider();
+      const sp2 = new ServiceCollection()
+        .pipe(provideFrom(sp1, [fooToken]))
+        .buildServiceProvider();
+
+      const instance = sp2.getService(fooToken);
+      expect(instance).toEqual({ a: 1 });
+      expect(instance).toBe(sp1.getService(fooToken));
+    });
   });
 });
