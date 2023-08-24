@@ -1,4 +1,5 @@
-import { expect, vi } from 'vitest';
+import { describe, expect, vi } from 'vitest';
+import { IDisposable } from './types';
 import { createServiceToken } from './create-service-token';
 import {
   defineServiceFactory,
@@ -114,6 +115,27 @@ describe('ServiceProvider', () => {
       const instance = sp2.getService(fooToken);
       expect(instance).toEqual({ a: 1 });
       expect(instance).toBe(sp1.getService(fooToken));
+    });
+  });
+
+  describe('dispose', () => {
+    it('should throw if disposed', () => {
+      const sp = new ServiceCollection().buildServiceProvider();
+      sp.dispose();
+      expect(() => sp.getService(fooToken)).toThrow();
+    });
+
+    it('should dispose all services', () => {
+      const disposeMock = vi.fn();
+      const testToken = createServiceToken<IDisposable>('test');
+      const sp = new ServiceCollection()
+        .pipe(provideValue(testToken, { dispose: disposeMock }))
+        .buildServiceProvider();
+
+      sp.getService(testToken);
+      sp.dispose();
+
+      expect(disposeMock).toHaveBeenCalledTimes(1);
     });
   });
 });

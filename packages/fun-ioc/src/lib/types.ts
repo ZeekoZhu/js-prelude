@@ -5,7 +5,11 @@ export interface IServiceToken<T> {
 
 export type Impl<TToken> = TToken extends IServiceToken<infer T> ? T : never;
 
-export interface IServiceProvider {
+export interface IDisposable {
+  dispose(): void;
+}
+
+export interface IServiceProvider extends IDisposable {
   getService<T>(token: IServiceToken<T>): T;
 
   /**

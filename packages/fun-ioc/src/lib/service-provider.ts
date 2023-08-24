@@ -2,6 +2,7 @@ import { FactoryDescriptor, ValueDescriptor } from './descriptors';
 import { providerToken } from './service-collection';
 import {
   Func,
+  IDisposable,
   IServiceCollection,
   IServiceProvider,
   IServiceToken,
@@ -18,6 +19,7 @@ export class ServiceProvider implements IServiceProvider {
   protected objectPool: Record<string, unknown> = {};
 
   getService<T>(token: IServiceToken<T>): T {
+    this.checkDisposed();
     if (this.objectPool[token.id]) {
       return this.objectPool[token.id] as T;
     }
@@ -36,6 +38,24 @@ export class ServiceProvider implements IServiceProvider {
 
   extends(config: Func<IServiceCollection, IServiceCollection>): this {
     return new ServiceProvider(config(this.serviceCollection)) as this;
+  }
+
+  private checkDisposed() {
+    if (!this.objectPool) {
+      throw new Error('The service provider has been disposed.');
+    }
+  }
+
+  dispose(): void {
+    Object.values(this.objectPool).forEach((obj) => {
+      const dispose = (obj as IDisposable)?.dispose;
+      if (dispose && typeof dispose === 'function') {
+        dispose();
+      }
+    });
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.objectPool = null;
   }
 }
 

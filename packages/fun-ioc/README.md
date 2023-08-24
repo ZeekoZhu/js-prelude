@@ -198,6 +198,26 @@ const serviceProvider = new ServiceCollection()
 const someString = serviceProvider.getService(someStringToken);
 ```
 
+#### Dispose a `ServiceProvider`
+
+The `ServiceProvider` implements the `IDisposable` interface, so you can call
+the `dispose` method to dispose it.
+When a `ServiceProvider` is disposed,
+all the services it provides will be disposed as well.
+
+```ts
+const disposeMock = vi.fn();
+const testToken = createServiceToken<IDisposable>('test');
+const sp = new ServiceCollection()
+  .pipe(provideValue(testToken, { dispose: disposeMock }))
+  .buildServiceProvider();
+
+sp.getService(testToken);
+sp.dispose();
+
+expect(disposeMock).toHaveBeenCalledTimes(1);
+```
+
 #### Modify `ServiceProvider`
 
 Once a `ServiceProvider` is created,
@@ -216,9 +236,9 @@ import {
 // let's say we have a service provider `rootProvider` that provides a string 'hello'
 
 const newProvider = rootProvider.extends(
-  new ServiceCollection()
-    .pipe
+  new ServiceCollection().pipe(
     // register new service here
-    (),
+    provideValue(someToken, someValue),
+  ),
 );
 ```
