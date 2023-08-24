@@ -9,7 +9,9 @@ import { providerToken, ServiceCollection } from './service-collection';
 import { provideFrom } from './service-provider';
 
 const fooToken = createServiceToken<{ a: number }>('foo');
+
 const barToken = createServiceToken<{ b: number }>('bar');
+
 describe('ServiceProvider', () => {
   it('should return it self with providerToken', () => {
     const sp = new ServiceCollection().buildServiceProvider();

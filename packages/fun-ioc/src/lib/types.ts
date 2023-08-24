@@ -3,6 +3,8 @@ export interface IServiceToken<T> {
   id: string;
 }
 
+export type Impl<TToken> = TToken extends IServiceToken<infer T> ? T : never;
+
 export interface IServiceProvider {
   getService<T>(token: IServiceToken<T>): T;
 

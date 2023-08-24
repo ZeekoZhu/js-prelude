@@ -1,9 +1,4 @@
-import { createServiceToken } from './create-service-token';
-import {
-  FactoryDescriptor,
-  provideValue,
-  ValueDescriptor,
-} from './descriptors';
+import { FactoryDescriptor, ValueDescriptor } from './descriptors';
 import { providerToken } from './service-collection';
 import {
   Func,
