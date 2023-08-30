@@ -9,6 +9,16 @@
   "dependencies": {
     "@swc/helpers": "~0.5.0"
   },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^17.0.0 || ^16.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.2",
+    "@testing-library/react": "^14.0.0",
+    "@types/testing-library__jest-dom": "^6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
   "type": "module",
   "main": "./src/index.js",
   "module": "./src/index.js",
@@ -16,6 +26,10 @@
     ".": {
       "import": "./src/index.js",
       "require": "./src/index.js"
+    },
+    "./react": {
+      "import": "./src/react/index.js",
+      "require": "./src/react/index.js"
     }
   },
   "typings": "./src/index.d.ts"
