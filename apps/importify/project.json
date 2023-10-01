@@ -20,7 +20,7 @@
           "apps/importify/src/assets"
         ],
         "styles": [
-          "@angular/material/prebuilt-themes/purple-green.css",
+          "@angular/material/prebuilt-themes/deeppurple-amber.css",
           "apps/importify/src/styles.css"
         ],
         "scripts": []
@@ -47,7 +47,13 @@
           "vendorChunk": true,
           "extractLicenses": false,
           "sourceMap": true,
-          "namedChunks": true
+          "namedChunks": true,
+          "fileReplacements": [
+            {
+              "replace": "apps/importify/src/environments/environment.ts",
+              "with": "apps/importify/src/environments/environment.development.ts"
+            }
+          ]
         }
       },
       "defaultConfiguration": "production"
@@ -59,7 +65,8 @@
           "browserTarget": "importify:build:production"
         },
         "development": {
-          "browserTarget": "importify:build:development"
+          "browserTarget": "importify:build:development",
+          "allowedHosts": ["importify-dev.zeeko.dev"]
         }
       },
       "defaultConfiguration": "development"

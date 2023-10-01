@@ -1,0 +1,28 @@
+<mat-form-field class="w-full" appearance="outline">
+  <mat-label>Search playlist</mat-label>
+  <input
+    matInput
+    type="text"
+    (input)="actions.searchPlaylist(search.value)"
+    #search
+  />
+</mat-form-field>
+
+<mat-selection-list
+  [multiple]="false"
+  (selectionChange)="
+    actions.selectPlaylist(
+      listSelect.selectedOptions.hasValue()
+        ? listSelect.selectedOptions.selected[0].value
+        : undefined
+    )
+  "
+  #listSelect
+>
+  <mat-list-option
+    *rxFor="let playlist of filteredPlaylist$; trackBy: 'id'"
+    [value]="playlist"
+  >
+    {{ playlist.name }}
+  </mat-list-option>
+</mat-selection-list>

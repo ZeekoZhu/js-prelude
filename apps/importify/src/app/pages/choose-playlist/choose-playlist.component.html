@@ -1,0 +1,12 @@
+<div class="w-96 m-auto mt-8">
+  <h2>Choose a playlist</h2>
+  <zeeko-playlist-select
+    class="w-full"
+    (selectPlaylist)="actions.selectPlaylist($event)"
+  />
+  <ng-container *rxLet="state.select('selectedPlaylist'); let p">
+    <button mat-raised-button [disabled]="!p" class="w-full" color="primary">
+      Next
+    </button>
+  </ng-container>
+</div>
