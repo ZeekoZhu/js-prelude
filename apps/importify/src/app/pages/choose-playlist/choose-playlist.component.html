@@ -5,7 +5,13 @@
     (selectPlaylist)="actions.selectPlaylist($event)"
   />
   <ng-container *rxLet="state.select('selectedPlaylist'); let p">
-    <button mat-raised-button [disabled]="!p" class="w-full" color="primary">
+    <button
+      mat-raised-button
+      [disabled]="!p"
+      class="w-full"
+      color="primary"
+      routerLink="/choose-file"
+    >
       Next
     </button>
   </ng-container>

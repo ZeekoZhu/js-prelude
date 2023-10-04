@@ -253,6 +253,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular-material-components/file-input@npm:^16.0.1":
+  version: 16.0.1
+  resolution: "@angular-material-components/file-input@npm:16.0.1"
+  dependencies:
+    tslib: ^2.3.0
+  peerDependencies:
+    "@angular/cdk": ^16.0.0
+    "@angular/common": ^16.0.0
+    "@angular/core": ^16.0.0
+    "@angular/forms": ^16.0.0
+    "@angular/material": ^16.0.0
+    "@angular/platform-browser": ^16.0.0
+  checksum: d47e8a1d95eee8d31155cc823ca0b6f04600f3520c9145a664e560e84976c295bbefe93d28ca9b013d9954f6d81440355dace7aa1ec3eccf90ebd456818739ef
+  languageName: node
+  linkType: hard
+
 "@angular/animations@npm:~16.1.0":
   version: 16.1.9
   resolution: "@angular/animations@npm:16.1.9"
@@ -7299,6 +7315,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/papaparse@npm:^5":
+  version: 5.3.9
+  resolution: "@types/papaparse@npm:5.3.9"
+  dependencies:
+    "@types/node": "*"
+  checksum: 05e6e3463f8ac6615d5bb793253faeaa49fac6f59ffd50c2c93373be503f057abc8c9bab889a6623a1c5cdcad39c57e5eaaa1164ce00a5926d8b53df598fb9a5
+  languageName: node
+  linkType: hard
+
 "@types/parse-json@npm:^4.0.0":
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
@@ -8572,6 +8597,7 @@ __metadata:
     "@angular-eslint/eslint-plugin": ~16.0.0
     "@angular-eslint/eslint-plugin-template": ~16.0.0
     "@angular-eslint/template-parser": ~16.0.0
+    "@angular-material-components/file-input": ^16.0.1
     "@angular/animations": ~16.1.0
     "@angular/cdk": 16.1.4
     "@angular/cli": ~16.1.0
@@ -8618,6 +8644,7 @@ __metadata:
     "@swc/jest": 0.2.20
     "@types/jest": ^29.4.0
     "@types/node": 18.7.1
+    "@types/papaparse": ^5
     "@types/react": 18.2.14
     "@types/react-dom": 18.2.6
     "@typescript-eslint/eslint-plugin": 5.62.0
@@ -8648,6 +8675,7 @@ __metadata:
     nx: 16.6.0
     nx-cloud: 16.2.0
     nx-remotecache-minio: ^4.2.0
+    papaparse: ^5.4.1
     postcss: ^8.4.21
     prettier: ^2.6.2
     react: 17
@@ -18604,6 +18632,13 @@ __metadata:
   version: 1.0.11
   resolution: "pako@npm:1.0.11"
   checksum: 1be2bfa1f807608c7538afa15d6f25baa523c30ec870a3228a89579e474a4d992f4293859524e46d5d87fd30fa17c5edf34dbef0671251d9749820b488660b16
+  languageName: node
+  linkType: hard
+
+"papaparse@npm:^5.4.1":
+  version: 5.4.1
+  resolution: "papaparse@npm:5.4.1"
+  checksum: fc9e52f7158dca3517c229e3309065b1ab5da6c7194572fba4f31ff138bc43e3c91182cc40365cc828f97fe10d0aca416068fd731661058bea0f69ddb84a411a
   languageName: node
   linkType: hard
 
