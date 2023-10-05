@@ -1,16 +1,25 @@
-import { catchError, map, Observable, of, startWith, switchAll } from 'rxjs';
+import {
+  bufferCount,
+  catchError,
+  filter,
+  map,
+  Observable,
+  of,
+  startWith,
+  switchAll,
+} from 'rxjs';
 
 export interface Pending {
   type: 'pending';
 }
 
 export interface Ok<T> {
-  type: 'success';
+  type: 'ok';
   value: T;
 }
 
 export interface Err<TErr> {
-  type: 'failure';
+  type: 'err';
   error: TErr;
 }
 
@@ -18,11 +27,11 @@ export type Result<T, TErr> = Ok<T> | Err<TErr>;
 export type AsyncResult<T, TErr> = Pending | Result<T, TErr>;
 
 export function ok<T>(value: T): Ok<T> {
-  return { type: 'success', value: value };
+  return { type: 'ok', value: value };
 }
 
 export function err<T>(error: T): Err<T> {
-  return { type: 'failure', error };
+  return { type: 'err', error };
 }
 
 export const pending: Pending = Object.freeze({ type: 'pending' });
@@ -34,13 +43,13 @@ export function isPending<T, TErr>(
 }
 
 export function isOk<T, TErr>(result: AsyncResult<T, TErr>): result is Ok<T> {
-  return result.type === 'success';
+  return result.type === 'ok';
 }
 
 export function isErr<T, TErr>(
   result: AsyncResult<T, TErr>,
 ): result is Err<TErr> {
-  return result.type === 'failure';
+  return result.type === 'err';
 }
 
 export function mapOk<T, TErr, TNew>(
@@ -81,9 +90,9 @@ export function toAsyncResult<T>(
   src: Observable<T>,
 ): Observable<AsyncResult<T, unknown>> {
   return src.pipe(
-    map((value) => ({ type: 'success', value } as const)),
-    startWith({ type: 'pending' } as const),
-    catchError((error) => of({ type: 'failure', error } as const)),
+    map((value) => ok(value)),
+    startWith(pending),
+    catchError((error) => of(err(error))),
   );
 }
 
@@ -91,4 +100,14 @@ export function toManyAsyncResult<T>(
   src: Observable<Observable<T>>,
 ): Observable<AsyncResult<T, unknown>> {
   return src.pipe(map(toAsyncResult), switchAll());
+}
+
+export function untilOk<T>(
+  src: Observable<AsyncResult<T, unknown>>,
+): Observable<Ok<T>> {
+  return src.pipe(
+    bufferCount(2, 1),
+    filter(([prev, curr]) => isOk(curr) && !isOk(prev)),
+    map(([, curr]) => curr as Ok<T>),
+  );
 }

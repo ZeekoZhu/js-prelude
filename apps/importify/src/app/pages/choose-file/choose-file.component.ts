@@ -22,10 +22,11 @@ import {
   ok,
   pending,
   toAsyncResult,
+  untilOk,
 } from '../../async-result';
 import { SpotifySdkProviderService } from '../../services/spotify-sdk-provider.service';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
-import { RxEffects } from '@rx-angular/state/effects';
+import { Router } from '@angular/router';
 
 function mockQuery() {
   return concat(of(pending), of(ok(undefined)).pipe(delay(2000)));
@@ -70,7 +71,10 @@ export class ChooseFileComponent {
   );
 
   constructor() {
+    const router = inject(Router);
     this.state.set({ tracks: [], importTask: ok(undefined) });
+
+    // tracks file selection
     this.state.connect(
       'tracks',
       this.actions.selectFile$.pipe(
@@ -82,16 +86,21 @@ export class ChooseFileComponent {
         this.actions.selectFile(file);
       }
     });
+    this.state.hold(this.state.select('tracks'), (tracks) => {
+      this.datasource.data = tracks;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.importCtx.importEntry!.tracks = tracks;
+    });
 
-    this.state.hold(
-      this.state.select('tracks'),
-      (tracks) => (this.datasource.data = tracks),
-    );
+    // import tracks
     this.state.connect(
       'importTask',
-      this.actions.importTracks$.pipe(
-        tap((file) => console.log('import tracks')),
-        switchMap(() => mockQuery()),
+      this.actions.importTracks$.pipe(switchMap(() => mockQuery())),
+    );
+    this.state.hold(
+      this.state.select('importTask').pipe(
+        untilOk,
+        switchMap(() => router.navigate(['/import-finished'])),
       ),
     );
   }
