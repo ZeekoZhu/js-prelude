@@ -1,6 +1,7 @@
 <mat-form-field class="w-full" appearance="outline">
   <mat-label>Search playlist</mat-label>
   <input
+    [disabled]="(isPlaylistPending$ | async)?.yes"
     matInput
     type="text"
     (input)="actions.searchPlaylist(search.value)"
@@ -8,7 +9,12 @@
   />
 </mat-form-field>
 
+<mat-progress-bar
+  *rxIf="(isPlaylistPending$ | async)?.yes"
+  mode="indeterminate"
+/>
 <mat-selection-list
+  [disabled]="(isPlaylistPending$ | async)?.yes"
   [multiple]="false"
   (selectionChange)="
     actions.selectPlaylist(

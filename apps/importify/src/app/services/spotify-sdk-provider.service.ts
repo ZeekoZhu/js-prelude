@@ -12,7 +12,9 @@ export class SpotifySdkProviderService {
     this.sdk = SpotifyApi.withUserAuthorization(
       environment.clientId,
       environment.redirectUrl,
-      ['playlist-modify-private', 'playlist-read-private'],
+      [ 'playlist-modify-private',
+        'playlist-read-private',
+        'playlist-modify-public' ],
     );
   }
 }

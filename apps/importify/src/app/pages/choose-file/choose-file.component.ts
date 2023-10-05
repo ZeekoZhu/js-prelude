@@ -1,42 +1,33 @@
 import { Component, inject, ViewChild } from '@angular/core';
+
 import { ImportContextService } from '../../services/import-context.service';
 import { RxState } from '@rx-angular/state';
 import { RxActionFactory } from '@rx-angular/state/actions';
 import {
   combineLatestWith,
-  concat,
-  delay,
   map,
   of,
   switchMap,
-  tap,
 } from 'rxjs';
 import Papa from 'papaparse';
 import { FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import {
-  AsyncResult,
+  AsyncResult, delayResult,
   err,
   isPending,
   ok,
-  pending,
   toAsyncResult,
   untilOk,
 } from '../../async-result';
-import { SpotifySdkProviderService } from '../../services/spotify-sdk-provider.service';
-import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 import { Router } from '@angular/router';
-
-function mockQuery() {
-  return concat(of(pending), of(ok(undefined)).pipe(delay(2000)));
-}
 
 @Component({
   selector: 'zeeko-choose-file',
   templateUrl: './choose-file.component.html',
-  styleUrls: ['./choose-file.component.css'],
-  providers: [RxState, RxActionFactory],
+  styleUrls: [ './choose-file.component.css' ],
+  providers: [ RxState, RxActionFactory ],
 })
 export class ChooseFileComponent {
   state: RxState<State> = inject(RxState);
@@ -44,10 +35,9 @@ export class ChooseFileComponent {
     {},
   );
   importCtx = inject(ImportContextService);
-  displayedColumns = ['trackName', 'trackUri'];
+  displayedColumns = [ 'trackName', 'trackUri' ];
   fileInputControl = new FormControl<File | null>(null);
   datasource = new MatTableDataSource();
-  sdkProvider = inject(SpotifySdkProviderService);
 
   @ViewChild(MatPaginator, { static: false }) set paginator(
     paginator: MatPaginator,
@@ -67,7 +57,7 @@ export class ChooseFileComponent {
   showProgress$ = this.state.select('importTask').pipe(map(isPending));
   disableImportBtn$ = this.showTable$.pipe(
     combineLatestWith(this.showProgress$),
-    map(([showTable, isPending]) => !showTable || isPending),
+    map(([ showTable, isPending ]) => !showTable || isPending),
   );
 
   constructor() {
@@ -95,12 +85,12 @@ export class ChooseFileComponent {
     // import tracks
     this.state.connect(
       'importTask',
-      this.actions.importTracks$.pipe(switchMap(() => mockQuery())),
+      this.actions.importTracks$.pipe(switchMap(() => this.importTracks())),
     );
     this.state.hold(
       this.state.select('importTask').pipe(
         untilOk,
-        switchMap(() => router.navigate(['/import-finished'])),
+        switchMap(() => router.navigate([ '/import-finished' ])),
       ),
     );
   }
@@ -110,11 +100,10 @@ export class ChooseFileComponent {
     if (!playlistId) {
       return of(err('no playlist selected'));
     }
-    const trackUris = this.state.get('tracks').map((track) => track.trackUri);
-    const sdk = this.sdkProvider.sdk;
-    return fromPromise(
-      sdk.playlists.addItemsToPlaylist(playlistId, trackUris),
-    ).pipe(toAsyncResult);
+    return this.importCtx.importTracks().pipe(
+      toAsyncResult,
+      delayResult(1000),
+    );
   }
 }
 

@@ -7,12 +7,18 @@ import {
   map,
   Observable,
   startWith,
-  tap,
 } from 'rxjs';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 import { RxState } from '@rx-angular/state';
 import { RxActionFactory, RxActions } from '@rx-angular/state/actions';
 import { SpotifySdkProviderService } from '../../services/spotify-sdk-provider.service';
+import {
+  AsyncResult,
+  delayResult,
+  okValues,
+  pendingValues,
+  toAsyncResult,
+} from '../../async-result';
 
 @Component({
   selector: 'zeeko-playlist-select',
@@ -25,7 +31,8 @@ export class PlaylistSelectComponent implements View {
   actions: RxActions<Actions> = inject(RxActionFactory<Actions>).create();
   state: RxState<State> = inject(RxState<State>);
   vm$: Observable<State> = this.state.select();
-  playlist$ = this.state.select('playlist');
+  playlist$ = this.state.select('playlist').pipe(okValues);
+  isPlaylistPending$ = this.state.select('playlist').pipe(pendingValues);
   filteredPlaylist$: Observable<SimplifiedPlaylist[]> =
     this.actions.searchPlaylist$.pipe(
       startWith(''),
@@ -50,7 +57,7 @@ export class PlaylistSelectComponent implements View {
 }
 
 interface State {
-  playlist: SimplifiedPlaylist[];
+  playlist: AsyncResult<SimplifiedPlaylist[], unknown>;
   selectedPlaylist?: SimplifiedPlaylist;
 }
 
@@ -66,11 +73,11 @@ interface View {
   filteredPlaylist$: Observable<SimplifiedPlaylist[]>;
 }
 
-function loadAllPlaylist(
-  endpoint: CurrentUserEndpoints,
-): Observable<SimplifiedPlaylist[]> {
+function loadAllPlaylist(endpoint: CurrentUserEndpoints) {
   // todo: load all playlists from endpoint
   return fromPromise(endpoint.playlists.playlists(50)).pipe(
     map((page) => page.items),
+    toAsyncResult,
+    delayResult(500),
   );
 }

@@ -1,12 +1,15 @@
 import {
   bufferCount,
   catchError,
+  delay,
+  delayWhen,
   filter,
   map,
   Observable,
   of,
   startWith,
   switchAll,
+  tap,
 } from 'rxjs';
 
 export interface Pending {
@@ -102,6 +105,24 @@ export function toManyAsyncResult<T>(
   return src.pipe(map(toAsyncResult), switchAll());
 }
 
+export type AsyncResultStream<T> = Observable<AsyncResult<T, unknown>>;
+
+export function okValues<T>(src: AsyncResultStream<T>) {
+  return src.pipe(
+    filter(isOk),
+    map((r) => r.value),
+  );
+}
+
+export function pendingValues<T>(src: AsyncResultStream<T>) {
+  return src.pipe(
+    map((it) => ({
+      yes: isPending(it),
+      no: !isPending(it),
+    })),
+  );
+}
+
 export function untilOk<T>(
   src: Observable<AsyncResult<T, unknown>>,
 ): Observable<Ok<T>> {
@@ -110,4 +131,24 @@ export function untilOk<T>(
     filter(([prev, curr]) => isOk(curr) && !isOk(prev)),
     map(([, curr]) => curr as Ok<T>),
   );
+}
+
+/**
+ * Delays the result of an async result until the duration is over.
+ * @param duration
+ */
+export function delayResult<T>(duration: number) {
+  return (src: AsyncResultStream<T>) => {
+    let fistEmitTime = 0;
+    return src.pipe(
+      delayWhen((it) => {
+        if (isPending(it)) {
+          fistEmitTime = Date.now();
+          return of(1);
+        }
+        const diff = Date.now() - fistEmitTime;
+        return of(1).pipe(delay(Math.max(duration - diff, 0)));
+      }),
+    );
+  };
 }
