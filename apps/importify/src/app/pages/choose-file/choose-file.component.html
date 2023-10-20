@@ -1,0 +1,55 @@
+<div class="w-96 m-auto mt-8">
+  <h2>Import tracks to "{{ playlist?.name }}"</h2>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-hint
+      >Select a csv file exported from
+      <zeeko-exportify-link />
+    </mat-hint>
+    <ngx-mat-file-input accept=".csv" [formControl]="fileInputControl" />
+  </mat-form-field>
+
+  <ng-container *rxIf="emptyTracks$">
+    <p class="text-center">No tracks to import</p>
+  </ng-container>
+
+  <button
+    color="accent"
+    mat-raised-button
+    class="mt-4 w-full"
+    (click)="actions.importTracks()"
+    [disabled]="disableImportBtn$ | async"
+  >
+    Import
+  </button>
+</div>
+<div class="w-full px-10 mt-4 box-border">
+  <mat-progress-bar
+    *rxIf="showProgress$"
+    mode="indeterminate"
+  ></mat-progress-bar>
+  <div
+    *rxLet="showTable$; let showTable"
+    [style.display]="showTable ? 'block' : 'none'"
+    class="w-full"
+  >
+    <h3>Tracks in your file</h3>
+    <table mat-table [dataSource]="datasource" class="mat-elevation-z2">
+      <!-- Name Column -->
+      <ng-container matColumnDef="trackName">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.trackName }}</td>
+      </ng-container>
+
+      <!-- Track Uri Column -->
+      <ng-container matColumnDef="trackUri">
+        <th mat-header-cell *matHeaderCellDef>Track Uri</th>
+        <td mat-cell *matCellDef="let element">{{ element.trackUri }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator class="mt-2" [pageSizeOptions]="[10]" showFirstLastButtons />
+  </div>
+</div>

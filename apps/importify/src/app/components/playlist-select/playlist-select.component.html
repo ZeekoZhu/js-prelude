@@ -1,0 +1,34 @@
+<mat-form-field class="w-full" appearance="outline">
+  <mat-label>Search playlist</mat-label>
+  <input
+    [disabled]="(isPlaylistPending$ | async)?.yes"
+    matInput
+    type="text"
+    (input)="actions.searchPlaylist(search.value)"
+    #search
+  />
+</mat-form-field>
+
+<mat-progress-bar
+  *rxIf="(isPlaylistPending$ | async)?.yes"
+  mode="indeterminate"
+/>
+<mat-selection-list
+  [disabled]="(isPlaylistPending$ | async)?.yes"
+  [multiple]="false"
+  (selectionChange)="
+    actions.selectPlaylist(
+      listSelect.selectedOptions.hasValue()
+        ? listSelect.selectedOptions.selected[0].value
+        : undefined
+    )
+  "
+  #listSelect
+>
+  <mat-list-option
+    *rxFor="let playlist of filteredPlaylist$; trackBy: 'id'"
+    [value]="playlist"
+  >
+    {{ playlist.name }}
+  </mat-list-option>
+</mat-selection-list>

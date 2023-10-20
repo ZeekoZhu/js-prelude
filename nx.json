@@ -4,9 +4,9 @@
       "runner": "@zeeko/nx-debug-hasher-runner",
       "options": {
         "debugOptions": {
-          "runner": "nx-remotecache-minio",
           "enable": false,
-          "debugInputPattern": true
+          "debugInputPattern": true,
+          "runner": "nx-remotecache-minio"
         },
         "bucket": "js-prelude-build",
         "region": "auto",
@@ -21,6 +21,10 @@
       }
     }
   },
+  "workspaceLayout": {
+    "appsDir": "apps",
+    "libsDir": "packages"
+  },
   "extends": "nx/presets/npm.json",
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
@@ -29,6 +33,21 @@
     },
     "test": {
       "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"]
+    }
+  },
+  "generators": {
+    "@nx/angular:application": {
+      "style": "css",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nx/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nx/angular:component": {
+      "style": "css"
     }
   }
 }
