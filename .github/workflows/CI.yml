@@ -12,6 +12,8 @@ jobs:
       NXCACHE_MINIO_URL: ${{ secrets.NXCACHE_MINIO_URL }}
       NXCACHE_MINIO_SECRET_KEY: ${{ secrets.NXCACHE_MINIO_SECRET_KEY }}
       NXCACHE_MINIO_ACCESS_KEY: ${{ secrets.NXCACHE_MINIO_ACCESS_KEY }}
+      APP_CLIENT_ID: 'placeholder'
+      APP_REDIRECT_URL: 'placeholder'
     steps:
       - uses: actions/checkout@v3
         with:
