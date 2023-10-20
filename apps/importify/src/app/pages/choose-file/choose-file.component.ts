@@ -3,18 +3,14 @@ import { Component, inject, ViewChild } from '@angular/core';
 import { ImportContextService } from '../../services/import-context.service';
 import { RxState } from '@rx-angular/state';
 import { RxActionFactory } from '@rx-angular/state/actions';
-import {
-  combineLatestWith,
-  map,
-  of,
-  switchMap,
-} from 'rxjs';
+import { combineLatestWith, map, of, switchMap } from 'rxjs';
 import Papa from 'papaparse';
 import { FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import {
-  AsyncResult, delayResult,
+  AsyncResult,
+  delayResult,
   err,
   isPending,
   ok,
@@ -26,8 +22,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'zeeko-choose-file',
   templateUrl: './choose-file.component.html',
-  styleUrls: [ './choose-file.component.css' ],
-  providers: [ RxState, RxActionFactory ],
+  styleUrls: ['./choose-file.component.css'],
+  providers: [RxState, RxActionFactory],
 })
 export class ChooseFileComponent {
   state: RxState<State> = inject(RxState);
@@ -35,7 +31,7 @@ export class ChooseFileComponent {
     {},
   );
   importCtx = inject(ImportContextService);
-  displayedColumns = [ 'trackName', 'trackUri' ];
+  displayedColumns = ['trackName', 'trackUri'];
   fileInputControl = new FormControl<File | null>(null);
   datasource = new MatTableDataSource();
 
@@ -57,7 +53,7 @@ export class ChooseFileComponent {
   showProgress$ = this.state.select('importTask').pipe(map(isPending));
   disableImportBtn$ = this.showTable$.pipe(
     combineLatestWith(this.showProgress$),
-    map(([ showTable, isPending ]) => !showTable || isPending),
+    map(([showTable, isPending]) => !showTable || isPending),
   );
 
   constructor() {
@@ -90,7 +86,7 @@ export class ChooseFileComponent {
     this.state.hold(
       this.state.select('importTask').pipe(
         untilOk,
-        switchMap(() => router.navigate([ '/import-finished' ])),
+        switchMap(() => router.navigate(['/import-finished'])),
       ),
     );
   }
@@ -100,10 +96,7 @@ export class ChooseFileComponent {
     if (!playlistId) {
       return of(err('no playlist selected'));
     }
-    return this.importCtx.importTracks().pipe(
-      toAsyncResult,
-      delayResult(1000),
-    );
+    return this.importCtx.importTracks().pipe(toAsyncResult, delayResult(1000));
   }
 }
 

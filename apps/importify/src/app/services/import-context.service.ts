@@ -36,19 +36,23 @@ export class ImportContextService {
       return throwError(() => 'No tracks to import');
     }
     const playlistId = this.importEntry.playlist.id;
-    const chunks = chunk(this.importEntry.tracks.map(it => it.trackUri),
-      TRACKS_PER_REQUEST);
+    const chunks = chunk(
+      this.importEntry.tracks.map((it) => it.trackUri),
+      TRACKS_PER_REQUEST,
+    );
     return from(chunks).pipe(
-      switchMap(chunk => addTracksToPlaylist(playlistId, chunk, this.sdk)),
+      switchMap((chunk) => addTracksToPlaylist(playlistId, chunk, this.sdk)),
     );
   }
 }
 
 const TRACKS_PER_REQUEST = 100;
 
-function addTracksToPlaylist(playlistId: string,
-                             tracks: string[],
-                             sdk: SpotifyApi): Observable<void> {
+function addTracksToPlaylist(
+  playlistId: string,
+  tracks: string[],
+  sdk: SpotifyApi,
+): Observable<void> {
   return defer(() => sdk.playlists.addItemsToPlaylist(playlistId, tracks)).pipe(
     retry(3),
   );
