@@ -17,6 +17,7 @@
         "packages/nx-debug-hasher-runner/src/index.ts"
       ],
       "@zeeko/power-accessor": ["packages/power-accessor/src/index.ts"],
+      "@zeeko/retro-identicon": ["packages/retro-identicon/src/index.ts"],
       "@zeeko/ts-sync-ref": ["packages/ts-sync-ref/src/index.ts"]
     }
   },
