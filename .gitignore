@@ -62,3 +62,4 @@ docs/packages/power-accessor### yarn
 
 .angular
 **/*/environment.development.ts
+**/*/.vitepress/cache

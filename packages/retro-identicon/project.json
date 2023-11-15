@@ -35,6 +35,13 @@
         "passWithNoTests": true,
         "reportsDirectory": "../../coverage/packages/retro-identicon"
       }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "packages/retro-identicon",
+        "command": "vitepress dev docs"
+      }
     }
   },
   "tags": []
