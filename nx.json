@@ -1,13 +1,8 @@
 {
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@zeeko/nx-debug-hasher-runner",
+      "runner": "nx-remotecache-minio",
       "options": {
-        "debugOptions": {
-          "enable": false,
-          "debugInputPattern": true,
-          "runner": "nx-remotecache-minio"
-        },
         "bucket": "js-prelude-build",
         "region": "auto"
       }
@@ -21,12 +16,22 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
     "lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json"
+      ],
       "cache": true
     },
     "test": {
-      "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"],
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/jest.preset.js"
+      ],
       "cache": true
+    },
+    "test:watch": {
+      "cache": false
     },
     "build": {
       "cache": true
@@ -41,7 +46,11 @@
       "cache": true
     },
     "@nx/jest:jest": {
-      "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"],
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/jest.preset.js"
+      ],
       "cache": true,
       "options": {
         "passWithNoTests": true
