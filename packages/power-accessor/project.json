@@ -30,11 +30,6 @@
       "outputs": ["{projectRoot}/coverage"],
       "options": {
         "passWithNoTests": true
-      },
-      "configurations": {
-        "watch": {
-          "watch": true
-        }
       }
     },
     "typedoc": {
