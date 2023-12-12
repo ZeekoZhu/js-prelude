@@ -10,8 +10,7 @@
       "options": {
         "main": "packages/ts-sync-ref/src/bin.ts",
         "tsConfig": "packages/ts-sync-ref/tsconfig.lib.json",
-        "outputPath": "dist/packages/ts-sync-ref",
-        "updateBuildableProjectDepsInPackageJson": true
+        "outputPath": "dist/packages/ts-sync-ref"
       }
     },
     "publish": {
@@ -27,11 +26,8 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["packages/ts-sync-ref/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     }
   },
   "tags": []

@@ -16,7 +16,7 @@ const canActiveSpotifySdk: CanActivateFn = async () => {
   return !!(await sdk.getAccessToken());
 };
 
-const canChooseFile: CanActivateFn = (route) => {
+const canChooseFile: CanActivateFn = () => {
   const importCtx = inject(ImportContextService);
   const router = inject(Router);
   if (importCtx.importEntry == null) {

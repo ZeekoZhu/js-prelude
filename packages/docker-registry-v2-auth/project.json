@@ -11,8 +11,7 @@
         "outputPath": "dist/packages/docker-registry-v2-auth",
         "main": "packages/docker-registry-v2-auth/src/index.ts",
         "tsConfig": "packages/docker-registry-v2-auth/tsconfig.lib.json",
-        "assets": ["packages/docker-registry-v2-auth/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true
+        "assets": ["packages/docker-registry-v2-auth/*.md"]
       }
     },
     "publish": {
@@ -23,11 +22,8 @@
       "dependsOn": ["build"]
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["packages/docker-registry-v2-auth/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/vite:test",

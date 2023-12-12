@@ -9,7 +9,6 @@ import {
   of,
   startWith,
   switchAll,
-  tap,
 } from 'rxjs';
 
 export interface Pending {

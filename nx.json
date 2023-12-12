@@ -9,15 +9,7 @@
           "runner": "nx-remotecache-minio"
         },
         "bucket": "js-prelude-build",
-        "region": "auto",
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e",
-          "typedoc",
-          "build-storybook"
-        ]
+        "region": "auto"
       }
     }
   },
@@ -29,10 +21,37 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
     "lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+      "cache": true
     },
     "test": {
-      "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"]
+      "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"],
+      "cache": true
+    },
+    "build": {
+      "cache": true
+    },
+    "e2e": {
+      "cache": true
+    },
+    "typedoc": {
+      "cache": true
+    },
+    "build-storybook": {
+      "cache": true
+    },
+    "@nx/jest:jest": {
+      "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"],
+      "cache": true,
+      "options": {
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
     }
   },
   "generators": {

@@ -21,8 +21,8 @@
         "@nx/dependency-checks": [
           "error",
           {
-            // these libs will be omitted from checks
-            "ignoredDependencies": ["nx"]
+            "ignoredDependencies": ["nx"],
+            "ignoredFiles": ["{projectRoot}/vite.config.{js,ts,mjs,mts}"]
           }
         ]
       }
