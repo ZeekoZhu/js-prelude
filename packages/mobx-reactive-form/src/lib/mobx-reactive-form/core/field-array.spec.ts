@@ -350,7 +350,6 @@ describe('FieldArray', () => {
     });
 
     it('should infer type correctly', () => {
-      new Set([]);
       const field = new FieldArray([
         new FieldGroup({
           name: new FormField('alice'),

@@ -14,6 +14,7 @@
       "require": "./src/index.js"
     }
   },
+  "types": "src/index.d.ts",
   "devDependencies": {
     "@nx/eslint-plugin": "^16.5.5",
     "@typescript-eslint/eslint-plugin": "5.51.0",

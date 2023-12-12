@@ -31,7 +31,7 @@ function isArrayEqual(a: string[], b: string[]) {
 type FieldArrayOf<TValue> = ReadonlyArray<AbstractFormField<TValue>>;
 
 export interface FieldArrayConstructor {
-  new <TStructure extends FieldArrayOf<unknown>>(
+  new <TValue, TStructure extends FieldArrayOf<TValue> = FieldArrayOf<TValue>>(
     values: TStructure,
   ): FieldArray<TStructure[number]['value'], TStructure>;
 
