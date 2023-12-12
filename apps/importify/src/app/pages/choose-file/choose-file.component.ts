@@ -115,7 +115,7 @@ interface TrackInfo {
   trackName: string;
 }
 
-async function parseTracks(file: File) {
+async function parseTracks(file: Blob) {
   // parse "Track URI", "Track Name" columns from file
   const content = await file.text();
 
