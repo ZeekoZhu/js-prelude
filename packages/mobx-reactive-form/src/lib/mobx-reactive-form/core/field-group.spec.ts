@@ -1,5 +1,6 @@
 import { isObservableProp, reaction } from 'mobx';
-import { beforeEach, describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, expectTypeOf, test } from 'vitest';
+import { FieldArray } from './field-array';
 import { FieldGroup } from './field-group';
 import { FormField } from './form-field';
 import { FormValidator } from './form-validator';
@@ -322,6 +323,29 @@ describe('FieldGroup', () => {
       const nameField = group.field('name');
       nameField.isValidating = true;
       expect(group.isValidating).toBe(true);
+    });
+  });
+
+  describe('typescript features', () => {
+    it('fields("fieldName") should return actual type', () => {
+      const group = new FieldGroup({
+        name: new FormField('alice'),
+        age: new FieldArray([new FormField(99)]),
+      });
+
+      expectTypeOf(group.field('age')).toMatchTypeOf<FieldArray<number>>();
+    });
+
+    it('should infer type correctly', () => {
+      const group = new FieldGroup({
+        name: new FormField('alice'),
+        age: new FieldArray<number>([new FormField(99)]),
+      });
+
+      expectTypeOf(group.value).toMatchTypeOf<{
+        name: string;
+        age: number[];
+      }>();
     });
   });
 });

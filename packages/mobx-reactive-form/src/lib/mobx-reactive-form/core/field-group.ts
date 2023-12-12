@@ -1,9 +1,17 @@
-import { makeAutoObservable, observable } from 'mobx';
+import { IKeyValueMap, makeAutoObservable, observable } from 'mobx';
 import { FormField } from './form-field';
 import { AbstractFormField, IValidatable } from './types';
 
-export class FieldGroup<T extends object>
-  implements AbstractFormField<T>, IValidatable
+type FieldGroupOf<TValue> = {
+  [TK in keyof TValue]: AbstractFormField<TValue[TK]>;
+};
+
+export class FieldGroup<
+  TInferredValue extends TStructure extends FieldGroupOf<infer U> ? U : never,
+  // todo: remove this type parameter once
+  //  constructor parameter type argument inference is supported
+  TStructure extends FieldGroupOf<TInferredValue> = FieldGroupOf<TInferredValue>,
+> implements AbstractFormField<TInferredValue>, IValidatable
 {
   private _isValid = true;
   private _errors: ReadonlyArray<string> = [];
@@ -52,28 +60,28 @@ export class FieldGroup<T extends object>
     this.forEachField((field, key) => {
       result[key] = field.value;
     });
-    return result as T;
+    return result as TInferredValue;
   }
 
   get fields(): ReadonlyMap<string, AbstractFormField<unknown>> {
     return this._fields;
   }
 
-  field<TK extends keyof T>(key: TK): AbstractFormField<T[TK]> {
-    return this._fields.get(key as string) as AbstractFormField<T[TK]>;
+  field<TK extends keyof TStructure>(key: TK): TStructure[TK] {
+    return this._fields.get(key as string) as TStructure[TK];
   }
 
-  constructor(fields: { [key in keyof T]: AbstractFormField<T[key]> }) {
-    this._fields.replace(fields);
+  constructor(fields: TStructure) {
+    this._fields.replace(fields as IKeyValueMap<AbstractFormField<unknown>>);
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
   }
 
-  setValue(val: T): void {
+  setValue(val: TInferredValue): void {
     const value = val as Record<string, unknown>;
     this.forEachField((field, key) => field.setValue(value[key]));
   }
 
-  reset(val?: Partial<T>): void {
+  reset(val?: Partial<TInferredValue>): void {
     const value = val as Record<string, unknown>;
     this.forEachField((field, key) => field.reset(value?.[key]));
     this.setErrors();
@@ -105,7 +113,9 @@ export class FieldGroup<T extends object>
     this._fields.set(name, field);
   }
 
-  setFields(fields: { [key in keyof T]: AbstractFormField<T[key]> }) {
+  setFields(fields: {
+    [key in keyof TInferredValue]: AbstractFormField<TInferredValue[key]>;
+  }) {
     this._fields.replace(fields);
   }
 

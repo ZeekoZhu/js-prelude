@@ -1,6 +1,7 @@
 import { isObservableProp } from 'mobx';
-import { beforeEach, describe, expect } from 'vitest';
+import { beforeEach, describe, expect, expectTypeOf } from 'vitest';
 import { FieldArray } from './field-array';
+import { FieldGroup } from './field-group';
 import { FormField } from './form-field';
 import { FormValidator } from './form-validator';
 
@@ -320,6 +321,52 @@ describe('FieldArray', () => {
       field.setErrors(['error']);
       field.reset();
       expect(field.errors).toEqual([]);
+    });
+  });
+
+  describe('typescript features', () => {
+    it('field(index) should return actual type', () => {
+      const field = new FieldArray([
+        new FieldGroup({
+          name: new FormField('alice'),
+          age: new FormField(99),
+        }),
+      ]);
+      expectTypeOf(field.field(0).field('name')).toMatchTypeOf<
+        FormField<string>
+      >();
+    });
+
+    it('fields() should return actual type', () => {
+      const field = new FieldArray([
+        new FieldGroup({
+          name: new FormField('alice'),
+          age: new FormField(99),
+        }),
+      ]);
+      expectTypeOf(field.fields[0].field('name')).toMatchTypeOf<
+        FormField<string>
+      >();
+    });
+
+    it('should infer type correctly', () => {
+      new Set([]);
+      const field = new FieldArray([
+        new FieldGroup({
+          name: new FormField('alice'),
+          age: new FormField(99),
+        }),
+        new FieldGroup({
+          name: new FormField('alice'),
+          age: new FormField(99),
+        }),
+      ]);
+      expectTypeOf(field.value).toMatchTypeOf<
+        {
+          name: string;
+          age: number;
+        }[]
+      >();
     });
   });
 });

@@ -1,17 +1,17 @@
 import { makeAutoObservable, observable } from 'mobx';
 import { AbstractFormField } from './types';
 
-interface FormFieldWithKey<T> extends AbstractFormField<T> {
+type FormFieldWithKey<T, _TForm extends AbstractFormField<T>> = _TForm & {
   readonly key: string;
-}
+};
 
-function makeFieldWithKey<T>(
-  formField: AbstractFormField<T>,
+function makeFieldWithKey<T, TForm extends AbstractFormField<T>>(
+  formField: TForm,
   index: number,
-): FormFieldWithKey<T> {
+): FormFieldWithKey<T, TForm> {
   return Object.assign(formField, {
     key: index.toString(),
-  }) as FormFieldWithKey<T>;
+  }) as FormFieldWithKey<T, TForm>;
 }
 
 function isArrayEqual(a: string[], b: string[]) {
@@ -28,8 +28,71 @@ function isArrayEqual(a: string[], b: string[]) {
   return true;
 }
 
-export class FieldArray<T> implements AbstractFormField<T[]> {
-  constructor(items: AbstractFormField<T>[]) {
+type FieldArrayOf<TValue> = ReadonlyArray<AbstractFormField<TValue>>;
+
+export interface FieldArrayConstructor {
+  new <TStructure extends FieldArrayOf<unknown>>(
+    values: TStructure,
+  ): FieldArray<TStructure[number]['value'], TStructure>;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly prototype: FieldArray<any>;
+}
+
+export interface FieldArray<
+  TInferredValue,
+  TStructure extends FieldArrayOf<TInferredValue> = FieldArrayOf<TInferredValue>,
+> extends AbstractFormField<TInferredValue[]> {
+  readonly fields: ReadonlyArray<
+    FormFieldWithKey<TInferredValue, TStructure[number]>
+  >;
+  isValidating: boolean;
+  readonly errors: ReadonlyArray<string>;
+  readonly isDirty: boolean;
+  readonly isTouched: boolean;
+  readonly value: TInferredValue[];
+  readonly isValid: boolean;
+
+  reset(val?: TInferredValue[]): void;
+
+  setErrors(errors?: string[]): void;
+
+  setValue(val: TInferredValue[]): void;
+
+  forEachField(
+    callback: (
+      field: FormFieldWithKey<TInferredValue, TStructure[number]>,
+      index: number,
+    ) => void,
+  ): void;
+
+  field(index: number): FormFieldWithKey<TInferredValue, TStructure[number]>;
+
+  insert(number: number, formField: TStructure[number]): void;
+
+  remove(number: number): void;
+
+  move(from: number, to: number): void;
+
+  swap(a: number, b: number): void;
+
+  ensureInRange(a: number): void;
+
+  setField(index: number, formField: TStructure[number]): void;
+
+  clear(): void;
+
+  push(...fields: TStructure): void;
+
+  nextKey(): number;
+}
+
+class FieldArrayImpl<
+  TInferredValue,
+  TStructure extends FieldArrayOf<TInferredValue> = FieldArrayOf<TInferredValue>,
+> implements FieldArray<TInferredValue, TStructure>
+{
+  constructor(items: TStructure) {
     this._value.replace(
       items.map((item) => makeFieldWithKey(item, this.nextKey())),
     );
@@ -40,12 +103,18 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
   private fieldKeys = observable.array<string>([], { deep: false });
 
   private _fieldCounter = 0;
-  private _value = observable.array<FormFieldWithKey<T>>([], { deep: false });
+  private _value = observable.array<
+    FormFieldWithKey<TInferredValue, TStructure[number]>
+  >([], {
+    deep: false,
+  });
   private _isValid = true;
   private _errors: ReadonlyArray<string> = [];
   private _isValidating = false;
 
-  get fields(): ReadonlyArray<FormFieldWithKey<T>> {
+  get fields(): ReadonlyArray<
+    FormFieldWithKey<TInferredValue, TStructure[number]>
+  > {
     return this._value;
   }
 
@@ -85,7 +154,7 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
     );
   }
 
-  get value(): T[] {
+  get value(): TInferredValue[] {
     return this._value.map((field) => field.value);
   }
 
@@ -100,12 +169,12 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
     return result;
   }
 
-  reset(val?: T[]): void {
+  reset(val?: TInferredValue[]): void {
     this.forEachField((field, index) => {
       if (val == null || index >= val.length) {
         field.reset();
       } else {
-        field.reset(val[index]);
+        field.reset(val[index] as TInferredValue);
       }
     });
     const keys = this.fields.map((it) => it.key);
@@ -123,26 +192,29 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
     }
   }
 
-  setValue(val: T[]): void {
+  setValue(val: TInferredValue[]): void {
     this.forEachField((field, index) => {
       if (index < val.length) {
-        field.setValue(val[index]);
+        field.setValue(val[index] as TInferredValue);
       }
     });
   }
 
-  private forEachField(
-    callback: (field: FormFieldWithKey<T>, index: number) => void,
+  forEachField(
+    callback: (
+      field: FormFieldWithKey<TInferredValue, TStructure[number]>,
+      index: number,
+    ) => void,
   ): void {
     this._value.forEach(callback);
   }
 
-  field(index: number): FormFieldWithKey<T> {
+  field(index: number): FormFieldWithKey<TInferredValue, TStructure[number]> {
     this.ensureInRange(index);
     return this._value[index];
   }
 
-  insert(number: number, formField: AbstractFormField<T>) {
+  insert(number: number, formField: TStructure[number]) {
     this.ensureInRange(number);
     this._value.splice(number, 0, makeFieldWithKey(formField, this.nextKey()));
   }
@@ -166,13 +238,13 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
     this._value[b] = temp;
   }
 
-  private ensureInRange(a: number) {
+  ensureInRange(a: number) {
     if (a < 0 || a >= this._value.length) {
       throw new Error('Index out of range');
     }
   }
 
-  setField(index: number, formField: AbstractFormField<T>) {
+  setField(index: number, formField: TStructure[number]) {
     this.ensureInRange(index);
     this._value[index] = makeFieldWithKey(formField, this.nextKey());
   }
@@ -181,13 +253,20 @@ export class FieldArray<T> implements AbstractFormField<T[]> {
     this._value.clear();
   }
 
-  push(...fields: AbstractFormField<T>[]) {
+  push(...fields: TStructure) {
     this._value.push(
-      ...fields.map((field) => makeFieldWithKey(field, this.nextKey())),
+      ...fields.map((field) =>
+        makeFieldWithKey<TInferredValue, TStructure[number]>(
+          field,
+          this.nextKey(),
+        ),
+      ),
     );
   }
 
-  private nextKey() {
+  nextKey() {
     return this._fieldCounter++;
   }
 }
+
+export const FieldArray = FieldArrayImpl as FieldArrayConstructor;
