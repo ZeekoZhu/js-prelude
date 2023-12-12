@@ -6190,7 +6190,7 @@ __metadata:
 
 "@nx/vite@patch:@nx/vite@npm%3A17.2.1#./.yarn/patches/@nx-vite-npm-17.2.1-9a6c23da9d.patch::locator=%40zeeko%2Fprelude%40workspace%3A.":
   version: 17.2.1
-  resolution: "@nx/vite@patch:@nx/vite@npm%3A17.2.1#./.yarn/patches/@nx-vite-npm-17.2.1-9a6c23da9d.patch::version=17.2.1&hash=daf814&locator=%40zeeko%2Fprelude%40workspace%3A."
+  resolution: "@nx/vite@patch:@nx/vite@npm%3A17.2.1#./.yarn/patches/@nx-vite-npm-17.2.1-9a6c23da9d.patch::version=17.2.1&hash=e335c2&locator=%40zeeko%2Fprelude%40workspace%3A."
   dependencies:
     "@nrwl/vite": 17.2.1
     "@nx/devkit": 17.2.1
@@ -6202,7 +6202,7 @@ __metadata:
   peerDependencies:
     vite: ^5.0.0
     vitest: ">=0.34.6 <1.0.0"
-  checksum: 0b0a581fbbd1a1622419777784c33e3e1b51f21dc2995a015353dfd943c38165de0a665a37f0112e7ed30b72eb8470924869a7d0e463418f3f9ff95d58cb5775
+  checksum: 6c435757318498f81258271137d7b370d51856b9ceef747eaa8311d306f10911b7bd93e4d8484738305608cab573977703491ae822998dd2cea387955dba100f
   languageName: node
   linkType: hard
 
