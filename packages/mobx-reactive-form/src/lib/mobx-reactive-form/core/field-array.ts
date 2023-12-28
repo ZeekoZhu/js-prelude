@@ -1,7 +1,10 @@
 import { makeAutoObservable, observable } from 'mobx';
 import { AbstractFormField } from './types';
 
-type FormFieldWithKey<T, _TForm extends AbstractFormField<T>> = _TForm & {
+export type FormFieldWithKey<
+  T,
+  _TForm extends AbstractFormField<T>,
+> = _TForm & {
   readonly key: string;
 };
 
@@ -28,7 +31,7 @@ function isArrayEqual(a: string[], b: string[]) {
   return true;
 }
 
-type FieldArrayOf<TValue> = ReadonlyArray<AbstractFormField<TValue>>;
+export type FieldArrayOf<TValue> = ReadonlyArray<AbstractFormField<TValue>>;
 
 export interface FieldArrayConstructor {
   new <TValue, TStructure extends FieldArrayOf<TValue> = FieldArrayOf<TValue>>(

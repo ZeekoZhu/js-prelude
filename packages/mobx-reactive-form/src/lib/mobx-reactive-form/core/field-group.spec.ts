@@ -1,7 +1,8 @@
 import { isObservableProp, reaction } from 'mobx';
 import { beforeEach, describe, expect, expectTypeOf, test } from 'vitest';
+import { AbstractFormField } from './types';
 import { FieldArray } from './field-array';
-import { FieldGroup } from './field-group';
+import { FieldGroup, FieldGroupOf } from './field-group';
 import { FormField } from './form-field';
 import { FormValidator } from './form-validator';
 
@@ -63,6 +64,7 @@ describe('FieldGroup', () => {
       group = new FieldGroup({
         name: new FormField('alice'),
         age: new FormField(99),
+        address: new FormField(undefined),
       });
     });
     test('should call setValue of each field', () => {
@@ -70,10 +72,12 @@ describe('FieldGroup', () => {
       expect(group.value).toEqual({ name: 'bob', age: 100 });
       expect(group.isDirty).toBe(true);
       expect(group.isTouched).toBe(true);
-      for (const [, f] of group.fields) {
-        expect(f.isDirty).toBe(true);
-        expect(f.isTouched).toBe(true);
-      }
+      expect(group.field('name').isDirty).toBe(true);
+      expect(group.field('name').isTouched).toBe(true);
+      expect(group.field('age').isDirty).toBe(true);
+      expect(group.field('age').isTouched).toBe(true);
+      expect(group.field('address').isDirty).toBe(false);
+      expect(group.field('address').isTouched).toBe(true);
     });
   });
 
@@ -83,6 +87,7 @@ describe('FieldGroup', () => {
       group = new FieldGroup({
         name: new FormField('alice'),
         age: new FormField(99),
+        address: new FormField(undefined),
       });
     });
     test('should call reset of each field', () => {
@@ -100,6 +105,7 @@ describe('FieldGroup', () => {
       group = new FieldGroup({
         name: new FormField('alice'),
         age: new FormField(99),
+        address: new FormField(undefined),
       });
     });
     test('should be valid when no errors in fields', () => {
@@ -135,6 +141,7 @@ describe('FieldGroup', () => {
       group = new FieldGroup({
         name: new FormField('alice'),
         age: new FormField(99),
+        address: new FormField(undefined),
       });
     });
     describe('add field', () => {
@@ -203,6 +210,7 @@ describe('FieldGroup', () => {
         group = new FieldGroup({
           name: new FormField('alice'),
           age: new FormField(99),
+          address: new FormField(undefined),
         });
         group.removeField('name');
       });
@@ -226,13 +234,14 @@ describe('FieldGroup', () => {
       group = new FieldGroup({
         name: new FormField('alice'),
         age: new FormField(99),
+        address: new FormField(undefined),
       });
     });
     it('should return true when contains field', () => {
       expect(group.containsField('name')).toBe(true);
     });
     it('should return false when not contains field', () => {
-      expect(group.containsField('address')).toBe(false);
+      expect(group.containsField('some other field')).toBe(false);
     });
   });
 
@@ -242,6 +251,7 @@ describe('FieldGroup', () => {
       group = new FieldGroup({
         name: new FormField('alice'),
         age: new FormField(99),
+        address: new FormField(undefined),
       });
       group.setField('name', new FormField('bob'));
     });
@@ -346,6 +356,35 @@ describe('FieldGroup', () => {
         name: string;
         age: number[];
       }>();
+    });
+
+    it('should infer optional field property as required with optional value', () => {
+      interface Foo {
+        alice: string;
+        bob?: string;
+      }
+
+      let group: FieldGroup<Foo>;
+      // eslint-disable-next-line prefer-const
+      group = new FieldGroup({
+        alice: new FormField('alice'),
+        bob: new FormField(undefined),
+      });
+      expectTypeOf(group.field('bob')).toMatchTypeOf<
+        AbstractFormField<string | undefined>
+      >();
+    });
+
+    it('should accept generic type as TInferredValue', () => {
+      interface Generic<
+        T extends FieldGroupOf<T> extends FieldGroupOf<infer U> ? U : never,
+      > {
+        value: FieldGroup<T>;
+      }
+
+      expectTypeOf<Generic<{ name: string }>['value']>().toMatchTypeOf<
+        FieldGroup<{ name: string }>
+      >();
     });
   });
 });
