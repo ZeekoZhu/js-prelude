@@ -15,16 +15,9 @@
   "extends": "nx/presets/npm.json",
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
-    "lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
-      "cache": true
-    },
     "test": {
       "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"],
       "cache": true
-    },
-    "test:watch": {
-      "cache": false
     },
     "build": {
       "cache": true
@@ -50,6 +43,10 @@
           "codeCoverage": true
         }
       }
+    },
+    "@nx/eslint:lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+      "cache": true
     }
   },
   "generators": {
@@ -66,5 +63,6 @@
     "@nx/angular:component": {
       "style": "css"
     }
-  }
+  },
+  "useInferencePlugins": false
 }

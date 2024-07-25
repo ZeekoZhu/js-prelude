@@ -64,3 +64,4 @@ docs/packages/power-accessor### yarn
 **/*/environment.development.ts
 
 .nx/cache
+.nx/workspace-data
