@@ -1,0 +1,59 @@
+{
+  "name": "@zeeko/unplugin-dll",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Dll Plugin for vite",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZeekoZhu/js-prelude.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ZeekoZhu/js-prelude/issues"
+  },
+  "keywords": [
+    "unplugin",
+    "vite",
+    "dll"
+  ],
+  "exports": {
+    ".": {
+      "types": "./packages/unplugin-dll/src/index.d.ts",
+      "import": "./index.js",
+      "require": "./index.cjs"
+    },
+    "./plugin-prebundle": {
+      "types": "./packages/unplugin-dll/src/plugin-prebundle/index.d.ts",
+      "import": "./plugin-prebundle/index.js",
+      "require": "./plugin-prebundle/index.cjs"
+    }
+  },
+  "main": "index.cjs",
+  "module": "index.js",
+  "types": "packages/unplugin-dll/src/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./*"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "vite": ">=3"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@rollup/pluginutils": "^5.1.0",
+    "lodash-es": "^4.17.21",
+    "unplugin": "^1.5.1",
+    "zx": "^8.1.8"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4"
+  }
+}

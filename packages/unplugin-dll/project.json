@@ -1,0 +1,46 @@
+{
+  "name": "unplugin-dll",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/unplugin-dll/src",
+  "projectType": "library",
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "dist/{projectRoot}",
+        "currentVersionResolver": "git-tag"
+      }
+    }
+  },
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/unplugin-dll",
+        "main": "packages/unplugin-dll/src/index.ts",
+        "additionalEntryPoints": [
+          "packages/unplugin-dll/src/plugin-prebundle/index.ts"
+        ],
+        "tsConfig": "packages/unplugin-dll/tsconfig.lib.json",
+        "assets": ["packages/unplugin-dll/*.md"],
+        "format": ["cjs", "esm"]
+      }
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/packages/unplugin-dll"
+      }
+    }
+  }
+}

@@ -1,4 +1,9 @@
 {
+  "pluginsConfig": {
+    "@nx/js": {
+      "analyzeSourceFiles": true
+    }
+  },
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx-remotecache-minio",
@@ -20,7 +25,8 @@
       "cache": true
     },
     "build": {
-      "cache": true
+      "cache": true,
+      "dependsOn": ["^build"]
     },
     "e2e": {
       "cache": true
@@ -47,6 +53,30 @@
     "@nx/eslint:lint": {
       "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
       "cache": true
+    },
+    "@nx/js:swc": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^default"]
+    },
+    "@nx/vite:test": {
+      "cache": true,
+      "inputs": ["default", "^default"]
+    },
+    "@nx/vite:build": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^default"]
+    },
+    "@nx/rollup:rollup": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^default"]
+    },
+    "@nx/esbuild:esbuild": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^default"]
     }
   },
   "generators": {
@@ -62,7 +92,27 @@
     },
     "@nx/angular:component": {
       "style": "css"
+    },
+    "@nx/react": {
+      "application": {
+        "babel": true,
+        "style": "none",
+        "linter": "eslint",
+        "bundler": "vite"
+      },
+      "component": {
+        "style": "none"
+      },
+      "library": {
+        "style": "none",
+        "linter": "eslint"
+      }
     }
   },
-  "useInferencePlugins": false
+  "useInferencePlugins": false,
+  "release": {
+    "version": {
+      "preVersionCommand": "yarn dlx nx run-many -t build"
+    }
+  }
 }

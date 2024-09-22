@@ -17,7 +17,8 @@
         "packages/nx-debug-hasher-runner/src/index.ts"
       ],
       "@zeeko/power-accessor": ["packages/power-accessor/src/index.ts"],
-      "@zeeko/ts-sync-ref": ["packages/ts-sync-ref/src/index.ts"]
+      "@zeeko/ts-sync-ref": ["packages/ts-sync-ref/src/index.ts"],
+      "@zeeko/unplugin-dll": ["packages/unplugin-dll/src/index.ts"]
     }
   },
   "exclude": ["node_modules"]

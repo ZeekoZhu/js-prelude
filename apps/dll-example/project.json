@@ -1,0 +1,84 @@
+{
+  "name": "dll-example",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/dll-example/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "prebundle": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "configFile": "apps/dll-example/prebundle.vite.config.mts",
+        "outputPath": "dist/apps/dll-example-prebundle"
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production"
+        }
+      }
+    },
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/dll-example"
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/vite:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "dll-example:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "dll-example:build:development",
+          "hmr": true
+        },
+        "production": {
+          "buildTarget": "dll-example:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "preview": {
+      "executor": "@nx/vite:preview-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "dll-example:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "dll-example:build:development"
+        },
+        "production": {
+          "buildTarget": "dll-example:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/dll-example/jest.config.ts"
+      }
+    }
+  }
+}
