@@ -11750,8 +11750,11 @@ __metadata:
     unplugin: ^1.5.1
     zx: ^8.1.8
   peerDependencies:
+    rollup: ">=4.2"
     vite: ">=3"
   peerDependenciesMeta:
+    rollup:
+      optional: true
     vite:
       optional: true
   languageName: unknown

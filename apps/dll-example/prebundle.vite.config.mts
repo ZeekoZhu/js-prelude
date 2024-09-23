@@ -18,6 +18,7 @@ export default defineConfig((env) => ({
         'react/jsx-runtime',
         'react/jsx-dev-runtime',
       ],
+      exclude: [/@babel/],
     }),
   ],
 
@@ -32,6 +33,11 @@ export default defineConfig((env) => ({
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
+    },
+    rollupOptions: {
+      output: {
+        experimentalMinChunkSize: 1000 * 1024,
+      },
     },
   },
 }));

@@ -17,11 +17,6 @@
     "dll"
   ],
   "exports": {
-    ".": {
-      "types": "./packages/unplugin-dll/src/index.d.ts",
-      "import": "./index.js",
-      "require": "./index.cjs"
-    },
     "./plugin-prebundle": {
       "types": "./packages/unplugin-dll/src/plugin-prebundle/index.d.ts",
       "import": "./plugin-prebundle/index.js",
@@ -45,14 +40,14 @@
     }
   },
   "peerDependencies": {
-    "vite": ">=3",
-    "rollup": ">=4.2"
+    "rollup": ">=4.2",
+    "vite": ">=3"
   },
   "peerDependenciesMeta": {
-    "vite": {
+    "rollup": {
       "optional": true
     },
-    "rollup": {
+    "vite": {
       "optional": true
     }
   },

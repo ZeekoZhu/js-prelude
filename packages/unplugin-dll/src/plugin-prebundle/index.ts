@@ -33,7 +33,7 @@ function extractModuleIds(content: string, importCounter: ImportCounter) {
 export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
   const FAKE_ENTRY = '\0virtual:prebundle-entry';
   let projectImports: string[] = [];
-  const preBundleEntries: PreBundleEntry[] = [];
+  const preBundleEntries = new PrebundleQueue(pluginOpt.exclude ?? []);
   return [
     {
       name: 'plugin-prebundle',
@@ -67,23 +67,23 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
           ...(await findProjectImports(rootDir, pluginOpt.exclude ?? [])),
           ...(pluginOpt.include ?? []),
         ]);
-        console.table(projectImports);
       },
-      async buildStart(options) {
-        for (const chunk of projectImports) {
+      async buildStart() {
+        preBundleEntries.onEnqueue = async (id) => {
           const outputFile = this.emitFile({
-            id: chunk,
-            name: `pre-bundle-${makeIdentifierFromModuleId(chunk)}`,
+            id: id,
+            name: `pre-bundle-${makeIdentifierFromModuleId(id)}`,
             type: 'chunk',
             preserveSignature: 'allow-extension',
           });
-          preBundleEntries.push({
-            moduleId: chunk,
+          preBundleEntries.markEmitted(id, {
+            moduleId: id,
             moduleFilePath: outputFile,
             exports: [],
             isCommonJS: false,
           });
-        }
+        };
+        projectImports.forEach((it) => preBundleEntries.enqueue(it));
       },
       resolveId: {
         order: 'pre',
@@ -93,6 +93,7 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
               id: FAKE_ENTRY,
             };
           }
+          preBundleEntries.enqueue(source);
           return null;
         },
       },
@@ -104,10 +105,14 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
       },
       generateBundle: {
         order: 'post',
-        async handler(options, chunkMap) {
+        async handler(_, chunkMap) {
           delete chunkMap['do_not_emit_this_file.mjs'];
           const entries: PreBundleEntry[] = [];
-          for (const entry of preBundleEntries) {
+          for (const id of preBundleEntries.emittedModules()) {
+            const entry = preBundleEntries.entries.get(id);
+            if (!entry) {
+              throw new Error(`Cannot find prebundle entry for ${id}`);
+            }
             const updated: PreBundleEntry = {
               ...entry,
               moduleFilePath: this.getFileName(entry.moduleFilePath),
@@ -116,7 +121,7 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
               isEntry: false,
             });
             if (!resolution) {
-              this.warn(`Cannot resolve ${entry.moduleId}`);
+              this.warn(`Cannot resolve prebundle module: ${entry.moduleId}`);
               continue;
             }
             const moduleInfo = this.getModuleInfo(resolution.id);
@@ -128,7 +133,7 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
                 false,
               );
             } else {
-              this.warn(`Cannot find module info for ${entry.moduleId}`);
+              this.warn(`Cannot find module info: ${entry.moduleId}`);
             }
             entries.push(updated);
           }
@@ -185,3 +190,54 @@ const findProjectImports = async (
     throw new Error(`Error reading files: ${error}`);
   }
 };
+
+class PrebundleQueue {
+  todo = new Set<string>();
+  emitted = new Set<string>();
+  bundled = new Set<string>();
+  entries = new Map<string, PreBundleEntry>();
+  onEnqueue?: (id: string) => Promise<void>;
+
+  constructor(private blockList: RegExp[]) {}
+
+  enqueue(id: string) {
+    if (!shouldPrebundle(id, this.blockList)) {
+      return;
+    }
+    if (this.emitted.has(id) || this.bundled.has(id)) {
+      return;
+    }
+    console.log('prebundle module', id);
+    this.todo.add(id);
+    void this.onEnqueue?.(id);
+  }
+
+  markEmitted(id: string, entry: PreBundleEntry) {
+    if (this.todo.has(id)) {
+      this.emitted.add(id);
+      this.todo.delete(id);
+      this.entries.set(id, entry);
+    }
+  }
+
+  emittedModules() {
+    return Array.from(this.emitted.values());
+  }
+
+  markBundled(id: string, entry: PreBundleEntry) {
+    if (this.emitted.has(id)) {
+      this.bundled.add(id);
+      this.entries.set(id, entry);
+    }
+  }
+}
+
+function shouldPrebundle(id: string, blockList: RegExp[]) {
+  return (
+    !id.startsWith('.') &&
+    !id.startsWith('~') &&
+    !id.startsWith('\0') &&
+    !id.startsWith('/') &&
+    !blockList.some((it) => it.test(id))
+  );
+}

@@ -9,6 +9,7 @@
       "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
+      "dependsOn": ["unplugin-dll:build"],
       "options": {
         "configFile": "apps/dll-example/prebundle.vite.config.mts",
         "outputPath": "dist/apps/dll-example-prebundle"
