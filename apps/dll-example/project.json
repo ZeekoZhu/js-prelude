@@ -4,6 +4,7 @@
   "sourceRoot": "apps/dll-example/src",
   "projectType": "application",
   "tags": [],
+  "implicitDependencies": ["unplugin-dll"],
   "targets": {
     "prebundle": {
       "executor": "@nx/vite:build",
@@ -76,7 +77,8 @@
         "production": {
           "buildTarget": "dll-example:build:production"
         }
-      }
+      },
+      "dependsOn": ["build"]
     },
     "lint": {
       "executor": "@nx/eslint:lint"
@@ -88,6 +90,5 @@
         "jestConfig": "apps/dll-example/jest.config.ts"
       }
     }
-  },
-  "implicitDependencies": ["unplugin-dll"]
+  }
 }

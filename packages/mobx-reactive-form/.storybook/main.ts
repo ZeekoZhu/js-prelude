@@ -6,16 +6,20 @@ const tsconfigPaths = viteTsconfig;
 
 module.exports = {
   stories: [
-    '../src/docs/**/*.stories.mdx',
+    '../src/docs/**/*.mdx',
     '../src/docs/**/*.stories.tsx',
-    '../src/lib/**/*.stories.mdx',
+    '../src/lib/**/*.mdx',
     '../src/lib/**/*.stories.@(js|jsx|ts|tsx)',
   ],
+
   addons: [
     getAbsolutePath('@storybook/addon-essentials'),
     getAbsolutePath('@storybook/addon-mdx-gfm'),
     getAbsolutePath('@storybook/addon-mdx-gfm'),
+    getAbsolutePath('@storybook/addon-mdx-gfm'),
+    '@chromatic-com/storybook',
   ],
+
   async viteFinal(config, { configType }) {
     return mergeConfig(config, {
       plugins: [
@@ -25,11 +29,15 @@ module.exports = {
       ],
     });
   },
+
   framework: {
     name: getAbsolutePath('@storybook/react-vite'),
   },
-  docs: {
-    autodocs: true,
+
+  docs: {},
+
+  typescript: {
+    reactDocgen: 'react-docgen-typescript',
   },
 };
 /**
