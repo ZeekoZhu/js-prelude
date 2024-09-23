@@ -75,6 +75,7 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
             id: chunk,
             name: `pre-bundle-${makeIdentifierFromModuleId(chunk)}`,
             type: 'chunk',
+            preserveSignature: 'allow-extension',
           });
           preBundleEntries.push({
             moduleId: chunk,
@@ -86,7 +87,7 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
       },
       resolveId: {
         order: 'pre',
-        handler(source) {
+        async handler(source) {
           if (source.endsWith(FAKE_ENTRY)) {
             return {
               id: FAKE_ENTRY,

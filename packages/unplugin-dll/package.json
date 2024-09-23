@@ -26,6 +26,11 @@
       "types": "./packages/unplugin-dll/src/plugin-prebundle/index.d.ts",
       "import": "./plugin-prebundle/index.js",
       "require": "./plugin-prebundle/index.cjs"
+    },
+    "./plugin-prebundle-reference": {
+      "types": "./packages/unplugin-dll/src/plugin-prebundle-reference/index.d.ts",
+      "import": "./plugin-prebundle-reference/index.js",
+      "require": "./plugin-prebundle-reference/index.cjs"
     }
   },
   "main": "index.cjs",
@@ -40,16 +45,22 @@
     }
   },
   "peerDependencies": {
-    "vite": ">=3"
+    "vite": ">=3",
+    "rollup": ">=4.2"
   },
   "peerDependenciesMeta": {
     "vite": {
+      "optional": true
+    },
+    "rollup": {
       "optional": true
     }
   },
   "dependencies": {
     "@rollup/pluginutils": "^5.1.0",
+    "estree-walker": "^3.0.3",
     "lodash-es": "^4.17.21",
+    "magic-string": "^0.30.11",
     "unplugin": "^1.5.1",
     "zx": "^8.1.8"
   },

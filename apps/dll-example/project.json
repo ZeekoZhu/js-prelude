@@ -26,6 +26,7 @@
       "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
+      "dependsOn": ["prebundle"],
       "options": {
         "outputPath": "dist/apps/dll-example"
       },
@@ -44,6 +45,12 @@
       "options": {
         "buildTarget": "dll-example:build"
       },
+      "dependsOn": [
+        {
+          "target": "prebundle",
+          "params": "forward"
+        }
+      ],
       "configurations": {
         "development": {
           "buildTarget": "dll-example:build:development",
@@ -80,5 +87,6 @@
         "jestConfig": "apps/dll-example/jest.config.ts"
       }
     }
-  }
+  },
+  "implicitDependencies": ["unplugin-dll"]
 }

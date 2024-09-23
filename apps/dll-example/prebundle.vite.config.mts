@@ -4,15 +4,26 @@ import react from '@vitejs/plugin-react';
 import { preBundle } from '@zeeko/unplugin-dll/plugin-prebundle';
 import { defineConfig } from 'vite';
 
-export default defineConfig({
+export default defineConfig((env) => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/dll-example-prebundle',
   plugins: [
     react(),
     nxViteTsPaths(),
-    preBundle({ include: ['react', 'react-dom', 'react/jsx-runtime'] }),
+    preBundle({
+      include: [
+        'react',
+        'react-dom',
+        'react-dom/client',
+        'react/jsx-runtime',
+        'react/jsx-dev-runtime',
+      ],
+    }),
   ],
 
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(env.mode),
+  },
   // avoid copy favicon to prebundle output
   publicDir: false,
   build: {
@@ -23,4 +34,4 @@ export default defineConfig({
       transformMixedEsModules: true,
     },
   },
-});
+}));
