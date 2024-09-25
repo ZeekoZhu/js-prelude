@@ -17,20 +17,15 @@
     "dll"
   ],
   "exports": {
-    "./plugin-prebundle": {
-      "types": "./packages/unplugin-dll/src/plugin-prebundle/index.d.ts",
-      "import": "./plugin-prebundle/index.js",
-      "require": "./plugin-prebundle/index.cjs"
-    },
-    "./plugin-prebundle-reference": {
-      "types": "./packages/unplugin-dll/src/plugin-prebundle-reference/index.d.ts",
-      "import": "./plugin-prebundle-reference/index.js",
-      "require": "./plugin-prebundle-reference/index.cjs"
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./index.js",
+      "require": "./index.cjs"
     }
   },
   "main": "index.cjs",
   "module": "index.js",
-  "types": "packages/unplugin-dll/src/index.d.ts",
+  "types": "./src/index.d.ts",
   "typesVersions": {
     "*": {
       "*": [

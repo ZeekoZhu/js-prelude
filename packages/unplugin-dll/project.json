@@ -19,10 +19,6 @@
       "options": {
         "outputPath": "dist/packages/unplugin-dll",
         "main": "packages/unplugin-dll/src/index.ts",
-        "additionalEntryPoints": [
-          "packages/unplugin-dll/src/plugin-prebundle/index.ts",
-          "packages/unplugin-dll/src/plugin-prebundle-reference/index.ts"
-        ],
         "tsConfig": "packages/unplugin-dll/tsconfig.lib.json",
         "assets": ["packages/unplugin-dll/*.md"],
         "format": ["cjs", "esm"]

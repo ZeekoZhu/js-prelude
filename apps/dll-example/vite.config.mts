@@ -1,7 +1,7 @@
 /// <reference types='vitest' />
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import react from '@vitejs/plugin-react';
-import { prebundleReference } from '@zeeko/unplugin-dll/plugin-prebundle-reference';
+import { prebundleReference } from '@zeeko/unplugin-dll';
 import { defineConfig } from 'vite';
 import { path } from 'zx';
 
