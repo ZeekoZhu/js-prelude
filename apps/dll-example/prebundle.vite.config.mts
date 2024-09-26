@@ -19,6 +19,11 @@ export default defineConfig((env) => ({
         'react/jsx-dev-runtime',
       ],
       exclude: [/@babel/],
+      merge: {
+        antdIcons: ['@ant-design/icons'],
+        reactComponents: ['rc-', '@rc-component/'],
+        dayjs: ['dayjs'],
+      },
     }),
   ],
 

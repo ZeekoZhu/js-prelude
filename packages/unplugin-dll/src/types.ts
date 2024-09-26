@@ -3,6 +3,7 @@ export interface PreBundleEntry {
   moduleFilePath: string;
   exports: string[];
   isCommonJS: boolean;
+  exportAs?: string;
 }
 
 export interface PrebundleOptions {
@@ -14,4 +15,8 @@ export interface PrebundleOptions {
    * Exclude the specified modules from the prebundle.
    */
   exclude?: RegExp[];
+  /**
+   * Output multiple prebundle files into a single chunk file.
+   */
+  merge?: Record<string, string[]>;
 }

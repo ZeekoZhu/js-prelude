@@ -1,39 +1,21 @@
-import { get, uniq } from 'lodash-es';
+import { filter, get, uniq } from 'lodash-es';
+import { EmittedChunk, PluginContext } from 'rollup';
 import { Plugin, UserConfig } from 'vite';
-import { fs, glob, path } from 'zx';
 
 import { PreBundleEntry, PrebundleOptions } from '../types';
 import { makeIdentifierFromModuleId } from '../utils';
-import { ImportCounter } from './import-counter';
+import { DepsCollector } from './deps-collector';
+import { findProjectImports } from './find-project-imports';
+import { ModuleMergeRules } from './module-merge-rules';
 
-/**
- * Function to extract module IDs from import statements
- * @param content
- * @param importCounter
- */
-function extractModuleIds(content: string, importCounter: ImportCounter) {
-  const importRegex = /import\s+(?:[^'"]*\s+from\s+)?['"]([^'"]+)['"]/g;
-  const dynamicImportRegex = /import\(['"]([^'"]+)['"]\)/g;
-  const typeImportRegex = /import\s+type/;
-
-  let match: RegExpExecArray | null;
-
-  while ((match = importRegex.exec(content)) !== null) {
-    if (typeImportRegex.test(match[0])) {
-      continue;
-    }
-    importCounter.addImport(match[1]);
-  }
-
-  while ((match = dynamicImportRegex.exec(content)) !== null) {
-    importCounter.addImport(match[1]);
-  }
-}
+const FAKE_ENTRY = '\0virtual:prebundle-entry';
+const PREFIX_MERGED_MODULE = '\0virtual:prebundle-merge-';
 
 export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
-  const FAKE_ENTRY = '\0virtual:prebundle-entry';
   let projectImports: string[] = [];
-  const preBundleEntries = new PrebundleQueue(pluginOpt.exclude ?? []);
+  const depsCollector = new DepsCollector();
+  const preBundleEntries = new PrebundleFiles();
+  const moduleMergeRules = new ModuleMergeRules(pluginOpt.merge ?? {});
   return [
     {
       name: 'plugin-prebundle',
@@ -69,21 +51,24 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
         ]);
       },
       async buildStart() {
-        preBundleEntries.onEnqueue = async (id) => {
-          const outputFile = this.emitFile({
-            id: id,
-            name: `pre-bundle-${makeIdentifierFromModuleId(id)}`,
-            type: 'chunk',
-            preserveSignature: 'allow-extension',
-          });
-          preBundleEntries.markEmitted(id, {
-            moduleId: id,
-            moduleFilePath: outputFile,
-            exports: [],
-            isCommonJS: false,
-          });
+        // collect deps
+        projectImports.forEach((id) => depsCollector.addToQueue(id));
+        await depsCollector.collectWithVite(this as PluginContext);
+
+        // to prebundle files
+        const files = toPrebundleFiles(
+          filter([...depsCollector.deps], (id) =>
+            shouldPrebundle(id, pluginOpt.exclude ?? []),
+          ),
+          moduleMergeRules,
+        );
+
+        // prepare chunk emitting
+        preBundleEntries.onEnqueue = async (file) => {
+          const outputFile = this.emitFile(toChunk(file));
+          preBundleEntries.markEmitted(file, outputFile);
         };
-        projectImports.forEach((it) => preBundleEntries.enqueue(it));
+        files.forEach((f) => preBundleEntries.enqueue(f));
       },
       resolveId: {
         order: 'pre',
@@ -93,13 +78,27 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
               id: FAKE_ENTRY,
             };
           }
-          preBundleEntries.enqueue(source);
+          if (source.startsWith(PREFIX_MERGED_MODULE)) {
+            return {
+              id: source,
+            };
+          }
+          depsCollector.addToQueue(source);
           return null;
         },
       },
       load(id) {
         if (id === FAKE_ENTRY) {
           return '';
+        } else if (id.startsWith(PREFIX_MERGED_MODULE)) {
+          const prebundleFileName = id.slice(PREFIX_MERGED_MODULE.length);
+          const file = preBundleEntries.files.get(prebundleFileName);
+          if (file == null) {
+            this.error(`Cannot find prebundle file: ${prebundleFileName}`);
+          } else {
+            const { code } = makeMergedModule(file);
+            return code;
+          }
         }
         return null;
       },
@@ -124,6 +123,8 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
               this.warn(`Cannot resolve prebundle module: ${entry.moduleId}`);
               continue;
             }
+            // get module info at bundle phase to ensure virtual modules are
+            // loaded
             const moduleInfo = this.getModuleInfo(resolution.id);
             if (moduleInfo) {
               updated.exports = moduleInfo.exports ?? [];
@@ -148,87 +149,59 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
   ];
 }
 
-const findProjectImports = async (
-  directoryPath: string,
-  blockList: RegExp[],
-) => {
-  if (!directoryPath) {
-    throw new Error('Please provide a directory path.');
+type PrebundleFileName = string;
+type ModuleId = string;
+
+/**
+ * Abstract data structure for prebundle file.
+ * A file can be a single module or a merged module.
+ */
+interface PrebundleFile {
+  /**
+   * If the file is a single module, the name is the module ID.
+   * If the file is a merged module, the name is the rule name.
+   */
+  name: PrebundleFileName;
+  entries: PreBundleEntry[];
+}
+
+class PrebundleFiles {
+  todo = new Set<PrebundleFileName>();
+  emitted = new Set<PrebundleFileName>();
+  bundled = new Set<PrebundleFileName>();
+  entries = new Map<ModuleId, PreBundleEntry>();
+  files = new Map<PrebundleFileName, PrebundleFile>();
+  onEnqueue?: (file: PrebundleFile) => Promise<void>;
+
+  enqueue(file: PrebundleFile) {
+    if (this.emitted.has(file.name) || this.bundled.has(file.name)) {
+      return;
+    }
+    this.todo.add(file.name);
+    this.files.set(file.name, file);
+    void this.onEnqueue?.(file);
   }
 
-  try {
-    // Use glob to find all .ts and .tsx files
-    const files: string[] = await glob(
-      path.join(directoryPath, '**/*.{ts,tsx}'),
-      {
-        gitignore: true,
-        ignoreFiles: [
-          '**/*.spec.ts',
-          '**/*.spec.tsx',
-          '**/*.test.ts',
-          '**/*.test.tsx',
-        ],
-      },
-    );
-
-    const moduleIds = new ImportCounter(blockList);
-
-    // Read each file and extract module IDs
-    for (const file of files) {
-      const content: string = await fs.readFile(file, 'utf-8');
-      extractModuleIds(content, moduleIds);
-    }
-
-    return Array.from(moduleIds.getImports().entries())
-      .filter(([, cnt]) => cnt > 1)
-      .map(([id]) => id)
-      .filter(
-        (it) =>
-          !it.startsWith('~') && !it.startsWith('.') && !it.endsWith('.css'),
+  markEmitted(file: PrebundleFile, chunkFileName: string) {
+    if (this.todo.has(file.name)) {
+      this.emitted.add(file.name);
+      this.todo.delete(file.name);
+      const entries = file.entries.map(
+        (entry) =>
+          ({
+            ...entry,
+            moduleFilePath: chunkFileName,
+          } as PreBundleEntry),
       );
-  } catch (error) {
-    throw new Error(`Error reading files: ${error}`);
-  }
-};
-
-class PrebundleQueue {
-  todo = new Set<string>();
-  emitted = new Set<string>();
-  bundled = new Set<string>();
-  entries = new Map<string, PreBundleEntry>();
-  onEnqueue?: (id: string) => Promise<void>;
-
-  constructor(private blockList: RegExp[]) {}
-
-  enqueue(id: string) {
-    if (!shouldPrebundle(id, this.blockList)) {
-      return;
-    }
-    if (this.emitted.has(id) || this.bundled.has(id)) {
-      return;
-    }
-    console.log('prebundle module', id);
-    this.todo.add(id);
-    void this.onEnqueue?.(id);
-  }
-
-  markEmitted(id: string, entry: PreBundleEntry) {
-    if (this.todo.has(id)) {
-      this.emitted.add(id);
-      this.todo.delete(id);
-      this.entries.set(id, entry);
+      entries.forEach((entry) => this.entries.set(entry.moduleId, entry));
     }
   }
 
   emittedModules() {
-    return Array.from(this.emitted.values());
-  }
-
-  markBundled(id: string, entry: PreBundleEntry) {
-    if (this.emitted.has(id)) {
-      this.bundled.add(id);
-      this.entries.set(id, entry);
-    }
+    return Array.from(this.files.entries())
+      .filter(([file]) => this.emitted.has(file))
+      .map(([, file]) => file.entries.map((entry) => entry.moduleId))
+      .flat();
   }
 }
 
@@ -240,4 +213,94 @@ function shouldPrebundle(id: string, blockList: RegExp[]) {
     !id.startsWith('/') &&
     !blockList.some((it) => it.test(id))
   );
+}
+
+/**
+ * Convert dependencies to prebundle files
+ * @param deps
+ * @param mergeRules
+ */
+function toPrebundleFiles(
+  deps: string[],
+  mergeRules: ModuleMergeRules,
+): PrebundleFile[] {
+  const singleModuleFiles: PrebundleFile[] = [];
+  const mergedModuleFiles: Map<PrebundleFileName, PrebundleFile> = new Map();
+  for (const dep of deps) {
+    const entry: PreBundleEntry = {
+      moduleId: dep,
+      moduleFilePath: '',
+      exports: [],
+      isCommonJS: false,
+    };
+    const rule = mergeRules.getRule(dep);
+    if (rule) {
+      const file = mergedModuleFiles.get(rule);
+      entry.exportAs = `__ns_${makeIdentifierFromModuleId(dep)}`;
+      if (file) {
+        file.entries.push(entry);
+      } else {
+        mergedModuleFiles.set(rule, {
+          name: rule,
+          entries: [entry],
+        });
+      }
+    } else {
+      singleModuleFiles.push({
+        name: dep,
+        entries: [entry],
+      });
+    }
+  }
+  return singleModuleFiles.concat(Array.from(mergedModuleFiles.values()));
+}
+
+function toChunk(file: PrebundleFile): EmittedChunk {
+  if (file.entries.length > 1) {
+    return {
+      id: `${PREFIX_MERGED_MODULE}${file.name}`,
+      name: `pre-bundle-merge-${makeIdentifierFromModuleId(file.name)}`,
+      preserveSignature: 'allow-extension',
+      type: 'chunk',
+    };
+  } else if (file.entries.length === 1) {
+    const entry = file.entries[0];
+    return {
+      id: entry.moduleId,
+      name: `pre-bundle-${makeIdentifierFromModuleId(entry.moduleId)}`,
+      preserveSignature: 'allow-extension',
+      type: 'chunk',
+    };
+  }
+  throw new Error('Cannot convert empty file to chunk');
+}
+
+function makeMergedModule(file: PrebundleFile): {
+  code: string;
+} {
+  if (file.entries.length < 2) {
+    throw new Error('Cannot merge single module');
+  }
+
+  function reexportModule(id: string) {
+    const importName = makeIdentifierFromModuleId(id);
+    const exportAs = `__ns_${importName}`;
+    const importCode = `import * as ${importName} from '${id}';`;
+    const exportCode = `export const ${exportAs} = ${importName};`;
+    return {
+      importCode,
+      exportCode,
+    };
+  }
+
+  const imports: string[] = [];
+  const exports: string[] = [];
+  for (const entry of file.entries) {
+    const { importCode, exportCode } = reexportModule(entry.moduleId);
+    imports.push(importCode);
+    exports.push(exportCode);
+  }
+  return {
+    code: `${imports.join('\n')}\n\n${exports.join('\n')}`,
+  };
 }
