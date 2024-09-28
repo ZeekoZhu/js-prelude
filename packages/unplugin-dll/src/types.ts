@@ -8,15 +8,17 @@ export interface PreBundleEntry {
 
 export interface PrebundleOptions {
   /**
-   * Include the specified modules in the prebundle.
+   * Create prebundle entries for the specified modules.
    */
   include?: string[];
   /**
-   * Exclude the specified modules from the prebundle.
+   * Avoid creating prebundle entries for the specified modules, but these modules will still be included in the final bundle.
    */
   exclude?: RegExp[];
   /**
-   * Output multiple prebundle files into a single chunk file.
+   * Merge multiple entry modules into a single module, each of them is
+   * reexported with a new name, which can reduce the
+   * number of output files.
    */
   merge?: Record<string, string[]>;
 }

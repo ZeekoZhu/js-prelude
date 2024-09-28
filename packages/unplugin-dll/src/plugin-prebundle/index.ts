@@ -1,3 +1,4 @@
+import esbuild from 'esbuild';
 import { filter, get, uniq } from 'lodash-es';
 import { EmittedChunk, PluginContext } from 'rollup';
 import { Plugin, UserConfig } from 'vite';
@@ -16,11 +17,12 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
   const depsCollector = new DepsCollector();
   const preBundleEntries = new PrebundleFiles();
   const moduleMergeRules = new ModuleMergeRules(pluginOpt.merge ?? {});
+  let isDev = false;
   return [
     {
       name: 'plugin-prebundle',
       enforce: 'pre',
-      config() {
+      config(config) {
         return {
           build: {
             lib: {
@@ -45,6 +47,7 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
       },
       async configResolved(cfg) {
         const rootDir = cfg.root;
+        isDev = cfg.mode === 'development';
         projectImports = uniq([
           ...(await findProjectImports(rootDir, pluginOpt.exclude ?? [])),
           ...(pluginOpt.include ?? []),
@@ -144,6 +147,20 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
             source: JSON.stringify(entries),
           });
         },
+      },
+    },
+    {
+      name: 'minify-bundle',
+      async generateBundle(_, bundle) {
+        if (isDev) {
+          return;
+        }
+        for (const asset of Object.values(bundle)) {
+          if (asset.type == 'chunk')
+            asset.code = (
+              await esbuild.transform(asset.code, { minify: true })
+            ).code;
+        }
       },
     },
   ];
