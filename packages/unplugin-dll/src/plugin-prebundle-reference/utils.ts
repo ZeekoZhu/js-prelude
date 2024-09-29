@@ -18,6 +18,6 @@ export class NamingCounter {
   next(name: string) {
     const postfix = this.counter.get(name) ?? 0;
     this.counter.set(name, postfix + 1);
-    return `${this.prefix}_${name}${postfix.toString(16)}`;
+    return `${this.prefix}_${name}$${postfix.toString(16)}`;
   }
 }

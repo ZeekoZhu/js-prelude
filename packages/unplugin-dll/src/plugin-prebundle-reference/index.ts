@@ -3,6 +3,7 @@ import { TransformPluginContext } from 'rollup';
 import { Plugin } from 'vite';
 
 import { prebundleReferenceEsbuildPlugin } from './prebundle-esbuild';
+import { PLUGIN_BUNDLE_HELPER, pluginBundleHelper } from './prebundle-helper';
 import { PreBundleReferenceManager } from './prebundle-reference-manager';
 import { transformCjsImport } from './transform-cjs-import';
 
@@ -59,6 +60,9 @@ export function prebundleReference(
       resolveId: {
         order: 'pre',
         handler(source, importer, option) {
+          if (source === PLUGIN_BUNDLE_HELPER) {
+            return PLUGIN_BUNDLE_HELPER;
+          }
           const prebundle = dllReferenceManager.getPreBundledModule(source);
           if (prebundle) {
             return {
@@ -70,6 +74,12 @@ export function prebundleReference(
           }
           return null;
         },
+      },
+      load(id) {
+        if (id === PLUGIN_BUNDLE_HELPER) {
+          return pluginBundleHelper;
+        }
+        return null;
       },
       transform: {
         handler(code, id) {

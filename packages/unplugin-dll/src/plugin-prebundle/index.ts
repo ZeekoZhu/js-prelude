@@ -1,5 +1,5 @@
 import esbuild from 'esbuild';
-import { filter, get, uniq } from 'lodash-es';
+import { filter, get, isEmpty, uniq } from 'lodash-es';
 import { EmittedChunk, PluginContext } from 'rollup';
 import { Plugin, UserConfig } from 'vite';
 
@@ -136,6 +136,9 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
                 'commonjs.isCommonJS',
                 false,
               );
+              if (updated.isCommonJS && isEmpty(updated.exportAs)) {
+                updated.exportAs = 'default';
+              }
             } else {
               this.warn(`Cannot find module info: ${entry.moduleId}`);
             }
