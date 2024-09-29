@@ -136,7 +136,7 @@
     "@spotify/web-api-ts-sdk": "^1.1.2",
     "@storybook/addon-interactions": "^8.2.8",
     "@swc/helpers": "0.5.12",
-    "@zeeko/unplugin-dll": "link:./dist/packages/unplugin-dll",
+    "@zeeko/vite-plugin-prebundle": "link:./dist/packages/vite-plugin-prebundle",
     "antd": "^5.20.6",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",

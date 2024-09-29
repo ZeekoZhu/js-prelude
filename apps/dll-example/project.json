@@ -4,13 +4,13 @@
   "sourceRoot": "apps/dll-example/src",
   "projectType": "application",
   "tags": [],
-  "implicitDependencies": ["unplugin-dll"],
+  "implicitDependencies": ["vite-plugin-prebundle"],
   "targets": {
     "prebundle": {
       "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
-      "dependsOn": ["unplugin-dll:build"],
+      "dependsOn": ["^build"],
       "options": {
         "configFile": "apps/dll-example/prebundle.vite.config.mts",
         "outputPath": "dist/apps/dll-example-prebundle"

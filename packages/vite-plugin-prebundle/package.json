@@ -1,5 +1,5 @@
 {
-  "name": "@zeeko/unplugin-dll",
+  "name": "@zeeko/vite-plugin-prebundle",
   "version": "0.0.1",
   "type": "module",
   "description": "Dll Plugin for vite",

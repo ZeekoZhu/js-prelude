@@ -1,7 +1,7 @@
 {
-  "name": "unplugin-dll",
+  "name": "vite-plugin-prebundle",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/unplugin-dll/src",
+  "sourceRoot": "packages/vite-plugin-prebundle/src",
   "projectType": "library",
   "release": {
     "version": {
@@ -17,10 +17,10 @@
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/unplugin-dll",
-        "main": "packages/unplugin-dll/src/index.ts",
-        "tsConfig": "packages/unplugin-dll/tsconfig.lib.json",
-        "assets": ["packages/unplugin-dll/*.md"],
+        "outputPath": "dist/packages/vite-plugin-prebundle",
+        "main": "packages/vite-plugin-prebundle/src/index.ts",
+        "tsConfig": "packages/vite-plugin-prebundle/tsconfig.lib.json",
+        "assets": ["packages/vite-plugin-prebundle/*.md"],
         "format": ["cjs", "esm"]
       }
     },
@@ -36,7 +36,7 @@
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../coverage/packages/unplugin-dll"
+        "reportsDirectory": "../../coverage/packages/vite-plugin-prebundle"
       }
     }
   }

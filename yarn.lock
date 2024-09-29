@@ -13027,7 +13027,7 @@ __metadata:
     "@vitejs/plugin-react": ^4.2.1
     "@vitest/coverage-v8": 1.6.0
     "@vitest/ui": 1.6.0
-    "@zeeko/unplugin-dll": "link:./dist/packages/unplugin-dll"
+    "@zeeko/vite-plugin-prebundle": "link:./dist/packages/vite-plugin-prebundle"
     ahooks: ^3.7.4
     antd: ^5.20.6
     autoprefixer: 10.4.13
@@ -13102,15 +13102,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@zeeko/unplugin-dll@link:./dist/packages/unplugin-dll::locator=%40zeeko%2Fprelude%40workspace%3A.":
+"@zeeko/vite-plugin-prebundle@link:./dist/packages/vite-plugin-prebundle::locator=%40zeeko%2Fprelude%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@zeeko/unplugin-dll@link:./dist/packages/unplugin-dll::locator=%40zeeko%2Fprelude%40workspace%3A."
+  resolution: "@zeeko/vite-plugin-prebundle@link:./dist/packages/vite-plugin-prebundle::locator=%40zeeko%2Fprelude%40workspace%3A."
   languageName: node
   linkType: soft
 
-"@zeeko/unplugin-dll@workspace:packages/unplugin-dll":
+"@zeeko/vite-plugin-prebundle@workspace:packages/vite-plugin-prebundle":
   version: 0.0.0-use.local
-  resolution: "@zeeko/unplugin-dll@workspace:packages/unplugin-dll"
+  resolution: "@zeeko/vite-plugin-prebundle@workspace:packages/vite-plugin-prebundle"
   dependencies:
     "@rollup/pluginutils": ^5.1.0
     "@types/lodash-es": ^4
