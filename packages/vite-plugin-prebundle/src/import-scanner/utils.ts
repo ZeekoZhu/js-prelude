@@ -1,33 +1,10 @@
 import { fs, glob, path } from 'zx';
 import { ImportCounter } from './import-counter';
 
-/**
- * Function to extract module IDs from import statements
- * @param content
- * @param importCounter
- */
-function extractModuleIds(content: string, importCounter: ImportCounter) {
-  const importRegex = /import\s+(?:[^'"]*\s+from\s+)?['"]([^'"]+)['"]/g;
-  const dynamicImportRegex = /import\(['"]([^'"]+)['"]\)/g;
-  const typeImportRegex = /import\s+type/;
-
-  let match: RegExpExecArray | null;
-
-  while ((match = importRegex.exec(content)) !== null) {
-    if (typeImportRegex.test(match[0])) {
-      continue;
-    }
-    importCounter.addImport(match[1]);
-  }
-
-  while ((match = dynamicImportRegex.exec(content)) !== null) {
-    importCounter.addImport(match[1]);
-  }
-}
-
 export const findProjectImports = async (
   directoryPath: string,
   blockList: RegExp[],
+  threshold: number,
 ) => {
   if (!directoryPath) {
     throw new Error('Please provide a directory path.');
@@ -57,13 +34,36 @@ export const findProjectImports = async (
     }
 
     return Array.from(moduleIds.getImports().entries())
-      .filter(([, cnt]) => cnt > 1)
-      .map(([id]) => id)
-      .filter(
-        (it) =>
-          !it.startsWith('~') && !it.startsWith('.') && !it.endsWith('.css'),
-      );
+      .filter(([, cnt]) => cnt > threshold)
+      .map(([id]) => id);
   } catch (error) {
     throw new Error(`Error reading files: ${error}`);
   }
 };
+
+/**
+ * Function to extract module IDs from import statements
+ * @param content
+ * @param importCounter
+ */
+export function extractModuleIds(
+  content: string,
+  importCounter: ImportCounter,
+) {
+  const importRegex = /import\s+(?:[^'"]*\s+from\s+)?['"]([^'"]+)['"]/g;
+  const dynamicImportRegex = /import\(['"]([^'"]+)['"]\)/g;
+  const typeImportRegex = /import\s+type/;
+
+  let match: RegExpExecArray | null;
+
+  while ((match = importRegex.exec(content)) !== null) {
+    if (typeImportRegex.test(match[0])) {
+      continue;
+    }
+    importCounter.addImport(match[1]);
+  }
+
+  while ((match = dynamicImportRegex.exec(content)) !== null) {
+    importCounter.addImport(match[1]);
+  }
+}

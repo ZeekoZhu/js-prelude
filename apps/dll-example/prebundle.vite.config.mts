@@ -4,6 +4,8 @@ import react from '@vitejs/plugin-react';
 import { preBundle } from '@zeeko/vite-plugin-prebundle';
 import { defineConfig } from 'vite';
 
+import prebundleModules from './prebundle-modules.json';
+
 export default defineConfig((env) => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/dll-example-prebundle',
@@ -12,6 +14,7 @@ export default defineConfig((env) => ({
     nxViteTsPaths(),
     preBundle({
       include: [
+        ...prebundleModules,
         'react',
         'react-dom',
         'react-dom/client',

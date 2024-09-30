@@ -6,7 +6,6 @@ import { Plugin, UserConfig } from 'vite';
 import { PreBundleEntry, PrebundleOptions } from '../types';
 import { makeIdentifierFromModuleId } from '../utils';
 import { DepsCollector } from './deps-collector';
-import { findProjectImports } from './find-project-imports';
 import { ModuleMergeRules } from './module-merge-rules';
 
 const FAKE_ENTRY = '\0virtual:prebundle-entry';
@@ -48,10 +47,7 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
       async configResolved(cfg) {
         const rootDir = cfg.root;
         isDev = cfg.mode === 'development';
-        projectImports = uniq([
-          ...(await findProjectImports(rootDir, pluginOpt.exclude ?? [])),
-          ...(pluginOpt.include ?? []),
-        ]);
+        projectImports = uniq([...(pluginOpt.include ?? [])]);
       },
       async buildStart() {
         // collect deps

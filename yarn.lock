@@ -12934,6 +12934,7 @@ __metadata:
     lodash-es: "npm:^4.17.21"
     magic-string: "npm:^0.30.11"
     unplugin: "npm:^1.5.1"
+    yargs: "npm:^17.7.2"
     zx: "npm:^8.1.8"
   peerDependencies:
     esbuild: ">=0.19.12"
@@ -12944,6 +12945,8 @@ __metadata:
       optional: true
     vite:
       optional: true
+  bin:
+    import-scanner: ./import-scanner/index.js
   languageName: unknown
   linkType: soft
 
@@ -33820,7 +33823,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:17.7.2, yargs@npm:^17.2.1, yargs@npm:^17.3.1, yargs@npm:^17.6.2":
+"yargs@npm:17.7.2, yargs@npm:^17.2.1, yargs@npm:^17.3.1, yargs@npm:^17.6.2, yargs@npm:^17.7.2":
   version: 17.7.2
   resolution: "yargs@npm:17.7.2"
   dependencies:

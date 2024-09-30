@@ -21,6 +21,9 @@
         "main": "packages/vite-plugin-prebundle/src/index.ts",
         "tsConfig": "packages/vite-plugin-prebundle/tsconfig.lib.json",
         "assets": ["packages/vite-plugin-prebundle/*.md"],
+        "additionalEntryPoints": [
+          "packages/vite-plugin-prebundle/src/import-scanner/index.ts"
+        ],
         "format": ["cjs", "esm"]
       }
     },
@@ -30,7 +33,10 @@
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint"
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["packages/vite-plugin-prebundle/src/**/*.ts"]
+      }
     },
     "test": {
       "executor": "@nx/vite:test",
