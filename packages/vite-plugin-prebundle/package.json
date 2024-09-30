@@ -2,7 +2,7 @@
   "name": "@zeeko/vite-plugin-prebundle",
   "version": "0.0.1",
   "type": "module",
-  "description": "Dll Plugin for vite",
+  "description": "Prebundle Plugin for vite",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -12,7 +12,6 @@
     "url": "https://github.com/ZeekoZhu/js-prelude/issues"
   },
   "keywords": [
-    "unplugin",
     "vite",
     "dll"
   ],
@@ -56,6 +55,7 @@
     "zx": "^8.1.8"
   },
   "devDependencies": {
+    "@types/estree": "^1.0.6",
     "@types/lodash-es": "^4"
   }
 }

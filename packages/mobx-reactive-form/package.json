@@ -16,7 +16,7 @@
   },
   "types": "src/index.d.ts",
   "devDependencies": {
-    "@nx/eslint-plugin": "^16.5.5",
+    "@nx/eslint-plugin": "^19.8.2",
     "@typescript-eslint/eslint-plugin": "5.51.0",
     "mobx": "^6.4.0",
     "react": "^17.0.2"
