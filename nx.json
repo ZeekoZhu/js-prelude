@@ -111,8 +111,9 @@
   },
   "useInferencePlugins": false,
   "release": {
+    "projectsRelationship": "independent",
     "version": {
-      "preVersionCommand": "yarn dlx nx run-many -t build"
+      "preVersionCommand": "yarn nx run-many -t build"
     }
   }
 }
