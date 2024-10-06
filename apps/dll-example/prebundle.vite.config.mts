@@ -20,6 +20,7 @@ export default defineConfig((env) => ({
         'react-dom/client',
         'react/jsx-runtime',
         'react/jsx-dev-runtime',
+        'react-virtualized',
       ],
       exclude: [/@babel/],
       merge: {
@@ -30,6 +31,14 @@ export default defineConfig((env) => ({
     }),
   ],
 
+  resolve: {
+    alias: [
+      {
+        find: /^react-virtualized$/,
+        replacement: 'react-virtualized/dist/umd/react-virtualized.js',
+      },
+    ],
+  },
   define: {
     'process.env.NODE_ENV': JSON.stringify(env.mode),
   },

@@ -9,7 +9,7 @@
     "scan-import": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "dist/packages/vite-plugin-prebundle/import-scanner/index.js -d apps/dll-example/src -o apps/dll-example/prebundle-modules.json -t 1"
+        "command": "dist/packages/vite-plugin-prebundle/import-scanner/index.js -d apps/dll-example/src -o apps/dll-example/prebundle-modules.json -t 0"
       }
     },
     "prebundle": {

@@ -144,6 +144,7 @@
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "papaparse": "^5.4.1",
+    "react-virtualized": "^9.22.5",
     "rxjs": "~7.8.0",
     "storybook": "^8.2.8",
     "tslib": "^2.3.0",

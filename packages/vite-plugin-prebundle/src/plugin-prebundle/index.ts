@@ -6,6 +6,7 @@ import { Plugin, UserConfig } from 'vite';
 import { PreBundleEntry, PrebundleOptions } from '../types';
 import { makeIdentifierFromModuleId } from '../utils';
 import { DepsCollector } from './deps-collector';
+import { findImportModules } from './find-import-modules';
 import { ModuleMergeRules } from './module-merge-rules';
 
 const FAKE_ENTRY = '\0virtual:prebundle-entry';
@@ -45,15 +46,15 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
         } as UserConfig;
       },
       async configResolved(cfg) {
-        const rootDir = cfg.root;
         isDev = cfg.mode === 'development';
         projectImports = uniq([...(pluginOpt.include ?? [])]);
       },
       async buildStart() {
         // collect deps
-        projectImports.forEach((id) => depsCollector.addToQueue(id));
+        projectImports.forEach((id) => depsCollector.directDeps.add(id));
         await depsCollector.collectWithVite(this as PluginContext);
 
+        moduleMergeRules.addRules(depsCollector.mergeTransitiveDepRules());
         // to prebundle files
         const files = toPrebundleFiles(
           filter([...depsCollector.deps], (id) =>
@@ -71,7 +72,7 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
       },
       resolveId: {
         order: 'pre',
-        async handler(source) {
+        async handler(source, importer, options) {
           if (source.endsWith(FAKE_ENTRY)) {
             return {
               id: FAKE_ENTRY,
@@ -82,7 +83,6 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
               id: source,
             };
           }
-          depsCollector.addToQueue(source);
           return null;
         },
       },
@@ -101,6 +101,7 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
         }
         return null;
       },
+
       generateBundle: {
         order: 'post',
         async handler(_, chunkMap) {
