@@ -18,7 +18,6 @@ export class DepsCollector {
    * @private
    */
   public deps = new Set<string>();
-  resolved = new Set<string>();
   private done = false;
   private failed = new Set<string>();
   private visited = new Set<string>();
@@ -31,7 +30,13 @@ export class DepsCollector {
     for (const [directDep, transitiveDeps] of this.transitiveDeps.entries()) {
       const ruleName = 'transitive_' + makeIdentifierFromModuleId(directDep);
       const matchModuleRegex = new RegExp(
-        '^' + transitiveDeps.map((it) => escapeRegExp(it)).join('|') + '$',
+        '^' +
+          Array.from(transitiveDeps)
+            // filter out direct deps
+            .filter((it) => !this.directDeps.has(it))
+            .map((it) => escapeRegExp(it))
+            .join('|') +
+          '$',
       );
       result.push({ ruleName, matchModule: matchModuleRegex });
     }
@@ -46,8 +51,17 @@ export class DepsCollector {
       directDepModuleId,
       ctx,
     );
+    // .css file will be stripped out by vite in the final build
+    // we should not create entry for them
+    if (directDepModuleId.endsWith('.css')) {
+      return;
+    }
+    // todo inject css to style tag
     this.deps.add(directDepModuleId);
     for (const transitiveDep of transitiveDeps) {
+      if (transitiveDep.endsWith('.css')) {
+        continue;
+      }
       this.transitiveDeps.add(directDepModuleId, transitiveDep);
       this.deps.add(transitiveDep);
     }
@@ -156,7 +170,7 @@ class Lookup<T> {
 
   *entries() {
     for (const [key, value] of this.map.entries()) {
-      yield [key, Array.from(value)] as const;
+      yield [key, value] as const;
     }
   }
 

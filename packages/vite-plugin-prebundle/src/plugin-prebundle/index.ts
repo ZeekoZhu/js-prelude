@@ -6,7 +6,6 @@ import { Plugin, UserConfig } from 'vite';
 import { PreBundleEntry, PrebundleOptions } from '../types';
 import { makeIdentifierFromModuleId } from '../utils';
 import { DepsCollector } from './deps-collector';
-import { findImportModules } from './find-import-modules';
 import { ModuleMergeRules } from './module-merge-rules';
 
 const FAKE_ENTRY = '\0virtual:prebundle-entry';
