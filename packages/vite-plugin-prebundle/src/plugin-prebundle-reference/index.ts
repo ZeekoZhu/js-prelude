@@ -1,4 +1,4 @@
-import { set } from 'lodash-es';
+import { concat, set, uniq } from 'lodash-es';
 import { TransformPluginContext } from 'rollup';
 import { Plugin } from 'vite';
 
@@ -24,17 +24,15 @@ export function prebundleReference(
       config: {
         order: 'post',
         handler(config) {
+          const preBundleModules = dllReferenceManager.getPreBundleModules();
           config.optimizeDeps!.include = config.optimizeDeps?.include?.filter(
-            (it) =>
-              ![
-                'react',
-                'react/jsx-runtime',
-                'react/jsx-dev-runtime',
-                'react-dom',
-              ].includes(it),
+            (it) => !preBundleModules.includes(it),
           );
-          config.optimizeDeps!.exclude =
-            dllReferenceManager.getPreBundleModules();
+          config.optimizeDeps!.exclude = uniq(
+            concat(config.optimizeDeps?.exclude, preBundleModules).filter(
+              (it) => it != null,
+            ),
+          );
           set(config, 'optimizeDeps.esbuildOptions.plugins', [
             prebundleReferenceEsbuildPlugin({
               refManager: dllReferenceManager,
