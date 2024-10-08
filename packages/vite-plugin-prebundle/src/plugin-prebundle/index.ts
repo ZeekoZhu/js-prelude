@@ -36,6 +36,11 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
                   if (chunkInfo.name.startsWith('pre-bundle-')) {
                     return `[name]-[hash].mjs`;
                   } else {
+                    // avoid vite treat prebundle files as cjs
+                    // https://github.com/vitejs/vite/blob/fafc7e28d3395292fbc2f2355417dcc15871ab1e/packages/vite/src/node/plugins/importAnalysis.ts#L599
+                    if (chunkInfo.name.includes('_vite-browser-external')) {
+                      return `pre-bundle-chunk-vite-internals-[hash].mjs`;
+                    }
                     return `pre-bundle-chunk-[name]-[hash].mjs`;
                   }
                 },
