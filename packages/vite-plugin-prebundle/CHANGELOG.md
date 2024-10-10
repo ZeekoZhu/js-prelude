@@ -1,3 +1,15 @@
+## 0.0.4 (2024-10-10)
+
+
+### 🩹 Fixes
+
+- **vite-prebundle:** correct transitive deps handling ([85e586d](https://github.com/ZeekoZhu/js-prelude/commit/85e586d))
+
+
+### ❤️  Thank You
+
+- ZeekoZhu
+
 ## 0.0.4-0 (2024-10-08)
 
 
