@@ -51,10 +51,6 @@ export default defineConfig((env) => ({
     commonjsOptions: {
       transformMixedEsModules: true,
     },
-    rollupOptions: {
-      output: {
-        experimentalMinChunkSize: 1000 * 1024,
-      },
-    },
+    rollupOptions: {},
   },
 }));

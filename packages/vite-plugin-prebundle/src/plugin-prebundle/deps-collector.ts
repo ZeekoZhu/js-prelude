@@ -2,7 +2,7 @@ import { escapeRegExp } from 'lodash-es';
 import { PluginContext } from 'rollup';
 import { makeIdentifierFromModuleId } from '../utils';
 import { findImportModules } from './find-import-modules';
-import { MergeRule } from './module-merge-rules';
+import { MergeRule, ModuleMergeRules } from './module-merge-rules';
 
 /**
  * Collect dependencies for a set of module during the `resolve` phase of Vite.
@@ -25,20 +25,26 @@ export class DepsCollector {
   /**
    * create merge rules for transitive dependencies
    */
-  mergeTransitiveDepRules() {
+  mergeTransitiveDepRules(existingMergeRules: ModuleMergeRules) {
     const result: MergeRule[] = [];
     for (const [directDep, transitiveDeps] of this.transitiveDeps.entries()) {
-      const ruleName = 'transitive_' + makeIdentifierFromModuleId(directDep);
       const matchModuleRegex = new RegExp(
-        '^' +
+        '^(' +
           Array.from(transitiveDeps)
-            // filter out direct deps
-            .filter((it) => !this.directDeps.has(it))
             .map((it) => escapeRegExp(it))
             .join('|') +
-          '$',
+          ')$',
       );
-      result.push({ ruleName, matchModule: matchModuleRegex });
+      const ruleForDirectDep = existingMergeRules.getRule(directDep);
+      if (ruleForDirectDep) {
+        result.push({
+          ruleName: ruleForDirectDep,
+          matchModule: matchModuleRegex,
+        });
+      } else {
+        const ruleName = 'transitive_' + makeIdentifierFromModuleId(directDep);
+        result.push({ ruleName, matchModule: matchModuleRegex });
+      }
     }
     return result;
   }
@@ -56,7 +62,6 @@ export class DepsCollector {
     if (directDepModuleId.endsWith('.css')) {
       return;
     }
-    // todo inject css to style tag
     this.deps.add(directDepModuleId);
     for (const transitiveDep of transitiveDeps) {
       if (transitiveDep.endsWith('.css')) {

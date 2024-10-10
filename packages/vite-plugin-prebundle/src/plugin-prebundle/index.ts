@@ -58,7 +58,9 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
         projectImports.forEach((id) => depsCollector.directDeps.add(id));
         await depsCollector.collectWithVite(this as PluginContext);
 
-        moduleMergeRules.addRules(depsCollector.mergeTransitiveDepRules());
+        moduleMergeRules.addRules(
+          depsCollector.mergeTransitiveDepRules(moduleMergeRules),
+        );
         // to prebundle files
         const files = toPrebundleFiles(
           filter([...depsCollector.deps], (id) =>
@@ -271,6 +273,13 @@ function toPrebundleFiles(
         name: dep,
         entries: [entry],
       });
+    }
+  }
+  // if a mergedModuleFile has only one entry, move it to singleModuleFiles
+  for (const [rule, file] of mergedModuleFiles) {
+    if (file.entries.length === 1) {
+      singleModuleFiles.push(file);
+      mergedModuleFiles.delete(rule);
     }
   }
   return singleModuleFiles.concat(Array.from(mergedModuleFiles.values()));
