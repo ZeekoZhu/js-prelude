@@ -1,0 +1,22 @@
+{
+  "name": "@zeeko/mobx-react-hooks",
+  "version": "0.0.1",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./index.js"
+    }
+  },
+  "dependencies": {
+    "ahooks": "^3.8.1",
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4"
+  },
+  "peerDependencies": {
+    "mobx": "*"
+  }
+}
