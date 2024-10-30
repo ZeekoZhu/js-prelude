@@ -22,7 +22,15 @@ export class ModuleMergeRules {
     this.rules.push(...rules);
   }
 
-  getRule(moduleId: string) {
+  addRule(rule: MergeRule) {
+    this.rules.push(rule);
+  }
+
+  /**
+   * Returns the name of the rule that matches the moduleId
+   * @param moduleId
+   */
+  getMatchingRule(moduleId: string) {
     return this.rules.find((it) => this.isMatchModule(moduleId, it))?.ruleName;
   }
 

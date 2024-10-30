@@ -1,8 +1,8 @@
 import { escapeRegExp } from 'lodash-es';
-import { PluginContext } from 'rollup';
+import type { PluginContext } from 'rollup';
 import { makeIdentifierFromModuleId } from '../utils';
 import { findImportModules } from './find-import-modules';
-import { MergeRule, ModuleMergeRules } from './module-merge-rules';
+import { ModuleMergeRules } from './module-merge-rules';
 
 /**
  * Collect dependencies for a set of module during the `resolve` phase of Vite.
@@ -26,7 +26,6 @@ export class DepsCollector {
    * create merge rules for transitive dependencies
    */
   mergeTransitiveDepRules(existingMergeRules: ModuleMergeRules) {
-    const result: MergeRule[] = [];
     for (const [directDep, transitiveDeps] of this.transitiveDeps.entries()) {
       const matchModuleRegex = new RegExp(
         '^(' +
@@ -35,18 +34,17 @@ export class DepsCollector {
             .join('|') +
           ')$',
       );
-      const ruleForDirectDep = existingMergeRules.getRule(directDep);
+      const ruleForDirectDep = existingMergeRules.getMatchingRule(directDep);
       if (ruleForDirectDep) {
-        result.push({
+        existingMergeRules.addRule({
           ruleName: ruleForDirectDep,
           matchModule: matchModuleRegex,
         });
       } else {
         const ruleName = 'transitive_' + makeIdentifierFromModuleId(directDep);
-        result.push({ ruleName, matchModule: matchModuleRegex });
+        existingMergeRules.addRule({ ruleName, matchModule: matchModuleRegex });
       }
     }
-    return result;
   }
 
   async collectFromDirectDep(ctx: PluginContext, directDepModuleId: string) {
