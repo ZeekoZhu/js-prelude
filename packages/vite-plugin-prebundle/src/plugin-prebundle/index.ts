@@ -5,7 +5,7 @@ import { Plugin, UserConfig } from 'vite';
 
 import { PreBundleEntry, PrebundleOptions } from '../types';
 import { makeIdentifierFromModuleId } from '../utils';
-import { DepsCollector } from './deps-collector';
+import { addTransitiveMergeRules, DepsCollector } from './deps-collector';
 import { ModuleMergeRules } from './module-merge-rules';
 
 const FAKE_ENTRY = '\0virtual:prebundle-entry';
@@ -58,7 +58,7 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
         projectImports.forEach((id) => depsCollector.directDeps.add(id));
         await depsCollector.collectWithVite(this as PluginContext);
 
-        depsCollector.mergeTransitiveDepRules(moduleMergeRules);
+        addTransitiveMergeRules(moduleMergeRules, depsCollector.transitiveDeps);
         // to prebundle files
         const files = toPrebundleFiles(
           filter([...depsCollector.deps], (id) =>

@@ -2,6 +2,7 @@ import { escapeRegExp } from 'lodash-es';
 import type { PluginContext } from 'rollup';
 import { makeIdentifierFromModuleId } from '../utils';
 import { findImportModules } from './find-import-modules';
+import { Lookup } from './lookup';
 import { ModuleMergeRules } from './module-merge-rules';
 
 /**
@@ -21,31 +22,6 @@ export class DepsCollector {
   private done = false;
   private failed = new Set<string>();
   private visited = new Set<string>();
-
-  /**
-   * create merge rules for transitive dependencies
-   */
-  mergeTransitiveDepRules(existingMergeRules: ModuleMergeRules) {
-    for (const [directDep, transitiveDeps] of this.transitiveDeps.entries()) {
-      const matchModuleRegex = new RegExp(
-        '^(' +
-          Array.from(transitiveDeps)
-            .map((it) => escapeRegExp(it))
-            .join('|') +
-          ')$',
-      );
-      const ruleForDirectDep = existingMergeRules.getMatchingRule(directDep);
-      if (ruleForDirectDep) {
-        existingMergeRules.addRule({
-          ruleName: ruleForDirectDep,
-          matchModule: matchModuleRegex,
-        });
-      } else {
-        const ruleName = 'transitive_' + makeIdentifierFromModuleId(directDep);
-        existingMergeRules.addRule({ ruleName, matchModule: matchModuleRegex });
-      }
-    }
-  }
 
   async collectFromDirectDep(ctx: PluginContext, directDepModuleId: string) {
     if (this.isVisited(directDepModuleId)) {
@@ -141,43 +117,29 @@ export class DepsCollector {
 }
 
 /**
- * A one-to-many lookup table
+ * add merge rules for transitive dependencies
  */
-class Lookup<T> {
-  private map = new Map<string, Set<T>>();
-
-  add(key: string, value: T) {
-    let set = this.map.get(key);
-    if (!set) {
-      set = new Set();
-      this.map.set(key, set);
+export function addTransitiveMergeRules(
+  mergeRules: ModuleMergeRules,
+  transitiveDeps: Lookup<string>,
+) {
+  for (const [directDep, transitives] of transitiveDeps.entries()) {
+    const matchModuleRegex = new RegExp(
+      '^(' +
+        Array.from(transitives)
+          .map((it) => escapeRegExp(it))
+          .join('|') +
+        ')$',
+    );
+    const ruleForDirectDep = mergeRules.getMatchingRule(directDep);
+    if (ruleForDirectDep) {
+      mergeRules.addRule({
+        ruleName: ruleForDirectDep,
+        matchModule: matchModuleRegex,
+      });
+    } else {
+      const ruleName = 'transitive_' + makeIdentifierFromModuleId(directDep);
+      mergeRules.addRule({ ruleName, matchModule: matchModuleRegex });
     }
-    set.add(value);
-  }
-
-  get(key: string) {
-    return this.map.get(key);
-  }
-
-  has(key: string) {
-    return this.map.has(key);
-  }
-
-  delete(key: string) {
-    return this.map.delete(key);
-  }
-
-  clear() {
-    this.map.clear();
-  }
-
-  *entries() {
-    for (const [key, value] of this.map.entries()) {
-      yield [key, value] as const;
-    }
-  }
-
-  keys() {
-    return this.map.keys();
   }
 }
