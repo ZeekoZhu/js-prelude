@@ -1,5 +1,5 @@
 import { makeAutoObservable, observable } from 'mobx';
-import { AbstractFormField } from './types';
+import { AbstractFormField } from './types.js';
 
 export class FormField<T> implements AbstractFormField<T> {
   initValue: unknown = undefined;

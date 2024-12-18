@@ -1,6 +1,6 @@
 import { isObservableProp } from 'mobx';
 import { beforeEach, describe, expect } from 'vitest';
-import { FormField } from './form-field';
+import { FormField } from './form-field.js';
 
 describe('FormField', () => {
   test('should be created with initial value', () => {

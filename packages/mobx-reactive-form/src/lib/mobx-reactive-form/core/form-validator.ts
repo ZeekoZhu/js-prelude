@@ -1,4 +1,4 @@
-import { IValidatable } from './types';
+import { IValidatable } from './types.js';
 
 export type ValidatorFn<T> = (value: T) => string[] | undefined;
 

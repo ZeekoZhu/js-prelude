@@ -1,6 +1,6 @@
 import { IKeyValueMap, makeAutoObservable, observable } from 'mobx';
-import { FormField } from './form-field';
-import { AbstractFormField, IValidatable } from './types';
+import { FormField } from './form-field.js';
+import { AbstractFormField, IValidatable } from './types.js';
 
 export type FieldGroupOf<TValue> = {
   [TK in keyof TValue]-?: AbstractFormField<TValue[TK]>;

@@ -5,8 +5,8 @@ import {
   AbstractFormField,
   FormValidator,
   FormValidatorOptions,
-} from '../core';
-import { useObservableRef } from './use-observable-ref';
+} from '../core/index.js';
+import { useObservableRef } from './use-observable-ref.js';
 
 export interface IValidationTrigger {
   validate(): Promise<void>;

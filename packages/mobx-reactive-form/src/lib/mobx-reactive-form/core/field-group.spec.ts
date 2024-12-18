@@ -1,10 +1,10 @@
 import { isObservableProp, reaction } from 'mobx';
 import { beforeEach, describe, expect, expectTypeOf, test } from 'vitest';
-import { AbstractFormField } from './types';
-import { FieldArray } from './field-array';
-import { FieldGroup, FieldGroupOf } from './field-group';
-import { FormField } from './form-field';
-import { FormValidator } from './form-validator';
+import { AbstractFormField } from './types.js';
+import { FieldArray } from './field-array.js';
+import { FieldGroup, FieldGroupOf } from './field-group.js';
+import { FormField } from './form-field.js';
+import { FormValidator } from './form-validator.js';
 
 interface Person {
   name: string;

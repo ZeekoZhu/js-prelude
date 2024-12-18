@@ -1,12 +1,12 @@
 import { observer } from 'mobx-react-lite';
 
 import { ChangeEvent } from 'react';
-import { AbstractFormField } from '../core';
+import { AbstractFormField } from '../core/index.js';
 import {
   useControlProps,
   UseControlPropsOptions,
   UseControlReturn,
-} from './use-control-props';
+} from './use-control-props.js';
 
 export interface ControllerProps<T, TValue> {
   field: AbstractFormField<T>;

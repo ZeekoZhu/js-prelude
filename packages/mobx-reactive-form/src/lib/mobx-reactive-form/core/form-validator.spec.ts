@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { FormField } from './form-field';
-import { FormValidator } from './form-validator';
+import { FormField } from './form-field.js';
+import { FormValidator } from './form-validator.js';
 
 describe('FormValidator', () => {
   test('sync validator', async () => {

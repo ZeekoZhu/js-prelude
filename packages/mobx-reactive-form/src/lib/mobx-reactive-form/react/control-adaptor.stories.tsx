@@ -3,12 +3,12 @@ import { useCreation } from 'ahooks';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { FormField } from '../core';
+import { FormField } from '../core/index.js';
 import {
   UseControlPropsOptions,
   useHtmlControlProps,
   useValidationTrigger,
-} from './use-control-props';
+} from './use-control-props.js';
 
 type StoryParams = Pick<
   UseControlPropsOptions<string>,
@@ -19,7 +19,7 @@ type StoryParams = Pick<
 const Demo = observer((props: StoryParams) => {
   const field = useCreation(() => new FormField(props.initValue), []);
   const rules = {
-    validator: (value) => {
+    validator: (value: string) => {
       if (value.length >= 5 && value.length < 15) {
         return [];
       }

@@ -1,9 +1,9 @@
 import { isObservableProp } from 'mobx';
 import { beforeEach, describe, expect, expectTypeOf } from 'vitest';
-import { FieldArray } from './field-array';
-import { FieldGroup } from './field-group';
-import { FormField } from './form-field';
-import { FormValidator } from './form-validator';
+import { FieldArray } from './field-array.js';
+import { FieldGroup } from './field-group.js';
+import { FormField } from './form-field.js';
+import { FormValidator } from './form-validator.js';
 
 describe('FieldArray', () => {
   test('can create instance', () => {
