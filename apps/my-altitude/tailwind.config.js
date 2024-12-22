@@ -10,5 +10,8 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('daisyui'),
+    require('@tailwindcss/typography'),
+  ],
 };

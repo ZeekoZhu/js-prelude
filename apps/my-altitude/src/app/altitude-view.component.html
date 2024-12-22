@@ -1,0 +1,20 @@
+<div class='bg-[#86A788] max-w-[100vw] h-[100vh] w-[100vw] flex items-center justify-center relative'>
+  <h1 class='fg-text fixed top-4 left-4 text-3xl'>⛰️ 海拔</h1>
+  <span class='fg-text self-center text-6xl sm:text-8xl font-bold'>
+    {{ altitude() }}</span>
+  <div class='fixed bottom-4 right-4'>
+    <button class='btn btn-circle bg-[#FFFDEC]' (click)='refresh()'>
+      📍
+    </button>
+  </div>
+
+  <ul class='fixed bottom-4 left-4 fg-text '>
+    <li>
+      latitude: {{ latitude() }}
+    </li>
+    <li>
+      longitude: {{ longitude() }}
+    </li>
+  </ul>
+
+</div>
