@@ -8,17 +8,13 @@ import { firstValueFrom } from 'rxjs';
 export class AltitudeProviderService {
   httpClient = inject(HttpClient);
 
-  getCurrentPosition(): Promise<Position> {
+  getCurrentPosition(): Promise<GeolocationPosition> {
     return new Promise((resolve, reject) => {
       console.log('getCurrentPosition');
       navigator.geolocation.getCurrentPosition(
         async (position) => {
-          const result: Position = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            altitude: position.coords.altitude,
-          };
-          resolve(result);
+          console.log('getCurrentPosition', position);
+          resolve(position);
         },
         (err) => {
           reject(err);

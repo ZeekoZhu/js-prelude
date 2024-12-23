@@ -1,15 +1,46 @@
 <div
-  class='bg-[#86A788] max-w-[100vw] h-[100vh] w-[100vw] flex items-center justify-center relative'
+  class="bg-[#86A788] max-w-[100vw] h-[100vh] w-[100vw] flex items-center justify-center relative"
 >
-  <h1 class='fg-text fixed top-4 left-4 text-3xl'>⛰️ 海拔</h1>
-  <span class='fg-text self-center text-6xl sm:text-8xl font-bold'>
-    {{ altitude() }}</span
-  >
-  <div class='fixed bottom-4 right-4'>
-    <button class='btn btn-circle bg-[#FFFDEC]' (click)='refresh()'>📍</button>
+  <h1 class="fg-text fixed top-4 left-4 text-3xl">⛰️ 海拔</h1>
+  <div class="fg-text self-center relative">
+    <ng-container
+      *rxIf="
+        altitude$;
+        contextTrigger: locating$;
+        suspense: locating;
+        let altitude
+      "
+    >
+      <span class="inline-block text-6xl sm:text-8xl font-bold">{{
+        altitude
+      }}</span>
+    </ng-container>
+    <ng-template #locating>
+      <span
+        class="inline-flex gap-x-4 items-center text-6xl sm:text-8xl font-bold"
+        >测量中
+        <svg-icon
+          src="icons/icon-spinner.svg"
+          [svgStyle]="{ color: '#FFFDEC', 'height.px': '48' }"
+        />
+      </span>
+    </ng-template>
+    <span
+      *rxIf="isGPSTooWeak$"
+      class="text-xs absolute whitespace-nowrap bottom-[-32px] left-0"
+      >GPS 信号弱，请移动到开阔的地方</span
+    >
   </div>
-  <ul class='fixed bottom-4 left-4 fg-text'>
-    <li>{{ latitude() }}</li>
-    <li>{{ longitude() }}</li>
+  <div class="fixed bottom-4 right-4">
+    <button class="btn btn-circle bg-[#FFFDEC]" (click)="refresh()">
+      <svg-icon
+        src="icons/md-icon-refresh-rounded.svg"
+        [svgStyle]="{ 'width.px': '24', color: '#86A788', 'height.px': '24' }"
+      />
+    </button>
+  </div>
+  <ul class="fixed bottom-4 left-4 fg-text">
+    <li *rxIf="latitude$; let latitude">{{ latitude }}</li>
+    <li *rxIf="longitude$; let longitude">{{ longitude }}</li>
   </ul>
 </div>
