@@ -399,6 +399,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular-devkit/core@npm:18.2.12":
+  version: 18.2.12
+  resolution: "@angular-devkit/core@npm:18.2.12"
+  dependencies:
+    ajv: "npm:8.17.1"
+    ajv-formats: "npm:3.0.1"
+    jsonc-parser: "npm:3.3.1"
+    picomatch: "npm:4.0.2"
+    rxjs: "npm:7.8.1"
+    source-map: "npm:0.7.4"
+  peerDependencies:
+    chokidar: ^3.5.2
+  dependenciesMeta:
+    esbuild:
+      built: true
+    puppeteer:
+      built: true
+  peerDependenciesMeta:
+    chokidar:
+      optional: true
+  checksum: 10/793c54cc9ac4e064d2580985c6c2de627ab3e2b8a7198e0557033db58bac36896e30ff06fc9b9faf91027a67af2d9b59f1985c0ee3cacf44c7b212823b901667
+  languageName: node
+  linkType: hard
+
 "@angular-devkit/core@npm:18.2.5":
   version: 18.2.5
   resolution: "@angular-devkit/core@npm:18.2.5"
@@ -420,6 +444,24 @@ __metadata:
     chokidar:
       optional: true
   checksum: 10/0aa6f2b98f3777be07fddfb07414157882d0a4a21c3bad14ab03d3b2cb5d9b82396de65be061ff7a1404bf4022e6f59d152bda53db29f54779b1d42bc589e168
+  languageName: node
+  linkType: hard
+
+"@angular-devkit/schematics@npm:18.2.12":
+  version: 18.2.12
+  resolution: "@angular-devkit/schematics@npm:18.2.12"
+  dependencies:
+    "@angular-devkit/core": "npm:18.2.12"
+    jsonc-parser: "npm:3.3.1"
+    magic-string: "npm:0.30.11"
+    ora: "npm:5.4.1"
+    rxjs: "npm:7.8.1"
+  dependenciesMeta:
+    esbuild:
+      built: true
+    puppeteer:
+      built: true
+  checksum: 10/7e3f345ce2fae18ce80502d019b65c0d1ea4126178fc1809a7b24745efbd7f42e128da66f0e7e8d385335185c07446ed963a83d902046b5761e4034e3a43197a
   languageName: node
   linkType: hard
 
@@ -832,6 +874,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular/pwa@npm:^18":
+  version: 18.2.12
+  resolution: "@angular/pwa@npm:18.2.12"
+  dependencies:
+    "@angular-devkit/schematics": "npm:18.2.12"
+    "@schematics/angular": "npm:18.2.12"
+    parse5-html-rewriting-stream: "npm:7.0.0"
+  peerDependencies:
+    "@angular/cli": ^18.0.0
+  dependenciesMeta:
+    esbuild:
+      built: true
+    puppeteer:
+      built: true
+  peerDependenciesMeta:
+    "@angular/cli":
+      optional: true
+  checksum: 10/97c6a79ee8747c5743d9c2e68f826bd55146b08c817d11e88915f5f63d29865e3553ca558b18f3ee62454c5f03af1cac3263dd13d422dd8b43314ca94a0c58f7
+  languageName: node
+  linkType: hard
+
 "@angular/router@npm:18.2.5":
   version: 18.2.5
   resolution: "@angular/router@npm:18.2.5"
@@ -843,6 +906,20 @@ __metadata:
     "@angular/platform-browser": 18.2.5
     rxjs: ^6.5.3 || ^7.4.0
   checksum: 10/0b1c5b96f7aba5806b929014826b7d2370a9fe9571a8aca9947724945be32599d826a989cbfa14e5394b5ccb16ac8754d0a17b4c3c658c22006b048a5f31f202
+  languageName: node
+  linkType: hard
+
+"@angular/service-worker@npm:18.2.5":
+  version: 18.2.5
+  resolution: "@angular/service-worker@npm:18.2.5"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/common": 18.2.5
+    "@angular/core": 18.2.5
+  bin:
+    ngsw-config: ngsw-config.js
+  checksum: 10/35cf156d32af9e9e504055966d91786d1ee6b8684afbd1ad080852faecee2e41c3f83edd47ef387532987631f9c596e73dc3aa824ca205a2c9e39908ed49d3c6
   languageName: node
   linkType: hard
 
@@ -9094,6 +9171,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@schematics/angular@npm:18.2.12":
+  version: 18.2.12
+  resolution: "@schematics/angular@npm:18.2.12"
+  dependencies:
+    "@angular-devkit/core": "npm:18.2.12"
+    "@angular-devkit/schematics": "npm:18.2.12"
+    jsonc-parser: "npm:3.3.1"
+  dependenciesMeta:
+    esbuild:
+      built: true
+    puppeteer:
+      built: true
+  checksum: 10/c4b94e4f2a37da69f73bd7bb36253eedc5512c2030c800a850c4d00f59cbbebdd0e556850677c03ed2ccdec7d418aade22f71db1980b9ca634abd1b1ae77cd8b
+  languageName: node
+  linkType: hard
+
 "@schematics/angular@npm:18.2.5":
   version: 18.2.5
   resolution: "@schematics/angular@npm:18.2.5"
@@ -13027,7 +13120,9 @@ __metadata:
     "@angular/material": "npm:18.2.5"
     "@angular/platform-browser": "npm:18.2.5"
     "@angular/platform-browser-dynamic": "npm:18.2.5"
+    "@angular/pwa": "npm:^18"
     "@angular/router": "npm:18.2.5"
+    "@angular/service-worker": "npm:18.2.5"
     "@babel/core": "npm:^7.20.12"
     "@babel/preset-react": "npm:^7.14.5"
     "@babel/preset-typescript": "npm:^7.18.6"

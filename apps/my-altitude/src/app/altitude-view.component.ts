@@ -21,17 +21,17 @@ export class AltitudeViewComponent {
   );
 
   latitude = toSignal(
-    this.position$.pipe(map((it) => formatMeasure(it.latitude))),
+    this.position$.pipe(map((it) => formatLatitude(it.latitude))),
     { initialValue: '测量中...' },
   );
 
   longitude = toSignal(
-    this.position$.pipe(map((it) => formatMeasure(it.longitude))),
+    this.position$.pipe(map((it) => formatLongitude(it.longitude))),
     { initialValue: '测量中...' },
   );
 
   altitude = toSignal(
-    this.position$.pipe(map((it) => formatMeasure(it.altitude,'m'))),
+    this.position$.pipe(map((it) => formatMeasure(it.altitude, 'm'))),
     { initialValue: '测量中...' },
   );
 
@@ -44,9 +44,29 @@ export class AltitudeViewComponent {
   }
 }
 
-function formatMeasure(value: number | null,  unit = ''): string {
+function formatMeasure(value: number | null, unit = ''): string {
   if (!value) {
     return '测量中...';
   }
-  return `${value.toFixed(2)}m`;
+  return `${value.toFixed(2)}${unit}`;
+}
+
+function formatLatitude(value: number): string {
+  if (!value) {
+    return '测量中...';
+  }
+  if (value > 0) {
+    return `N ${formatMeasure(value, '°')}`;
+  }
+  return `S ${formatMeasure(-value, '°')}`;
+}
+
+function formatLongitude(value: number): string {
+  if (!value) {
+    return '测量中...';
+  }
+  if (value > 0) {
+    return `E ${formatMeasure(value, '°')}`;
+  }
+  return `W ${formatMeasure(-value, '°')}`;
 }

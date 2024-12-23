@@ -24,8 +24,8 @@ export class AltitudeProviderService {
           reject(err);
         },
         {
-          enableHighAccuracy: true
-        }
+          enableHighAccuracy: true,
+        },
       );
     });
   }
