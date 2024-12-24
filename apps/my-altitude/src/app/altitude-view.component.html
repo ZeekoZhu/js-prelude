@@ -1,5 +1,6 @@
 <div
-  class="bg-primary max-w-[100vw] h-[100vh] w-[100vw] flex items-center justify-center relative"
+  [class.is-fullscreen]="isFullscreen$"
+  class="background bg-primary max-w-[100vw] h-[100vh] w-[100vw] flex items-center justify-center relative"
 >
   <h1 class="fg-text fixed top-4 left-4 text-3xl">⛰️ 海拔</h1>
   <div class="fg-text self-center relative">
@@ -31,7 +32,8 @@
       >GPS 信号弱，请移动到开阔的地方</span
     >
   </div>
-  <div class="fixed bottom-4 right-4">
+  <div class="fixed bottom-4 right-4 flex gap-4">
+    <app-toggle-full-screen-btn />
     <button class="btn btn-circle bg-primary-content" (click)="refresh()">
       <svg-icon
         src="icons/md-icon-refresh-rounded.svg"

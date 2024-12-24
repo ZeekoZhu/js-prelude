@@ -4,38 +4,27 @@ import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 import { rxState } from '@rx-angular/state';
 import { RxIf } from '@rx-angular/template/if';
 import { SvgIconComponent } from 'angular-svg-icon';
-import { catchError, exhaustMap, map, of, startWith, Subject } from 'rxjs';
+import { catchError, exhaustMap, map, of, Subject } from 'rxjs';
 import { AltitudeProviderService } from './altitude-provider.service';
+import { IsFullscreenService } from './is-fullscreen.service';
+import { ToggleFullScreenBtnComponent } from './toggle-full-screen-btn.component';
 
 @Component({
   selector: 'app-altitude-view',
   standalone: true,
-  imports: [CommonModule, SvgIconComponent, RxIf],
+  imports: [CommonModule, SvgIconComponent, RxIf, ToggleFullScreenBtnComponent],
   templateUrl: './altitude-view.component.html',
   styleUrl: './altitude-view.component.css',
 })
 export class AltitudeViewComponent {
   altitudeProvider = inject(AltitudeProviderService);
-  state = rxState<{ position: GeolocationPosition | null }>();
-
-  latitude$ = this.state
-    .select('position')
-    .pipe(map((it) => formatLatitude(it?.coords.latitude)));
-  longitude$ = this.state
-    .select('position')
-    .pipe(map((it) => formatLongitude(it?.coords.longitude)));
-  altitude$ = this.state
-    .select('position')
-    .pipe(map((it) => formatMeasure(it?.coords.altitude, 'm') ?? '无法定位'));
-  isGPSTooWeak$ = this.state
-    .select('position')
-    .pipe(map((it) => it?.coords.accuracy == null || it.coords.accuracy > 100));
-
   $refresh = new Subject<void>();
-  locating$ = new Subject<RxNotificationKind>();
-
-  constructor() {
-    this.state.connect(
+  state = rxState<{
+    position: GeolocationPosition | null;
+    isFullscreen: boolean;
+  }>(({ connect }) => {
+    connect('isFullscreen', inject(IsFullscreenService).isFullscreen$);
+    connect(
       'position',
       this.$refresh.pipe(
         exhaustMap(async () => {
@@ -51,6 +40,23 @@ export class AltitudeViewComponent {
         }),
       ),
     );
+  });
+  latitude$ = this.state
+    .select('position')
+    .pipe(map((it) => formatLatitude(it?.coords.latitude)));
+  longitude$ = this.state
+    .select('position')
+    .pipe(map((it) => formatLongitude(it?.coords.longitude)));
+  altitude$ = this.state
+    .select('position')
+    .pipe(map((it) => formatMeasure(it?.coords.altitude, 'm') ?? '无法定位'));
+  isGPSTooWeak$ = this.state
+    .select('position')
+    .pipe(map((it) => it?.coords.accuracy == null || it.coords.accuracy > 100));
+  locating$ = new Subject<RxNotificationKind>();
+  isFullscreen$ = this.state.select('isFullscreen');
+
+  constructor() {
     this.refresh();
   }
 

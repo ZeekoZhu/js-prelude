@@ -1,7 +1,7 @@
 {
   "name": "My Elevation",
   "short_name": "My Elevation",
-  "theme_color": "#1976d2",
+  "theme_color": "#86A788",
   "background_color": "#86A788",
   "display": "standalone",
   "scope": "./",
