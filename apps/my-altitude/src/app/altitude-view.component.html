@@ -1,5 +1,5 @@
 <div
-  class="bg-[#86A788] max-w-[100vw] h-[100vh] w-[100vw] flex items-center justify-center relative"
+  class="bg-primary max-w-[100vw] h-[100vh] w-[100vw] flex items-center justify-center relative"
 >
   <h1 class="fg-text fixed top-4 left-4 text-3xl">⛰️ 海拔</h1>
   <div class="fg-text self-center relative">
@@ -21,7 +21,7 @@
         >测量中
         <svg-icon
           src="icons/icon-spinner.svg"
-          [svgStyle]="{ color: '#FFFDEC', 'height.px': '48' }"
+          class="text-primary-content w-12"
         />
       </span>
     </ng-template>
@@ -32,10 +32,10 @@
     >
   </div>
   <div class="fixed bottom-4 right-4">
-    <button class="btn btn-circle bg-[#FFFDEC]" (click)="refresh()">
+    <button class="btn btn-circle bg-primary-content" (click)="refresh()">
       <svg-icon
         src="icons/md-icon-refresh-rounded.svg"
-        [svgStyle]="{ 'width.px': '24', color: '#86A788', 'height.px': '24' }"
+        class="text-primary w-6 h-6"
       />
     </button>
   </div>

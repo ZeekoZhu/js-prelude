@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ThemeChangerService } from './theme-changer.service';
 
 @Component({
   standalone: true,
@@ -8,4 +9,10 @@ import { RouterModule } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {}
+export class AppComponent {
+  themeChanger = inject(ThemeChangerService);
+
+  constructor() {
+    this.themeChanger.changeTheme();
+  }
+}
