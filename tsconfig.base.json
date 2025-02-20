@@ -10,6 +10,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "paths": {
+      "@zeeko/codemirror-mdast": ["packages/codemirror-mdast/src/index.ts"],
       "@zeeko/docker-registry-v2-auth": [
         "packages/docker-registry-v2-auth/src/index.ts"
       ],
