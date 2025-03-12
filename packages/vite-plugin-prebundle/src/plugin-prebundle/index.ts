@@ -51,7 +51,7 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
       },
       async configResolved(cfg) {
         isDev = cfg.mode === 'development';
-        projectImports = uniq([...(pluginOpt.include ?? [])]);
+        projectImports = uniq([...(pluginOpt.entries ?? [])]);
       },
       async buildStart() {
         // collect deps

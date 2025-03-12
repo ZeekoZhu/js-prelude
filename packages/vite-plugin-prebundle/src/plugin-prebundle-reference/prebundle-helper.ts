@@ -55,3 +55,17 @@ export function importNamedWithHelper(
 ) {
   return `const ${localName} = _prebundle_merge_get_named(${nsLocalName}, '${name}');`;
 }
+
+/**
+ * ```
+ * export { name: _prebundle_merge_get_default(nsLocalName) }
+ * ```
+ * @param nsLocalName
+ * @param names
+ */
+export function exprotNamedWithHelper(nsLocalName: string, names: string[]) {
+  const objectAssignments = names
+    .map((n) => `'${n}':_prebundle_merge_get_named(${nsLocalName}, '${n}')`)
+    .join(',');
+  return `export {${objectAssignments}};`;
+}

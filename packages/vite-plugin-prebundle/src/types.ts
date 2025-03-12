@@ -8,11 +8,12 @@ export interface PreBundleEntry {
 
 export interface PrebundleOptions {
   /**
-   * Create prebundle entries for the specified modules.
+   * Create prebundle entries for the specified modules, each item in the
+   * array must be a resolvable module id. Dependencies of these modules will be prebundled as well.
    */
-  include?: string[];
+  entries?: string[];
   /**
-   * Avoid creating prebundle entries for the specified modules, but these modules will still be included in the final bundle.
+   * Avoid creating prebundle entries for the specified modules, but these modules might still be included in the final bundle if it is referenced by other prebundled modules.
    */
   exclude?: RegExp[];
   /**

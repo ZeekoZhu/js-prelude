@@ -66,6 +66,8 @@ export function transformCjsImport(
             magicString.remove(node.start, node.end);
             magicString.appendRight(node.start, changes.join('\n'));
           }
+        } else if (node.type === 'ExportNamedDeclaration') {
+          // todo: maybe export statement should be handled
         }
       },
     });
