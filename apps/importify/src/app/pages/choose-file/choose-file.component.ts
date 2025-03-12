@@ -1,13 +1,13 @@
 import { Component, inject, ViewChild } from '@angular/core';
-
-import { ImportContextService } from '../../services/import-context.service';
-import { RxState } from '@rx-angular/state';
-import { RxActionFactory } from '@rx-angular/state/actions';
-import { combineLatestWith, map, of, switchMap } from 'rxjs';
-import Papa from 'papaparse';
 import { FormControl } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { rxState } from '@rx-angular/state';
+import { rxEffects } from '@rx-angular/state/effects';
+import { rxActions } from '@rx-angular/state/actions';
+import Papa from 'papaparse';
+import { combineLatestWith, map, of, switchMap } from 'rxjs';
 import {
   AsyncResult,
   delayResult,
@@ -17,19 +17,18 @@ import {
   toAsyncResult,
   untilOk,
 } from '../../async-result';
-import { Router } from '@angular/router';
+
+import { ImportContextService } from '../../services/import-context.service';
 
 @Component({
   selector: 'zeeko-choose-file',
   templateUrl: './choose-file.component.html',
   styleUrls: ['./choose-file.component.css'],
-  providers: [RxState, RxActionFactory],
 })
 export class ChooseFileComponent {
-  state: RxState<State> = inject(RxState);
-  actions = inject<RxActionFactory<Actions>>(RxActionFactory<Actions>).create(
-    {},
-  );
+  state = rxState<State>();
+  actions = rxActions<Actions>();
+  effects = rxEffects();
   importCtx = inject(ImportContextService);
   displayedColumns = ['trackName', 'trackUri'];
   fileInputControl = new FormControl<File | null>(null);
@@ -67,12 +66,12 @@ export class ChooseFileComponent {
         switchMap((file) => (file ? parseTracks(file) : [])),
       ),
     );
-    this.state.hold(this.fileInputControl.valueChanges, (file) => {
+    this.effects.register(this.fileInputControl.valueChanges, (file) => {
       if (file) {
         this.actions.selectFile(file);
       }
     });
-    this.state.hold(this.state.select('tracks'), (tracks) => {
+    this.effects.register(this.state.select('tracks'), (tracks) => {
       this.datasource.data = tracks;
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.importCtx.importEntry!.tracks = tracks;
@@ -83,7 +82,7 @@ export class ChooseFileComponent {
       'importTask',
       this.actions.importTracks$.pipe(switchMap(() => this.importTracks())),
     );
-    this.state.hold(
+    this.effects.register(
       this.state.select('importTask').pipe(
         untilOk,
         switchMap(() => router.navigate(['/import-finished'])),
