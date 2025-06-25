@@ -1,5 +1,5 @@
 import esbuild from 'esbuild';
-import { filter, get, isEmpty, uniq } from 'lodash-es';
+import { filter, isEmpty, uniq } from 'lodash-es';
 import { EmittedChunk, PluginContext } from 'rollup';
 import { Plugin, UserConfig } from 'vite';
 
@@ -130,13 +130,13 @@ export function preBundle(pluginOpt: PrebundleOptions): Plugin[] {
             // get module info at bundle phase to ensure virtual modules are
             // loaded
             const moduleInfo = this.getModuleInfo(resolution.id);
+            // commonjs creates proxy module for some cjs module
+            const isProxiedCJS = resolution.id.endsWith('?commonjs-es-import');
+            const isRollupResolvedCJS =
+              moduleInfo?.meta?.['commonjs']?.isCommonJS ?? false;
             if (moduleInfo) {
               updated.exports = moduleInfo.exports ?? [];
-              updated.isCommonJS = get(
-                moduleInfo.meta,
-                'commonjs.isCommonJS',
-                false,
-              );
+              updated.isCommonJS = isProxiedCJS || isRollupResolvedCJS;
               if (updated.isCommonJS && isEmpty(updated.exportAs)) {
                 updated.exportAs = 'default';
               }
