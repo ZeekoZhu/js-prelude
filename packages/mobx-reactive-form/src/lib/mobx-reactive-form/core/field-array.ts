@@ -73,7 +73,7 @@ export interface FieldArray<
 
   insert(number: number, formField: TStructure[number]): void;
 
-  remove(number: number): void;
+  remove(indexOrKeyOrField: number | string | FormFieldWithKey<TInferredValue, TStructure[number]>): void;
 
   move(from: number, to: number): void;
 
@@ -222,9 +222,23 @@ class FieldArrayImpl<
     this._value.splice(number, 0, makeFieldWithKey(formField, this.nextKey()));
   }
 
-  remove(number: number) {
-    this.ensureInRange(number);
-    this._value.splice(number, 1);
+  remove(indexOrKeyOrField: number | string | FormFieldWithKey<TInferredValue, TStructure[number]>) {
+    if (typeof indexOrKeyOrField === 'number') {
+      this.ensureInRange(indexOrKeyOrField);
+      this._value.splice(indexOrKeyOrField, 1);
+    } else if (typeof indexOrKeyOrField === 'string') {
+      const index = this._value.findIndex((field) => field.key === indexOrKeyOrField);
+      if (index === -1) {
+        throw new Error('Key not found');
+      }
+      this._value.splice(index, 1);
+    } else {
+      const index = this._value.findIndex((field) => field === indexOrKeyOrField);
+      if (index === -1) {
+        throw new Error('Field not found');
+      }
+      this._value.splice(index, 1);
+    }
   }
 
   move(from: number, to: number) {

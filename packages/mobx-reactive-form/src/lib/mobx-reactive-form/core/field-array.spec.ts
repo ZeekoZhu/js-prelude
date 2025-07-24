@@ -211,6 +211,34 @@ describe('FieldArray', () => {
       it('should be touched', () => {
         expect(array.isTouched).toBe(true);
       });
+      it('should remove field by key', () => {
+        const newArray = new FieldArray([
+          new FormField(1),
+          new FormField(2),
+          new FormField(3),
+        ]);
+        const keyToRemove = newArray.fields[1].key;
+        newArray.remove(keyToRemove);
+        expect(newArray.fields.length).toBe(2);
+        expect(newArray.value).toEqual([1, 3]);
+        expect(newArray.fields.find(f => f.key === keyToRemove)).toBeUndefined();
+        expect(newArray.isDirty).toBe(true);
+        expect(newArray.isTouched).toBe(true);
+      });
+      it('should remove field by instance', () => {
+        const newArray = new FieldArray([
+          new FormField(1),
+          new FormField(2),
+          new FormField(3),
+        ]);
+        const fieldToRemove = newArray.fields[1];
+        newArray.remove(fieldToRemove);
+        expect(newArray.fields.length).toBe(2);
+        expect(newArray.value).toEqual([1, 3]);
+        expect(newArray.fields.includes(fieldToRemove)).toBe(false);
+        expect(newArray.isDirty).toBe(true);
+        expect(newArray.isTouched).toBe(true);
+      });
     });
     describe('move', () => {
       beforeEach(() => {
