@@ -36,6 +36,7 @@ export type FieldArrayOf<TValue> = ReadonlyArray<AbstractFormField<TValue>>;
 export interface FieldArrayConstructor {
   new <TValue, TStructure extends FieldArrayOf<TValue> = FieldArrayOf<TValue>>(
     values: TStructure,
+    fieldConstructor?: (value: typeof values[number]['value']) => TStructure[number],
   ): FieldArray<TStructure[number]['value'], TStructure>;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -103,7 +104,10 @@ class FieldArrayImpl<
   TStructure extends FieldArrayOf<TInferredValue> = FieldArrayOf<TInferredValue>,
 > implements FieldArray<TInferredValue, TStructure>
 {
-  constructor(items: TStructure) {
+  constructor(
+    items: TStructure,
+    private fieldConstructor?: (value: TInferredValue) => TStructure[number],
+  ) {
     this._value.replace(
       items.map((item) => makeFieldWithKey(item, this.nextKey())),
     );
@@ -181,10 +185,7 @@ class FieldArrayImpl<
     return result;
   }
 
-  reset(
-    val?: TInferredValue[],
-    fieldCtor?: (value: TInferredValue) => TStructure[number],
-  ): void {
+  reset(val?: TInferredValue[]): void {
     if (val === undefined) {
       // just reset all fields
       this._value.forEach((it) => it.reset());
@@ -202,8 +203,10 @@ class FieldArrayImpl<
       // reset existing fields
       this._value.forEach((it, i) => it.reset(val[i] as TInferredValue));
     } else if (shouldExtend) {
-      if (!fieldCtor) {
-        throw new Error('fieldCtor is required when extending field array');
+      const fieldConstructor = this.fieldConstructor;
+      if (!fieldConstructor) {
+        throw new Error('fieldConstructor is required when extending field' +
+          ' array');
       }
       // reset existing fields
       this._value.forEach((it, i) => it.reset(val[i] as TInferredValue));
@@ -211,7 +214,7 @@ class FieldArrayImpl<
       this._value.push(
         ...val
           .slice(this._value.length)
-          .map((it) => makeFieldWithKey(fieldCtor(it), this.nextKey())),
+          .map((it) => makeFieldWithKey(fieldConstructor(it), this.nextKey())),
       );
     } else {
       // reset fields

@@ -1,10 +1,10 @@
 import { isObservableProp, reaction } from 'mobx';
 import { beforeEach, describe, expect, expectTypeOf, test } from 'vitest';
-import { AbstractFormField } from './types.js';
 import { FieldArray } from './field-array.js';
 import { FieldGroup, FieldGroupOf } from './field-group.js';
 import { FormField } from './form-field.js';
 import { FormValidator } from './form-validator.js';
+import { AbstractFormField } from './types.js';
 
 interface Person {
   name: string;
@@ -333,6 +333,21 @@ describe('FieldGroup', () => {
       const nameField = group.field('name');
       nameField.isValidating = true;
       expect(group.isValidating).toBe(true);
+    });
+
+    it('should be able to reset field array', () => {
+      const group = new FieldGroup({
+        name: new FormField('alice'),
+        age: new FieldArray<number>([], (x) => new FormField(x)),
+      });
+      group.reset({
+        name: 'alice',
+        age: [99],
+      });
+      expect(group.value).toEqual({
+        name: 'alice',
+        age: [99],
+      });
     });
   });
 

@@ -119,12 +119,13 @@ describe('FieldArray', () => {
       expect(array.isTouched).toBeFalsy();
     });
     it('should use fieldCtor when extending the array', () => {
-      const singleItemArray = new FieldArray([new FormField(1)]);
+      const singleItemArray = new FieldArray(
+        [new FormField(1)],
+        // Custom field constructor that doubles the value
+        (value) => new FormField(value * 2),
+      );
 
-      // Custom field constructor that doubles the value
-      const fieldCtor = (value: number) => new FormField(value * 2);
-
-      singleItemArray.reset([1, 2, 3], fieldCtor);
+      singleItemArray.reset([1, 2, 3]);
 
       expect(singleItemArray.fields.length).toBe(3);
       expect(singleItemArray.isDirty).toBe(false);
@@ -135,7 +136,7 @@ describe('FieldArray', () => {
       const multiItemArray = new FieldArray([
         new FormField(1),
         new FormField(2),
-        new FormField(3)
+        new FormField(3),
       ]);
 
       // Reset with fewer values
@@ -257,7 +258,9 @@ describe('FieldArray', () => {
         newArray.remove(keyToRemove);
         expect(newArray.fields.length).toBe(2);
         expect(newArray.value).toEqual([1, 3]);
-        expect(newArray.fields.find(f => f.key === keyToRemove)).toBeUndefined();
+        expect(
+          newArray.fields.find((f) => f.key === keyToRemove),
+        ).toBeUndefined();
         expect(newArray.isDirty).toBe(true);
         expect(newArray.isTouched).toBe(true);
       });
