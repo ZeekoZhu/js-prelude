@@ -111,6 +111,42 @@ describe('FieldArray', () => {
       expect(array.isDirty).toBe(false);
       expect(array.isTouched).toBeFalsy();
     });
+    it('should empty the array when reset with empty array', () => {
+      array.reset([]);
+      expect(array.fields.length).toBe(0);
+      expect(array.value).toEqual([]);
+      expect(array.isDirty).toBe(false);
+      expect(array.isTouched).toBeFalsy();
+    });
+    it('should use fieldCtor when extending the array', () => {
+      const singleItemArray = new FieldArray([new FormField(1)]);
+
+      // Custom field constructor that doubles the value
+      const fieldCtor = (value: number) => new FormField(value * 2);
+
+      singleItemArray.reset([1, 2, 3], fieldCtor);
+
+      expect(singleItemArray.fields.length).toBe(3);
+      expect(singleItemArray.isDirty).toBe(false);
+      expect(singleItemArray.value).toEqual([1, 4, 6]);
+      expect(singleItemArray.isTouched).toBeFalsy();
+    });
+    it('should shrink the array when reset with less values', () => {
+      const multiItemArray = new FieldArray([
+        new FormField(1),
+        new FormField(2),
+        new FormField(3)
+      ]);
+
+      // Reset with fewer values
+      multiItemArray.reset([1]);
+
+      // The array should be shrunk to match the new values
+      expect(multiItemArray.fields.length).toBe(1);
+      expect(multiItemArray.value).toEqual([1]);
+      expect(multiItemArray.isDirty).toBe(false);
+      expect(multiItemArray.isTouched).toBeFalsy();
+    });
   });
 
   describe('validation', () => {

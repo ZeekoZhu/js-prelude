@@ -56,7 +56,10 @@ export interface FieldArray<
   readonly value: TInferredValue[];
   readonly isValid: boolean;
 
-  reset(val?: TInferredValue[]): void;
+  reset(
+    val?: TInferredValue[],
+    fieldCtor?: (value: TInferredValue) => TStructure[number],
+  ): void;
 
   setErrors(errors?: string[]): void;
 
@@ -73,7 +76,12 @@ export interface FieldArray<
 
   insert(number: number, formField: TStructure[number]): void;
 
-  remove(indexOrKeyOrField: number | string | FormFieldWithKey<TInferredValue, TStructure[number]>): void;
+  remove(
+    indexOrKeyOrField:
+      | number
+      | string
+      | FormFieldWithKey<TInferredValue, TStructure[number]>,
+  ): void;
 
   move(from: number, to: number): void;
 
@@ -139,6 +147,7 @@ class FieldArrayImpl<
         return true;
       }
     }
+    console.log('items are not dirty');
     return !isArrayEqual(
       this.fieldKeys,
       this.fields.map((it) => it.key),
@@ -172,16 +181,44 @@ class FieldArrayImpl<
     return result;
   }
 
-  reset(val?: TInferredValue[]): void {
-    this.forEachField((field, index) => {
-      if (val == null || index >= val.length) {
-        field.reset();
-      } else {
-        field.reset(val[index] as TInferredValue);
+  reset(
+    val?: TInferredValue[],
+    fieldCtor?: (value: TInferredValue) => TStructure[number],
+  ): void {
+    if (val === undefined) {
+      // just reset all fields
+      this._value.forEach((it) => it.reset());
+      this.fieldKeys.replace(this._value.map((it) => it.key));
+      this.setErrors();
+      return;
+    }
+
+    const shouldShrink = val.length < this._value.length;
+    const shouldExtend = val.length > this._value.length;
+
+    if (shouldShrink) {
+      // remove extra fields
+      this._value.splice(val.length);
+      // reset existing fields
+      this._value.forEach((it, i) => it.reset(val[i] as TInferredValue));
+    } else if (shouldExtend) {
+      if (!fieldCtor) {
+        throw new Error('fieldCtor is required when extending field array');
       }
-    });
-    const keys = this.fields.map((it) => it.key);
-    this.fieldKeys.replace(keys);
+      // reset existing fields
+      this._value.forEach((it, i) => it.reset(val[i] as TInferredValue));
+      // add new fields
+      this._value.push(
+        ...val
+          .slice(this._value.length)
+          .map((it) => makeFieldWithKey(fieldCtor(it), this.nextKey())),
+      );
+    } else {
+      // reset fields
+      this._value.forEach((it, i) => it.reset(val[i] as TInferredValue));
+    }
+
+    this.fieldKeys.replace(this._value.map((it) => it.key));
     this.setErrors();
   }
 
@@ -222,18 +259,27 @@ class FieldArrayImpl<
     this._value.splice(number, 0, makeFieldWithKey(formField, this.nextKey()));
   }
 
-  remove(indexOrKeyOrField: number | string | FormFieldWithKey<TInferredValue, TStructure[number]>) {
+  remove(
+    indexOrKeyOrField:
+      | number
+      | string
+      | FormFieldWithKey<TInferredValue, TStructure[number]>,
+  ) {
     if (typeof indexOrKeyOrField === 'number') {
       this.ensureInRange(indexOrKeyOrField);
       this._value.splice(indexOrKeyOrField, 1);
     } else if (typeof indexOrKeyOrField === 'string') {
-      const index = this._value.findIndex((field) => field.key === indexOrKeyOrField);
+      const index = this._value.findIndex(
+        (field) => field.key === indexOrKeyOrField,
+      );
       if (index === -1) {
         throw new Error('Key not found');
       }
       this._value.splice(index, 1);
     } else {
-      const index = this._value.findIndex((field) => field === indexOrKeyOrField);
+      const index = this._value.findIndex(
+        (field) => field === indexOrKeyOrField,
+      );
       if (index === -1) {
         throw new Error('Field not found');
       }
