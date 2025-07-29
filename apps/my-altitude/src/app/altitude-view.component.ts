@@ -10,11 +10,10 @@ import { IsFullscreenService } from './is-fullscreen.service';
 import { ToggleFullScreenBtnComponent } from './toggle-full-screen-btn.component';
 
 @Component({
-  selector: 'app-altitude-view',
-  standalone: true,
-  imports: [CommonModule, SvgIconComponent, RxIf, ToggleFullScreenBtnComponent],
-  templateUrl: './altitude-view.component.html',
-  styleUrl: './altitude-view.component.css',
+    selector: 'app-altitude-view',
+    imports: [CommonModule, SvgIconComponent, RxIf, ToggleFullScreenBtnComponent],
+    templateUrl: './altitude-view.component.html',
+    styleUrl: './altitude-view.component.css'
 })
 export class AltitudeViewComponent {
   altitudeProvider = inject(AltitudeProviderService);
