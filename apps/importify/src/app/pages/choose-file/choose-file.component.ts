@@ -21,10 +21,10 @@ import {
 import { ImportContextService } from '../../services/import-context.service';
 
 @Component({
-    selector: 'zeeko-choose-file',
-    templateUrl: './choose-file.component.html',
-    styleUrls: ['./choose-file.component.css'],
-    standalone: false
+  selector: 'zeeko-choose-file',
+  templateUrl: './choose-file.component.html',
+  styleUrls: ['./choose-file.component.css'],
+  standalone: false,
 })
 export class ChooseFileComponent {
   state = rxState<State>();

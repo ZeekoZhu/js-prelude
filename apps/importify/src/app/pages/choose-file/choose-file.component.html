@@ -6,7 +6,12 @@
       >Select a csv file exported from
       <zeeko-exportify-link />
     </mat-hint>
-    <ngx-mat-file-input accept=".csv" [formControl]="fileInputControl" />
+    <input
+      matInput
+      type="file"
+      accept=".csv"
+      [formControl]="fileInputControl"
+    />
   </mat-form-field>
 
   <ng-container *rxIf="emptyTracks$">

@@ -7,9 +7,9 @@ import { map } from 'rxjs';
 import { IsFullscreenService } from './is-fullscreen.service';
 
 @Component({
-    selector: 'app-toggle-full-screen-btn',
-    imports: [CommonModule, SvgIconComponent, RxIf],
-    templateUrl: './toggle-full-screen-btn.component.html'
+  selector: 'app-toggle-full-screen-btn',
+  imports: [CommonModule, SvgIconComponent, RxIf],
+  templateUrl: './toggle-full-screen-btn.component.html',
 })
 export class ToggleFullScreenBtnComponent {
   document = inject(DOCUMENT);

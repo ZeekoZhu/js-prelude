@@ -5,11 +5,11 @@ import { RxActionFactory, RxActions } from '@rx-angular/state/actions';
 import { ImportContextService } from '../../services/import-context.service';
 
 @Component({
-    selector: 'zeeko-choose-playlist',
-    templateUrl: './choose-playlist.component.html',
-    styleUrls: ['./choose-playlist.component.css'],
-    providers: [RxState, RxActionFactory],
-    standalone: false
+  selector: 'zeeko-choose-playlist',
+  templateUrl: './choose-playlist.component.html',
+  styleUrls: ['./choose-playlist.component.css'],
+  providers: [RxState, RxActionFactory],
+  standalone: false,
 })
 export class ChoosePlaylistComponent {
   state: RxState<State> = inject(RxState);
