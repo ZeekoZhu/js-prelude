@@ -151,7 +151,6 @@ class FieldArrayImpl<
         return true;
       }
     }
-    console.log('items are not dirty');
     return !isArrayEqual(
       this.fieldKeys,
       this.fields.map((it) => it.key),
