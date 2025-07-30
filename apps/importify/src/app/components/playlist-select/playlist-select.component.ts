@@ -25,6 +25,7 @@ import {
   templateUrl: './playlist-select.component.html',
   styleUrls: ['./playlist-select.component.css'],
   providers: [RxState, RxActionFactory],
+  standalone: false,
 })
 export class PlaylistSelectComponent implements View {
   sdk = inject(SpotifySdkProviderService).sdk;

@@ -24,6 +24,7 @@ import { ImportContextService } from '../../services/import-context.service';
   selector: 'zeeko-choose-file',
   templateUrl: './choose-file.component.html',
   styleUrls: ['./choose-file.component.css'],
+  standalone: false,
 })
 export class ChooseFileComponent {
   state = rxState<State>();

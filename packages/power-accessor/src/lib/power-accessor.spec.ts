@@ -188,7 +188,7 @@ describe('power accessor', () => {
         }),
       );
       expect(() => accessor.get(obj)).toThrowErrorMatchingInlineSnapshot(
-        '"Failed to match object with matcher at index 2. Error: Error in predicate function called with key: 0, value: {\\"c\\":\\"d\\"}: Error: foo"',
+        '[Error: Failed to match object with matcher at index 2. Error: Error in predicate function called with key: 0, value: {"c":"d"}: Error: foo]',
       );
     });
     test('predicate function not matched', () => {

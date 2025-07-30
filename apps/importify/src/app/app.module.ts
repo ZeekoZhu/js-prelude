@@ -12,7 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { RxLet } from '@rx-angular/template/let';
 import { RxFor } from '@rx-angular/template/for';
 import { ChooseFileComponent } from './pages/choose-file/choose-file.component';
-import { NgxMatFileInputModule } from '@angular-material-components/file-input';
+// import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { ExportifyLinkComponent } from './components/exportify-link/exportify-link.component';
 import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -28,8 +28,6 @@ import { ImportFinishedComponent } from './pages/import-finished/import-finished
     ChoosePlaylistComponent,
     PlaylistSelectComponent,
     ChooseFileComponent,
-    ChooseFileComponent,
-    ExportifyLinkComponent,
     ExportifyLinkComponent,
     ImportFinishedComponent,
   ],
@@ -42,7 +40,7 @@ import { ImportFinishedComponent } from './pages/import-finished/import-finished
     MatListModule,
     RxLet,
     RxFor,
-    NgxMatFileInputModule,
+    // NgxMatFileInputModule,
     MatTableModule,
     ReactiveFormsModule,
     MatPaginatorModule,

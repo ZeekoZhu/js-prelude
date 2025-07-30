@@ -7,24 +7,12 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular-builders/custom-webpack:browser",
+      "executor": "@angular-devkit/build-angular:application",
       "outputs": ["{options.outputPath}"],
-      "inputs": [
-        "default",
-        {
-          "env": "APP_CLIENT_ID"
-        },
-        {
-          "env": "APP_REDIRECT_URL"
-        }
-      ],
       "options": {
-        "customWebpackConfig": {
-          "path": "apps/importify/webpack.config.js"
-        },
         "outputPath": "dist/apps/importify",
         "index": "apps/importify/src/index.html",
-        "main": "apps/importify/src/main.ts",
+        "browser": "apps/importify/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/importify/tsconfig.app.json",
         "assets": [
