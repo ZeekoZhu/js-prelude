@@ -43,8 +43,7 @@
         "production": {
           "buildTarget": "rewrite-it:build:production"
         }
-      },
-      "dependsOn": ["watch"]
+      }
     },
     "test": {
       "executor": "@nx/vite:test",

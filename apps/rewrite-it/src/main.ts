@@ -1,5 +1,3 @@
-import './app/app.element';
-
 (function () {
   'use strict';
 
@@ -11,8 +9,6 @@ import './app/app.element';
   }
 
   function initializeScript() {
-    // Create and inject the custom element
-    const appElement = document.createElement('zeeko-root');
-    document.body.appendChild(appElement);
+    console.log('hello world');
   }
 })();
