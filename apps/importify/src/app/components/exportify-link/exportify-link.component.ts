@@ -4,5 +4,6 @@ import { Component } from '@angular/core';
   selector: 'zeeko-exportify-link',
   templateUrl: './exportify-link.component.html',
   styleUrls: ['./exportify-link.component.css'],
+  standalone: false,
 })
 export class ExportifyLinkComponent {}

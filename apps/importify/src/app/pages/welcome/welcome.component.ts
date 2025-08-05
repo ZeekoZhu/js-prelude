@@ -4,5 +4,6 @@ import { Component } from '@angular/core';
   selector: 'zeeko-welcome',
   templateUrl: './welcome.component.html',
   styleUrls: ['./welcome.component.css'],
+  standalone: false,
 })
 export class WelcomeComponent {}

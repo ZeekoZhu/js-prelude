@@ -9,6 +9,7 @@ import { ImportContextService } from '../../services/import-context.service';
   templateUrl: './choose-playlist.component.html',
   styleUrls: ['./choose-playlist.component.css'],
   providers: [RxState, RxActionFactory],
+  standalone: false,
 })
 export class ChoosePlaylistComponent {
   state: RxState<State> = inject(RxState);

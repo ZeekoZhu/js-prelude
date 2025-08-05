@@ -5,6 +5,7 @@ import { ImportContextService } from '../../services/import-context.service';
   selector: 'zeeko-import-finished',
   templateUrl: './import-finished.component.html',
   styleUrls: ['./import-finished.component.css'],
+  standalone: false,
 })
 export class ImportFinishedComponent {
   importCtx = inject(ImportContextService);
