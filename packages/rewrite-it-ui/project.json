@@ -1,0 +1,36 @@
+{
+  "name": "rewrite-it-ui",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/rewrite-it-ui/src",
+  "prefix": "rewrite-it",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "packages/rewrite-it-ui/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "packages/rewrite-it-ui/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "packages/rewrite-it-ui/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/packages/rewrite-it-ui"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -20,6 +20,7 @@
         "packages/nx-debug-hasher-runner/src/index.ts"
       ],
       "@zeeko/power-accessor": ["packages/power-accessor/src/index.ts"],
+      "@zeeko/rewrite-it-ui": ["packages/rewrite-it-ui/src/index.ts"],
       "@zeeko/ts-sync-ref": ["packages/ts-sync-ref/src/index.ts"],
       "@zeeko/vite-plugin-prebundle": [
         "packages/vite-plugin-prebundle/src/index.ts"
