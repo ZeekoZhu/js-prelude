@@ -32,7 +32,6 @@ This is a Tampermonkey userscript application called "rewrite-it" built as part 
 ### Tampermonkey Userscript Structure
 
 - **Entry Point**: `src/main.ts` - Contains IIFE wrapper and DOM initialization logic
-- **Main Component**: `src/app/app.element.ts` - Custom web component that gets injected
 - **Build Output**: `dist/apps/rewrite-it/rewrite-it.user.iife.js` - Final userscript with Tampermonkey header
 
 ### Vite Configuration
@@ -44,9 +43,8 @@ This is a Tampermonkey userscript application called "rewrite-it" built as part 
 ### Key Files
 
 - `vite.config.ts` - Contains custom Tampermonkey header injection plugin
-- `src/main.ts` - DOM ready check and custom element injection
-- `src/app/app.element.ts` - Main web component with welcome UI
-- `index.html` - Development HTML with `<zeeko-root>` custom element
+- `src/main.ts` - DOM ready check and script initialization (currently logs "hello world")
+- `index.html` - Development HTML with `<zeeko-root>` custom element placeholder
 
 ### Build Process
 
@@ -70,7 +68,7 @@ This is a Tampermonkey userscript application called "rewrite-it" built as part 
 
 ## Technology Stack
 
-- **Framework**: Custom Web Components
+- **Framework**: Basic IIFE wrapper (currently no web components implemented)
 - **Build Tool**: Vite with Nx
 - **Testing**: Vitest with jsdom
 - **Language**: TypeScript (ESNext)
