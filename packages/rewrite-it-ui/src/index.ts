@@ -1,1 +1,1 @@
-export * from './lib/rewrite-it-ui/rewrite-it-ui.component';
+export * from './lib/rewrite-it-ui/config-ui.component';

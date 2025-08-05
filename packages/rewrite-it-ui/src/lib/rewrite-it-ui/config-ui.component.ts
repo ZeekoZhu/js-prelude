@@ -2,10 +2,10 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'rewrite-it-rewrite-it-ui',
+  selector: 'rewrite-it-config-ui',
   imports: [CommonModule],
-  templateUrl: './rewrite-it-ui.component.html',
-  styleUrl: './rewrite-it-ui.component.css',
+  templateUrl: './config-ui.component.html',
+  styleUrl: './config-ui.component.css',
   encapsulation: ViewEncapsulation.ShadowDom,
 })
-export class RewriteItUiComponent {}
+export class ConfigUiComponent {}

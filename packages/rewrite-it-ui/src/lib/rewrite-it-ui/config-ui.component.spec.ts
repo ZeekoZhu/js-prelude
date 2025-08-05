@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RewriteItUiComponent } from './rewrite-it-ui.component';
+import { ConfigUiComponent } from './config-ui.component';
 
 describe('RewriteItUiComponent', () => {
-  let component: RewriteItUiComponent;
-  let fixture: ComponentFixture<RewriteItUiComponent>;
+  let component: ConfigUiComponent;
+  let fixture: ComponentFixture<ConfigUiComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RewriteItUiComponent],
+      imports: [ConfigUiComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RewriteItUiComponent);
+    fixture = TestBed.createComponent(ConfigUiComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
