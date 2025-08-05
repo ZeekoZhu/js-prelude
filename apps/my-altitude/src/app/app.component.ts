@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 import { ThemeChangerService } from './theme-changer.service';
 
 @Component({
-  standalone: true,
   imports: [RouterModule],
   selector: 'app-root',
   templateUrl: './app.component.html',

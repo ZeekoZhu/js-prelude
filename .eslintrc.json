@@ -36,6 +36,12 @@
         "@typescript-eslint/no-extra-semi": "error",
         "no-extra-semi": "off"
       }
+    },
+    {
+      "files": ["*.ts"],
+      "rules": {
+        "@angular-eslint/prefer-standalone": "off"
+      }
     }
   ],
   "extends": ["plugin:storybook/recommended"]

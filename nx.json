@@ -130,5 +130,6 @@
     "changelog": {
       "projectChangelogs": true
     }
-  }
+  },
+  "useLegacyCache": true
 }

@@ -8,7 +8,6 @@ import { IsFullscreenService } from './is-fullscreen.service';
 
 @Component({
   selector: 'app-toggle-full-screen-btn',
-  standalone: true,
   imports: [CommonModule, SvgIconComponent, RxIf],
   templateUrl: './toggle-full-screen-btn.component.html',
 })

@@ -11,7 +11,6 @@ import { ToggleFullScreenBtnComponent } from './toggle-full-screen-btn.component
 
 @Component({
   selector: 'app-altitude-view',
-  standalone: true,
   imports: [CommonModule, SvgIconComponent, RxIf, ToggleFullScreenBtnComponent],
   templateUrl: './altitude-view.component.html',
   styleUrl: './altitude-view.component.css',
