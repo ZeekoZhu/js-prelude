@@ -3,20 +3,36 @@ import { defineConfig, Plugin } from 'vite';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 
 function tampermonkeyHeader(): Plugin {
+  let mode = 'production';
+
   return {
     name: 'tampermonkey-header',
-    generateBundle(options, bundle) {
-      const fileName = 'rewrite-it.user.iife.js';
+    config(_config, { mode: configMode }) {
+      mode = configMode;
+    },
+    generateBundle(_options, bundle) {
+      const fileName = 'rewrite-it.user.js';
       if (bundle[fileName] && bundle[fileName].type === 'chunk') {
         const chunk = bundle[fileName];
+        const isDev = mode === 'development';
+        const version = isDev ? `1.0.${Date.now()}` : '1.0';
         const header = `// ==UserScript==
 // @name         Rewrite It
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      ${version}
 // @description  Rewrite content on web pages
 // @author       Zeeko
 // @match        *://*/*
-// @grant        none
+// @grant        GM_registerMenuCommand
+// @grant        GM_unregisterMenuCommand
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_deleteValue
+// @grant        GM_listValues
+// @grant        GM_openInTab
+// @grant        GM_xmlhttpRequest
+// @grant        GM_addStyle
+// @grant        GM_notification
 // ==/UserScript==
 
 `;
@@ -39,7 +55,7 @@ export default defineConfig({
     lib: {
       entry: 'src/main.ts',
       name: 'RewriteIt',
-      fileName: 'rewrite-it.user',
+      fileName: (format, entryName) => 'rewrite-it.user.js',
       formats: ['iife'],
     },
     commonjsOptions: {
