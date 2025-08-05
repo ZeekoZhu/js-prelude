@@ -55,7 +55,7 @@ export default defineConfig({
     lib: {
       entry: 'src/main.ts',
       name: 'RewriteIt',
-      fileName: (format, entryName) => 'rewrite-it.user.js',
+      fileName: () => 'rewrite-it.user.js',
       formats: ['iife'],
     },
     commonjsOptions: {

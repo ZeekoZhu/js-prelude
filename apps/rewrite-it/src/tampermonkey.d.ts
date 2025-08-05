@@ -1,7 +1,7 @@
 declare const GM_registerMenuCommand: (
   name: string,
   callback: () => void,
-  accessKey?: string
+  accessKey?: string,
 ) => void | number;
 
 declare const GM_unregisterMenuCommand: (id: void | number) => void;
@@ -13,7 +13,7 @@ declare const GM_listValues: () => string[];
 
 declare const GM_openInTab: (
   url: string,
-  options?: { active?: boolean; insert?: boolean; setParent?: boolean }
+  options?: { active?: boolean; insert?: boolean; setParent?: boolean },
 ) => void | object;
 
 declare const GM_xmlhttpRequest: (details: {
@@ -36,5 +36,5 @@ declare const GM_notification: (
   text: string,
   title?: string,
   image?: string,
-  onclick?: () => void
+  onclick?: () => void,
 ) => void;

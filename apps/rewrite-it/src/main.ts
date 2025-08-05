@@ -10,7 +10,9 @@
       .trim();
   }
 
-  function isEditableElement(element: Element): element is HTMLInputElement | HTMLTextAreaElement | HTMLElement {
+  function isEditableElement(
+    element: Element,
+  ): element is HTMLInputElement | HTMLTextAreaElement | HTMLElement {
     return (
       element instanceof HTMLInputElement ||
       element instanceof HTMLTextAreaElement ||
@@ -19,7 +21,10 @@
   }
 
   function getSelectedText(element: Element): string | null {
-    if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+    if (
+      element instanceof HTMLInputElement ||
+      element instanceof HTMLTextAreaElement
+    ) {
       const start = element.selectionStart;
       const end = element.selectionEnd;
       if (start !== null && end !== null && start !== end) {
@@ -38,12 +43,16 @@
   }
 
   function replaceSelectedText(element: Element, newText: string): void {
-    if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+    if (
+      element instanceof HTMLInputElement ||
+      element instanceof HTMLTextAreaElement
+    ) {
       const start = element.selectionStart;
       const end = element.selectionEnd;
       if (start !== null && end !== null) {
         const value = element.value;
-        element.value = value.substring(0, start) + newText + value.substring(end);
+        element.value =
+          value.substring(0, start) + newText + value.substring(end);
         element.setSelectionRange(start, start + newText.length);
         element.dispatchEvent(new Event('input', { bubbles: true }));
       }
