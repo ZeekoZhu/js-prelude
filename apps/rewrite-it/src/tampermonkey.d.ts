@@ -38,3 +38,13 @@ declare const GM_notification: (
   image?: string,
   onclick?: () => void,
 ) => void;
+
+interface ImportMetaEnv {
+  readonly VITE_AI_ENDPOINT?: string;
+  readonly VITE_AI_API_KEY?: string;
+  readonly VITE_AI_MODEL?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}

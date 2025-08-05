@@ -12,6 +12,18 @@
       "options": {
         "outputPath": "dist/apps/rewrite-it"
       },
+      "inputs": [
+        "default",
+        {
+          "env": "VITE_AI_ENDPOINT"
+        },
+        {
+          "env": "VITE_AI_API_KEY"
+        },
+        {
+          "env": "VITE_AI_MODEL"
+        }
+      ],
       "configurations": {
         "development": {
           "mode": "development"

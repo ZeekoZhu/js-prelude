@@ -1,13 +1,27 @@
+import { aiRewrite } from './ai-rewrite';
+import { SLUGIFY_RECIPE } from './interfaces';
+
 (function () {
   'use strict';
 
-  function slugify(text: string): string {
-    return text
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim();
+  const style = document.createElement('style');
+  style.textContent = `
+    .rewrite-it-spinning-cursor {
+      cursor: progress !important;
+    }
+  `;
+  document.head.appendChild(style);
+
+  function showSpinningCursor(): void {
+    document.body.classList.add('rewrite-it-spinning-cursor');
+  }
+
+  function hideSpinningCursor(): void {
+    document.body.classList.remove('rewrite-it-spinning-cursor');
+  }
+
+  async function aiSlugify(text: string): Promise<string> {
+    return await aiRewrite(SLUGIFY_RECIPE, text);
   }
 
   function isEditableElement(
@@ -71,14 +85,31 @@
 
   function initializeScript() {
     if (typeof GM_registerMenuCommand !== 'undefined') {
-      GM_registerMenuCommand('Slugify Selected Text', () => {
+      GM_registerMenuCommand('Slugify Selected Text', async () => {
+        console.log('rewrite-it: slugify command triggered');
         const activeElement = document.activeElement;
         if (activeElement && isEditableElement(activeElement)) {
+          console.log(
+            'rewrite-it: active element is editable:',
+            activeElement.tagName,
+          );
           const selectedText = getSelectedText(activeElement);
           if (selectedText) {
-            const slugified = slugify(selectedText);
-            replaceSelectedText(activeElement, slugified);
+            console.log('rewrite-it: selected text:', selectedText);
+            showSpinningCursor();
+            try {
+              const slugified = await aiSlugify(selectedText);
+              console.log('rewrite-it: slugified result:', slugified);
+              replaceSelectedText(activeElement, slugified);
+              console.log('rewrite-it: text replaced successfully');
+            } finally {
+              hideSpinningCursor();
+            }
+          } else {
+            console.log('rewrite-it: no text selected');
           }
+        } else {
+          console.log('rewrite-it: no editable element found');
         }
       });
       console.log('rewrite-it: slugify menu command registered');
