@@ -21,29 +21,20 @@
         }
       }
     },
-    "serve": {
-      "executor": "@nx/vite:dev-server",
-      "defaultConfiguration": "development",
+    "watch": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
       "options": {
-        "buildTarget": "rewrite-it:build"
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "rewrite-it:build:development",
-          "hmr": true
-        },
-        "production": {
-          "buildTarget": "rewrite-it:build:production",
-          "hmr": false
-        }
+        "outputPath": "dist/apps/rewrite-it",
+        "mode": "development",
+        "watch": true
       }
     },
-    "preview": {
-      "dependsOn": ["build"],
-      "executor": "@nx/vite:preview-server",
-      "defaultConfiguration": "development",
+    "serve": {
+      "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "rewrite-it:build"
+        "buildTarget": "rewrite-it:build",
+        "port": 4200
       },
       "configurations": {
         "development": {
@@ -52,7 +43,8 @@
         "production": {
           "buildTarget": "rewrite-it:build:production"
         }
-      }
+      },
+      "dependsOn": ["watch"]
     },
     "test": {
       "executor": "@nx/vite:test",
@@ -63,14 +55,6 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint"
-    },
-    "serve-static": {
-      "executor": "@nx/web:file-server",
-      "dependsOn": ["build"],
-      "options": {
-        "buildTarget": "rewrite-it:build",
-        "spa": true
-      }
     }
   }
 }

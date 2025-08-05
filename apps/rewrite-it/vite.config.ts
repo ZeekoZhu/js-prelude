@@ -1,34 +1,47 @@
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
-
+import { defineConfig, Plugin } from 'vite';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
-import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
+
+function tampermonkeyHeader(): Plugin {
+  return {
+    name: 'tampermonkey-header',
+    generateBundle(options, bundle) {
+      const fileName = 'rewrite-it.user.iife.js';
+      if (bundle[fileName] && bundle[fileName].type === 'chunk') {
+        const chunk = bundle[fileName];
+        const header = `// ==UserScript==
+// @name         Rewrite It
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Rewrite content on web pages
+// @author       Zeeko
+// @match        *://*/*
+// @grant        none
+// ==/UserScript==
+
+`;
+        chunk.code = header + chunk.code;
+      }
+    },
+  };
+}
 
 export default defineConfig({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/rewrite-it',
 
-  server: {
-    port: 4200,
-    host: 'localhost',
-  },
-
-  preview: {
-    port: 4300,
-    host: 'localhost',
-  },
-
-  plugins: [nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
-
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [ nxViteTsPaths() ],
-  // },
+  plugins: [nxViteTsPaths(), tampermonkeyHeader()],
 
   build: {
     outDir: '../../dist/apps/rewrite-it',
     emptyOutDir: true,
-    reportCompressedSize: true,
+    reportCompressedSize: false,
+    lib: {
+      entry: 'src/main.ts',
+      name: 'RewriteIt',
+      fileName: 'rewrite-it.user',
+      formats: ['iife'],
+    },
     commonjsOptions: {
       transformMixedEsModules: true,
     },
