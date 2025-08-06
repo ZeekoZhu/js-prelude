@@ -734,6 +734,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular/elements@npm:^19.2.0":
+  version: 19.2.14
+  resolution: "@angular/elements@npm:19.2.14"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/core": 19.2.14
+    rxjs: ^6.5.3 || ^7.4.0
+  checksum: 10/878a99d310e19a3d355354239225049ecdd2c3c0b4531e17242928bbb963340678acf248ff4c7a26ae07c9f71c9f2cabc3b0942efdd1ca81e2dfc66f4055fd46
+  languageName: node
+  linkType: hard
+
 "@angular/forms@npm:19.2.9":
   version: 19.2.9
   resolution: "@angular/forms@npm:19.2.9"
@@ -13990,6 +14002,7 @@ __metadata:
     "@angular/compiler": "npm:19.2.9"
     "@angular/compiler-cli": "npm:19.2.9"
     "@angular/core": "npm:19.2.9"
+    "@angular/elements": "npm:^19.2.0"
     "@angular/forms": "npm:19.2.9"
     "@angular/language-service": "npm:19.2.9"
     "@angular/material": "npm:19.2.9"
@@ -14124,6 +14137,7 @@ __metadata:
   peerDependencies:
     "@angular/common": ^19.2.0
     "@angular/core": ^19.2.0
+    "@angular/platform-browser": ^19.2.0
   languageName: unknown
   linkType: soft
 

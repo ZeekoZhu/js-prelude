@@ -1,6 +1,6 @@
 /// <reference types='vitest' />
-import { defineConfig, Plugin } from 'vite';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import { defineConfig, Plugin } from 'vite';
 
 function tampermonkeyHeader(): Plugin {
   let mode = 'production';
@@ -46,7 +46,12 @@ export default defineConfig({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/rewrite-it',
 
-  plugins: [nxViteTsPaths(), tampermonkeyHeader()],
+  plugins: [
+    nxViteTsPaths({
+      buildLibsFromSource: false,
+    }),
+    tampermonkeyHeader(),
+  ],
 
   build: {
     outDir: '../../dist/apps/rewrite-it',

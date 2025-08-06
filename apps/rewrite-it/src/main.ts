@@ -1,9 +1,11 @@
+import { bootstrap, type RewriteItConfigUIElement } from '@zeeko/rewrite-it-ui';
 import { aiRewrite } from './ai-rewrite';
 import { SLUGIFY_RECIPE } from './interfaces';
 
-(function () {
+(async function () {
   'use strict';
 
+  await bootstrap();
   const style = document.createElement('style');
   style.textContent = `
     .rewrite-it-spinning-cursor {
@@ -11,6 +13,22 @@ import { SLUGIFY_RECIPE } from './interfaces';
     }
   `;
   document.head.appendChild(style);
+
+  // Function to show/hide the config UI using the web component
+  function toggleConfigUI() {
+    let configUI = document.querySelector(
+      'rewrite-it-config-ui',
+    ) as RewriteItConfigUIElement;
+    if (!configUI) {
+      configUI = document.createElement(
+        'rewrite-it-config-ui',
+      ) as RewriteItConfigUIElement;
+      document.body.appendChild(configUI);
+    } else {
+      const isVisible = configUI.style.display !== 'none';
+      configUI.style.display = isVisible ? 'none' : 'block';
+    }
+  }
 
   function showSpinningCursor(): void {
     document.body.classList.add('rewrite-it-spinning-cursor');
@@ -84,6 +102,8 @@ import { SLUGIFY_RECIPE } from './interfaces';
   }
 
   function initializeScript() {
+    // The UI will be initialized when first accessed via toggleConfigUI()
+
     if (typeof GM_registerMenuCommand !== 'undefined') {
       GM_registerMenuCommand('Slugify Selected Text', async () => {
         console.log('rewrite-it: slugify command triggered');
@@ -112,7 +132,13 @@ import { SLUGIFY_RECIPE } from './interfaces';
           console.log('rewrite-it: no editable element found');
         }
       });
-      console.log('rewrite-it: slugify menu command registered');
+
+      GM_registerMenuCommand('Toggle Config UI', () => {
+        console.log('rewrite-it: toggle config UI command triggered');
+        toggleConfigUI();
+      });
+
+      console.log('rewrite-it: menu commands registered');
     } else {
       console.warn('rewrite-it: GM_registerMenuCommand not available');
     }
