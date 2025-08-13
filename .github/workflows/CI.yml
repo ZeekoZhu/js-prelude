@@ -9,9 +9,8 @@ jobs:
   main:
     runs-on: ubuntu-latest
     env:
-      NXCACHE_MINIO_URL: ${{ secrets.NXCACHE_MINIO_URL }}
-      NXCACHE_MINIO_SECRET_KEY: ${{ secrets.NXCACHE_MINIO_SECRET_KEY }}
-      NXCACHE_MINIO_ACCESS_KEY: ${{ secrets.NXCACHE_MINIO_ACCESS_KEY }}
+      NX_SELF_HOSTED_REMOTE_CACHE_ACCESS_TOKEN: ${{ secrets.NX_SELF_HOSTED_REMOTE_CACHE_ACCESS_TOKEN }}
+      NX_SELF_HOSTED_REMOTE_CACHE_SERVER: ${{ secrets.NX_SELF_HOSTED_REMOTE_CACHE_SERVER }}
       APP_CLIENT_ID: 'placeholder'
       APP_REDIRECT_URL: 'placeholder'
     steps:

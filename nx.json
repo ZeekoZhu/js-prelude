@@ -4,15 +4,6 @@
       "analyzeSourceFiles": true
     }
   },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx-remotecache-minio",
-      "options": {
-        "bucket": "js-prelude-build",
-        "region": "auto"
-      }
-    }
-  },
   "workspaceLayout": {
     "appsDir": "apps",
     "libsDir": "packages"
@@ -135,6 +126,5 @@
     "changelog": {
       "projectChangelogs": true
     }
-  },
-  "useLegacyCache": true
+  }
 }
