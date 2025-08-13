@@ -4,9 +4,10 @@
   "peerDependencies": {
     "@angular/common": "^19.2.0",
     "@angular/core": "^19.2.0",
-    "@angular/platform-browser": "^19.2.0",
     "@angular/elements": "^19.2.0",
-    "@angular/platform-browser-dynamic": "^19.2.0"
+    "@angular/platform-browser": "^19.2.0",
+    "@angular/platform-browser-dynamic": "^19.2.0",
+    "js-yaml": "*"
   },
   "sideEffects": true
 }

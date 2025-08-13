@@ -49,6 +49,7 @@
         "buildTarget": "rewrite-it:build",
         "port": 4200
       },
+      "defaultConfiguration": "development",
       "configurations": {
         "development": {
           "buildTarget": "rewrite-it:build:development"

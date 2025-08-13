@@ -1,1 +1,30 @@
-<p>RewriteItUi works!</p>
+<dialog #dialog class="config-dialog">
+  <div class="dialog-header">
+    <h2>Configuration Editor</h2>
+  </div>
+
+  <div class="dialog-content">
+    <textarea
+      #yamlTextarea
+      class="yaml-editor"
+      [value]="yamlString()"
+      (input)="onYamlChange($event)"
+      placeholder="Enter configuration in YAML format..."
+      rows="20"
+      cols="80"
+    ></textarea>
+
+    @if (parseError()) {
+    <div class="error-message">
+      {{ parseError() }}
+    </div>
+    }
+  </div>
+
+  <div class="dialog-footer">
+    <button class="btn btn-cancel" (click)="onCancel()">Cancel</button>
+    <button class="btn btn-save" (click)="onSave()" [disabled]="!!parseError()">
+      Save
+    </button>
+  </div>
+</dialog>

@@ -1,0 +1,132 @@
+:host {
+  --dialog-width: 600px;
+  --dialog-max-width: 90vw;
+  --dialog-max-height: 90vh;
+  --primary-color: #2563eb;
+  --danger-color: #dc2626;
+  --border-color: #e5e7eb;
+  --background-color: #ffffff;
+  --text-color: #374151;
+  --error-color: #dc2626;
+}
+
+.config-dialog {
+  width: var(--dialog-width);
+  max-width: var(--dialog-max-width);
+  max-height: var(--dialog-max-height);
+  padding: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  background: var(--background-color);
+  color: var(--text-color);
+}
+
+.dialog-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--background-color);
+}
+
+.dialog-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.dialog-content {
+  padding: 1.5rem;
+  max-height: calc(var(--dialog-max-height) - 200px);
+  overflow-y: auto;
+}
+
+.yaml-editor {
+  width: 100%;
+  min-height: 300px;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  background: #f9fafb;
+  color: var(--text-color);
+  box-sizing: border-box;
+}
+
+.yaml-editor:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.yaml-editor::placeholder {
+  color: #9ca3af;
+}
+
+.error-message {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #fef2f2;
+  color: var(--error-color);
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.dialog-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  background: var(--background-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--background-color);
+  color: var(--text-color);
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-cancel {
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.btn-save {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.btn-save:hover:not(:disabled) {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}

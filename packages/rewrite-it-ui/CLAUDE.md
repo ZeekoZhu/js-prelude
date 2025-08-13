@@ -42,7 +42,10 @@ This is the `@zeeko/rewrite-it-ui` package - an Angular component library that p
 
 ### Component Architecture
 
-- **Main Component**: `ConfigUiComponent` - Currently a basic Angular component
+- **Main Component**: `ConfigUiComponent` - Currently a basic Angular component,
+  registered as a custom element `rewrite-it-config-ui`
+- **Zoneless**: This project runs in a zoneless environment, use angular signals
+  for state management, avoid using change detection and zone.js
 - **Selector**: `rewrite-it-config-ui`
 - **Styling**: Uses Shadow DOM encapsulation
 - **Template**: Basic placeholder content
