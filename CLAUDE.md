@@ -9,69 +9,87 @@ This is a JavaScript/TypeScript monorepo called "Prelude" that contains various 
 ## Common Commands
 
 ### Building
+
 - `nx build <package>` - Build a specific package
 - `nx run-many -t build` - Build all packages
 
 ### Testing
+
 - `nx test <package>` - Run tests for a specific package
 - `nx run-many -t test` - Run tests for all packages
 - `nx test <package> --codeCoverage` - Run tests with coverage
 
 ### Linting
+
 - `nx lint <package>` - Lint a specific package
 - `nx run-many -t lint` - Lint all packages
 
 ### Development
+
 - `nx serve <app>` - Serve a development application
 - `nx e2e <app>` - Run E2E tests for an application
 
 ## Key Packages
 
 ### mobx-reactive-form
+
 A reactive form library built with MobX that provides:
+
 - Field management with validation
 - Form state management
 - React integration with hooks and controllers
 - Storybook documentation in `src/docs/`
 
 ### power-accessor
+
 A utility for accessing and modifying nested object properties with pattern matching:
+
 - Uses `Accessor` and `Matcher` classes
 - Supports conditional property access based on key patterns
 - Published as `@zeeko/power-accessor`
 
 ### vite-plugin-prebundle
+
 A Vite plugin for prebundling dependencies:
+
 - Handles CommonJS to ESM conversion
 - Manages import scanning and dependency collection
 - Used internally in the monorepo (linked from `dist/packages/vite-plugin-prebundle`)
 
 ### ts-sync-ref
+
 A TypeScript utility for synchronizing project references:
+
 - Updates TypeScript config references across projects
 - Includes CLI tool (`src/bin.ts`)
 - Path utilities for project resolution
 
 ### codemirror-mdast
+
 CodeMirror extension for Markdown AST manipulation
 
 ### docker-registry-v2-auth
+
 Docker registry v2 authentication utilities
 
 ### mobx-react-hooks
+
 React hooks for MobX integration:
+
 - Provides reactive value management
 - Setup utilities for MobX in React components
 
 ## Architecture Patterns
 
 ### Monorepo Structure
+
 - **packages/**: Library packages using Nx
 - **apps/**: Applications (Angular, React)
 - Each package has its own `project.json` with build targets
 - Workspace uses Nx cache with MinIO remote storage
 
 ### Build System
+
 - Nx workspace with caching enabled
 - Multiple build tools: Vite, Rollup, ESBuild, Angular CLI
 - Jest for unit tests, Vitest for some packages
@@ -79,6 +97,7 @@ React hooks for MobX integration:
 - ESLint for linting with TypeScript support
 
 ### Package Structure
+
 - Standard pattern: `src/index.ts` as main entry
 - `src/lib/` for implementation files
 - `tsconfig.lib.json` for library TypeScript config
@@ -86,6 +105,7 @@ React hooks for MobX integration:
 - Storybook for component documentation (where applicable)
 
 ### Testing Strategy
+
 - Unit tests with Jest/Vitest
 - E2E tests with Cypress
 - Coverage reporting enabled
@@ -108,3 +128,14 @@ React hooks for MobX integration:
 - **UI**: Angular Material, Ant Design, Tailwind CSS
 - **Node**: 20.10.0 (via Volta)
 - **Package Manager**: Yarn 4.5.0
+
+## Commit Convention
+
+Follow Angular commit convention with these key aspects:
+
+- Format: `<type>(<scope>): <subject>`
+- Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore
+- Scopes: package names (e.g., mobx-reactive-form, power-accessor)
+- Use `yarn commit` for interactive commit creation
+- Commits validated via Husky hooks
+- Changelog generated automatically from conventional commits
