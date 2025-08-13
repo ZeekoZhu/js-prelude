@@ -14067,6 +14067,7 @@ __metadata:
     "@angular-eslint/eslint-plugin-template": "npm:19.8.1"
     "@angular-eslint/template-parser": "npm:19.8.1"
     "@angular/animations": "npm:19.2.14"
+    "@angular/build": "npm:19.2.9"
     "@angular/cdk": "npm:19.2.14"
     "@angular/cli": "npm:19.2.14"
     "@angular/common": "npm:19.2.14"

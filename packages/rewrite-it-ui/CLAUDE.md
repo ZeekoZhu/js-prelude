@@ -35,20 +35,20 @@ This is the `@zeeko/rewrite-it-ui` package - an Angular component library that p
 
 ### Package Structure
 
-- **Entry Point**: `src/index.ts` - Main library export
+- **Entry Point**: `src/index.ts` - Main library export with bootstrap function
 - **Component**: `src/lib/rewrite-it-ui/config-ui.component.*` - Main Angular component
+- **Module**: `src/lib/rewrite-it-ui.module.ts` - Angular module with custom element registration
 - **Build Config**: `ng-package.json` - ng-packagr configuration
 - **Project Config**: `project.json` - Nx target definitions
 
 ### Component Architecture
 
-- **Main Component**: `ConfigUiComponent` - Currently a basic Angular component,
-  registered as a custom element `rewrite-it-config-ui`
-- **Zoneless**: This project runs in a zoneless environment, use angular signals
-  for state management, avoid using change detection and zone.js
-- **Selector**: `rewrite-it-config-ui`
-- **Styling**: Uses Shadow DOM encapsulation
-- **Template**: Basic placeholder content
+- **Main Component**: `ConfigUiComponent` - YAML configuration editor dialog
+- **Custom Element**: Registered as `rewrite-it-config-ui` custom element
+- **Zoneless**: Uses Angular's experimental zoneless change detection (`provideExperimentalZonelessChangeDetection()`)
+- **Shadow DOM**: Component encapsulation enabled for style isolation
+- **YAML Integration**: Uses `js-yaml` for configuration parsing and serialization
+- **State Management**: Uses Angular signals (`model()`, `signal()`, `computed()`) for reactive state
 
 ### Testing Setup
 
@@ -61,19 +61,21 @@ This is the `@zeeko/rewrite-it-ui` package - an Angular component library that p
 
 - **TypeScript Configs**: Separate configs for library, production, and testing
 - **Vite Config**: Includes Angular plugin, Nx path resolution, and asset copying
-- **Peer Dependencies**: Angular 19.2+ required
+- **Peer Dependencies**: Angular 19.2+ and js-yaml required
 
 ## Key Files
 
-- `src/index.ts` - Library entry point
-- `src/lib/rewrite-it-ui/config-ui.component.ts` - Main component implementation
+- `src/index.ts` - Library entry point with bootstrap function
+- `src/lib/rewrite-it-ui/config-ui.component.ts` - Main YAML editor component
+- `src/lib/rewrite-it-ui.module.ts` - Angular module with custom element registration
 - `project.json` - Nx build targets and configuration
 - `ng-package.json` - ng-packagr library configuration
 - `vite.config.mts` - Vite configuration for testing and development
 
 ## Development Notes
 
-- The package is in early development with basic component structure
-- Uses modern Angular 19 with standalone components
-- Shadow DOM encapsulation enabled for component isolation
+- The package provides a YAML configuration editor as a modal dialog
+- Uses modern Angular 19 with standalone components and signals
+- Custom element registration allows usage in non-Angular environments
+- Shadow DOM encapsulation prevents style conflicts
 - Part of a larger monorepo with shared build cache

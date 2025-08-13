@@ -42,6 +42,7 @@
             "ignoredFiles": [
               "{projectRoot}/eslint.config.{js,cjs,mjs}",
               "{projectRoot}/vite.config.{js,ts,mjs,mts}",
+              "{projectRoot}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,jsx,tsx}",
               "{projectRoot}/src/test-setup.ts"
             ]
           }
