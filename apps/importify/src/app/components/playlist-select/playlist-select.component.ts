@@ -1,4 +1,9 @@
-import { Component, inject, Output } from '@angular/core';
+import {
+  Component,
+  inject,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import CurrentUserEndpoints from '@spotify/web-api-ts-sdk/dist/mjs/endpoints/CurrentUserEndpoints';
 import { SimplifiedPlaylist } from '@spotify/web-api-ts-sdk';
 import {
@@ -26,6 +31,7 @@ import {
   styleUrls: ['./playlist-select.component.css'],
   providers: [RxState, RxActionFactory],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlaylistSelectComponent implements View {
   sdk = inject(SpotifySdkProviderService).sdk;

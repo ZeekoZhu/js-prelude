@@ -32,7 +32,7 @@ export class ChooseFileComponent {
   effects = rxEffects();
   importCtx = inject(ImportContextService);
   displayedColumns = ['trackName', 'trackUri'];
-  fileInputControl = new FormControl<File | null>(null);
+  fileInputControl = new FormControl<HTMLInputElement | null>(null);
   datasource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: false }) set paginator(
@@ -67,9 +67,9 @@ export class ChooseFileComponent {
         switchMap((file) => (file ? parseTracks(file) : [])),
       ),
     );
-    this.effects.register(this.fileInputControl.valueChanges, (file) => {
-      if (file) {
-        this.actions.selectFile(file);
+    this.effects.register(this.fileInputControl.valueChanges, (input) => {
+      if (input && input.files && input.files.length > 0) {
+        this.actions.selectFile(input.files[0]);
       }
     });
     this.effects.register(this.state.select('tracks'), (tracks) => {

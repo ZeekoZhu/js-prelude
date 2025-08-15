@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { AppComponent } from './app.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,10 +11,13 @@ import { ChoosePlaylistComponent } from './pages/choose-playlist/choose-playlist
 import { PlaylistSelectComponent } from './components/playlist-select/playlist-select.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RxLet } from '@rx-angular/template/let';
 import { RxFor } from '@rx-angular/template/for';
 import { ChooseFileComponent } from './pages/choose-file/choose-file.component';
-import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { ExportifyLinkComponent } from './components/exportify-link/exportify-link.component';
 import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -28,21 +33,23 @@ import { ImportFinishedComponent } from './pages/import-finished/import-finished
     ChoosePlaylistComponent,
     PlaylistSelectComponent,
     ChooseFileComponent,
-    ChooseFileComponent,
-    ExportifyLinkComponent,
     ExportifyLinkComponent,
     ImportFinishedComponent,
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     MatButtonModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     MatInputModule,
     MatListModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatProgressSpinnerModule,
     RxLet,
     RxFor,
-    NgxMatFileInputModule,
     MatTableModule,
     ReactiveFormsModule,
     MatPaginatorModule,
