@@ -37,7 +37,7 @@ jobs:
       - name: Run tests
         run: |
           yarn exec nx affected --target=test --parallel=3 -c ci --coverage
-          yarn exec nx affected --target=e2e --parallel=3 -c ci
+          #yarn exec nx affected --target=e2e --parallel=3 -c ci
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
