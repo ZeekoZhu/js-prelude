@@ -8,7 +8,7 @@ async function readCompositeTsconfigPathFromConfig(
   const compositeConfig = get(packageJson, 'ts-auto-ref');
   if (!compositeConfig) return undefined;
   const compositeTsconfigPath = path.join(projectRoot, compositeConfig);
-  if (!(await fs.exists(compositeTsconfigPath))) {
+  if (!(await fs.pathExists(compositeTsconfigPath))) {
     return undefined;
   }
   return compositeConfig;
